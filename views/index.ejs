@@ -1,0 +1,81 @@
+<html>
+
+	<head>
+		<title><%= pageTitle %> - <%= title %></title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!--Favicon-->
+		<link href="img/icon_24.png" rel="icon" type="image/png">
+
+		<!--Manifest-->
+		<link rel="manifest" href="manifest.json">
+
+		<!--Roboto Font-->
+		<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Josefin+Sans:600|Roboto:100,300,500,900,100italic,300italic,500italic,900italic'>
+		<!--Material Icons-->
+		<link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<!--Material Lite
+		<link href="css/material.min.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="js/material.min.js" defer></script>-->
+
+		<link href="css/general.css" rel="stylesheet" type="text/css">
+		<link href="css/navbar.css" rel="stylesheet" type="text/css">
+
+		<script src="/socket.io/socket.io.js" type="text/javascript" defer></script>
+		<script src="js/general.js" type="text/javascript" defer></script>
+		<script src="js/navbar.js" type="text/javascript" defer></script>
+
+		<!--Ganadores-->
+		<% if(title === 'Ganadores'){ %>
+			<script src="js/winners.js" type="text/javascript" defer></script>
+			<link href="css/winners.css" rel="stylesheet" type="text/css">
+		<% } %>
+
+		<!--Premios-->
+		<% if(title === 'Premios'){ %>
+			<script src="js/prizes.js" type="text/javascript" defer></script>
+			<script src="js/validations.js" type="text/javascript" defer></script>
+			<link href="css/prizes.css" rel="stylesheet" type="text/css">
+		<% } %>
+	</head>
+
+	<body>
+
+		<header>
+			<% include partials/navbar.js %>
+		</header>
+
+		<div class="sections">
+
+			<!-- SECTIONS -->
+			<% if(title === 'Premios'){ %>
+				<% include partials/prizes.js %>
+			<% } %>
+			<% if(title === 'Ganadores'){ %>
+				<% include partials/winners.js %>
+			<% } %>
+			<% if(title === 'Inicio de Sesión'){ %>
+				<% include partials/login.js %>
+			<% } %>
+			<% if(title === 'Alta de Usuario'){ %>
+				<% include partials/register.js %>
+			<% } %>
+
+		</div>
+		<div id="info-hub">
+			<div id="info_message" class="info-card pos-bottom-out">
+				<span class="info-emoticon">:)</span>
+				<span class="info-text"><!--It is filled from winners.js--></span>
+			</div>
+			<div id="info_error" class="info-card pos-bottom-out">
+				<span class="info-emoticon">:(</span>
+				<span class="info-text"><!--It is filled from winners.js--></span>
+			</div>
+		</div>
+
+		<span id="pageUrl" hidden><%= pageUrl %></span>
+
+	</body>
+
+</html>

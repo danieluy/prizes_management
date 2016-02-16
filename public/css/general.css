@@ -1,0 +1,279 @@
+*, body{
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	font-family: Roboto, Verdana, sans-serif;
+	font-weight: 300;
+}
+
+body{
+	background-color: #eee;
+}
+
+header{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
+
+div.sections{
+	max-width: 1200px;
+	margin: 0px auto;
+}
+
+section{
+	padding: 80px 20px 0px 20px;
+	width: 50%;
+	margin: 0px auto;
+	float: left;
+}
+section.w100{
+	width: 100%;
+}
+section h2{
+	font-size: 1.5em;
+	font-weight: 500;
+	text-transform: capitalize;
+	color: #ffa500;
+	line-height: 60px;
+	text-align: center;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+}
+
+div.form-card{
+	background-color: #fff;
+	border-radius: 3px;
+	padding: 15px;
+	margin-bottom: 10px;
+	overflow: auto;
+	box-shadow: 0px 2px 4px #888;
+}
+
+form{
+	width: 100%;
+}
+form fieldset{
+	width: 100%;
+	border-style: none;
+}
+form fieldset legend{
+	width: 100%;
+	line-height: 30px;
+	font-size: .7em;
+	font-weight: 500;
+	color: #ccc;
+	text-transform: uppercase;
+}
+form input{
+	display: block;
+	width: 100%;
+	line-height: 40px;
+	padding-left: 10px;
+	background-color: transparent;
+	border-style: none;
+	margin-bottom: 10px;
+}
+form input:hover{
+	color: #333;
+	background-color: #ccc;
+}
+input.input-name{
+	width: 50%;
+	float: left;
+}
+form input[type='date']{
+	display: block;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+	color: #888;
+	background-color: transparent;
+	border-style: none;
+	margin-bottom: 10px;
+}
+form input[type='date']:hover{
+	color: #333;
+	background-color: #ccc;
+}
+
+form textarea{
+	width: 100%;
+	min-height: 80px;
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: transparent;
+	border-style: none;
+}
+form textarea:hover{
+	color: #333;
+	background-color: #ccc;
+}
+form select{
+	display: block;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 5px;
+	color: #888;
+	background-color: transparent;
+	border-style: none;
+	margin-bottom: 10px;
+}
+form select:hover{
+	color: #333;
+	background-color: #ccc;
+}
+form label{
+	width: 100%;
+	float: left;
+	color: #555;
+	font-size: .85em;
+	font-weight: 500;
+}
+
+
+button{
+	background-color: #ff8800;
+	color: #fff;
+	border-style: none;
+	border-radius: 3px;
+	box-shadow: 0px 1px 2px #888;
+	line-height: 40px;
+	text-transform: uppercase;
+	font-weight: 500;
+	padding: 0px 20px;
+}
+
+button.btn-undo{
+	background-color: transparent;
+	color:  #ff8800;
+	border-style: none;
+	border-radius: 0px;
+	box-shadow: none;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+}
+
+span.note{
+	position: fixed;
+	top:0px;
+	right: 0px;
+	line-height: 60px;
+	z-index: 10;
+	padding-right: 30px;
+}
+
+.hidden{
+	display: none;
+}
+
+span.capitalize{
+	text-transform: capitalize !important;
+}
+
+ul#notes{
+	display: block;
+	position: fixed;
+	top:0px;
+	right: 0px;
+	z-index: 10;
+	height: 60px;
+	padding: 10px;
+}
+
+
+.info-card{
+	position: fixed;
+	bottom: 10px;
+	left: calc(50% - 250px);
+	width: 500px;
+	margin: 0px auto;
+	color: #fff;
+	overflow: auto;
+	border-radius: 3px;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+#info_message{
+	background-color: #585;
+}
+#info_error{
+	background-color: #f55;
+}
+.info-emoticon{
+	display: block;
+	float: left;
+	text-align: center;
+	line-height: 80px;
+	width: 80px;
+	font-size: 2em;
+	font-weight: 500;
+}
+.info-text{
+	display: block;
+	float: left;
+	width: calc(100% - 80px);
+	padding: 25px 25px 25px 0px;
+	font-size: .8em;
+	text-align: justify;
+}
+.pos-bottom-in{
+	transform: translate(0%, 0%);
+	opacity: 1;
+	transition: all 0.3s ease-out;
+}
+.pos-bottom-out{
+	transform: translate(0%, 150%);
+	opacity: 0;
+	transition: all 0.3s ease-out;
+}
+
+
+
+
+
+/*Large devices Desktops (≥1200px)########################################################################################################################*/
+/*@media screen and (min-width: 1200px){}*/
+
+
+
+/*Medium devices Desktops (≥992px)########################################################################################################################*/
+/*@media screen and (min-width: 992px) and (max-width: 1199px){}*/
+
+
+
+/*Small devices Tablets (≥768px)########################################################################################################################*/
+/*@media screen and (min-width: 768px){}*/
+
+
+
+/*Extra small devices Phones  (<768px)########################################################################################################################*/
+@media screen and (max-width: 767px){
+	div.sections{
+		margin: 60px 0px 0px 0px;
+		max-width: 100%;
+	}
+	section{
+		padding: 0px;
+		width: calc(100% - 30px);
+		margin: 10px 15px;
+		float: left;
+	}
+
+	div.form-card{
+		margin-bottom: 0px;
+	}
+
+	button.w100{
+		width: 100%;
+	}
+
+	button.w50{
+		width: calc(50% - 4px);
+		margin: 0px 2px;
+		float: left;
+	}
+}

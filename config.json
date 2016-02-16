@@ -1,0 +1,13 @@
+{
+   "remote":
+   {
+      "url": "201.217.149.74",
+      "port": "1043"
+   },
+   "database":
+   {
+      "url": "localhost",
+      "port": "27017",
+      "name": "rcrmc2016"
+   }
+}

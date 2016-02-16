@@ -1,0 +1,85 @@
+/*___NAV MENU_____________________________________________________________________________________________*/
+nav#main{
+	width: 100%;
+	height: 100%;
+
+	background-color: #ffa500;
+}
+div#menu-button{
+	display: none;
+}
+div#menu-button i:hover{
+	color: #fff;
+	transition: color 0.3s ease;
+}
+h1.main-title{
+	float: left;
+	line-height: 60px;
+	color: #fff;
+	padding-right: 10px;
+	padding-left: 20px;
+    overflow: hidden;
+	width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+h1 i.sub-title{
+	line-height: 60px;
+	color: rgba(0,0,0,0.5);
+}
+
+nav#main ul{
+	position: absolute;
+	top:33.3vh;
+
+	left: 0px;
+
+	width: 200px;
+	min-height: 150px;
+}
+nav#main ul li{
+	display: block;
+	list-style-type: none;
+}
+
+nav#main ul li.menu-title span{
+	display: inline-block;
+	margin: 5px 0px 0px 5px;
+	font-size: .7em;
+	color: #888;
+	text-transform: uppercase;
+}
+nav#main ul li i{
+	vertical-align: middle;
+	font-size: 1em;
+}
+nav#main ul a{
+	display: block;
+	line-height: 60px;
+	width: 100%;
+	height: 100%;
+	min-width: 150px;
+	max-width: 300px;
+	font-size: 1em;
+	text-decoration: none;
+	font-weight: 500;
+	padding: 0px 20px;
+	color: rgba(0,0,0,0.5);
+	transition: color 0.3s ease;
+}
+nav#main ul a:hover{
+	color: #ffa500;
+	transition: color 0.3s ease;
+}
+nav#main div#menu-option-back{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 10000px;
+	display: none;
+}
+nav#main div#menu-option-back.visible{
+	display: block;
+}
+/*___FIN NAV MENU_________________________________________________________________________________________*/

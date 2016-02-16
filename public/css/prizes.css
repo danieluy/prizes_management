@@ -1,0 +1,28 @@
+div#divPrevPrizes h3{
+	color: #ffa500;
+	font-weight: 500;
+	font-size: 1.2em;
+}
+div#divPrevPrizes{
+	padding: 10px 0px;
+}
+div.prevPrizeBox{
+	color: #555;
+	font-size: .75em;
+	padding: 10px;
+}
+span.prevPrizeNum{
+	display: inline-block;
+	width: 100%;
+	font-weight: 700;
+	color: #555;
+}
+span.prevPrizeData{
+	display: inline-block;
+	font-weight: 500;
+	width: 100%;
+}
+span.prevPrizeData strong{
+	font-weight: 300;
+	color: #ffa500;
+}

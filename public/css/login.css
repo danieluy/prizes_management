@@ -1,0 +1,113 @@
+*, body{
+    font-family: roboto, arial;
+    font-weight: 300;
+    font-style: normal;
+    color: #555;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body{
+    background-color: #eee;
+}
+#ctrlWrapper{
+    position: relative;
+    top: 80px;
+    width: 400px;
+    margin: 0px auto;
+    background-color: #fff;
+    padding: 20px;
+    overflow: auto;
+    border-radius: 3px;
+    box-shadow: 0px 1px 2px #aaa;
+}
+#ctrlWrapper h1{
+    margin-bottom: 20px;
+    text-align: center;
+}
+#ctrlWrapper input{
+    /*padding-left: 15px; */
+    display: inline-block;
+    height: 40px;
+    float: left;
+    width: 100%;
+    background-color: transparent;
+    border-style: none;
+}
+#ctrlWrapper button{
+    margin: 20px 0px;
+    height: 40px;
+    float: left;
+    width: 100%;
+    background-color: transparent;
+    border-style: none;
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+#ctrlWrapper button:hover{
+    background-color: #eee;
+    transition: background-color .3s ease;
+}
+#ctrlWrapper button:active{
+    background-color: transparent;
+}
+#ctrlWrapper select{
+    height: 40px;
+    background-color: transparent;
+    border-style: none;
+    cursor: pointer;
+    padding-left: 15px;
+}
+#ctrlWrapper label{
+    line-height: 40px;
+    font-size: 13.3333px;
+    color: #555;
+}
+
+#ctrlWrapper input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+
+/*Large devices Desktops (≥1200px)########################################################################################################################*/
+/*@media screen and (min-width: 1200px){}*/
+
+
+
+/*Medium devices Desktops (≥992px)########################################################################################################################*/
+/*@media screen and (min-width: 992px) and (max-width: 1199px){}*/
+
+
+
+/*Small devices Tablets (≥768px)########################################################################################################################*/
+/*@media screen and (min-width: 768px){}*/
+
+
+
+/*Extra small devices Phones  (<768px)########################################################################################################################*/
+@media screen and (max-width: 767px){
+    #ctrlWrapper{
+        width: 100%;
+        background-color: transparent;
+        box-shadow: none;
+    }
+    #ctrlWrapper input{
+        border-bottom: 1px solid #888;
+        margin: 10px 0px;
+        padding-left: 10px;
+        height: 40px;
+        float: left;
+        width: 100%;
+        border-style: none;
+    }
+    #ctrlWrapper button{
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0px 1px 2px #888;
+    }
+    #ctrlWrapper button:active{
+        background-color: #eee;
+        border-radius: 2px;
+        box-shadow: none;
+    }
+}
