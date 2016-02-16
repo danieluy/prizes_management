@@ -49,6 +49,9 @@
 		<div class="sections">
 
 			<!-- SECTIONS -->
+			<% if(title === 'Inicio'){ %>
+				<% include partials/home.js %>
+			<% } %>
 			<% if(title === 'Premios'){ %>
 				<% include partials/prizes.js %>
 			<% } %>

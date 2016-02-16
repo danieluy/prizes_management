@@ -4,14 +4,17 @@
     <div class="user-info"></div>
     <ul id="menu-options">
 
-        <li class="menu-title"><span>Principal</span></li>
-        <!-- <li><a href="/"><i class="material-icons">&#xE88A;</i> Inicio</a></li> -->
+        <li class="menu-title"><span>Usuarios</span></li>
+        <li><a href="/"><i class="material-icons">&#xE88A;</i> Inicio</a></li>
         <li><a href="/ganadores"><i class="material-icons">&#xE838;</i> Ganadores</a></li>
         <li><a href="/premios"><i class="material-icons">&#xE838;</i> Premios</a></li>
 
-        <!-- <li class="menu-title"><span>Sesión</span></li>
+        <li class="menu-title"><span>Administradores</span></li>
         <li><a href="/register"><i class="material-icons">&#xE7FE;</i> Agregar usuarios</a></li>
-        <li><a href="/logout"><i class="material-icons">&#xE8AC;</i> Salir</a></li> -->
+
+        <li class="menu-title"><span>Sesión</span></li>
+        <li><a href="/login"><i class="material-icons">&#xE890;</i> Iniciar sesión</a></li>
+        <li><a href="/logout"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
     </ul>
     <div id="menu-option-back"></div><!-- background -->
 </nav>

@@ -19,10 +19,10 @@ var sessions = require('client-sessions');
 
 
 //My Modules////////////////////////////////////////////////////////////////////
-var security = require('./my_modules/security.js');
 var proto = require('./my_modules/proto.js');
 var db_winners = require('./my_modules/db_winners.js');
 var db_prizes = require('./my_modules/db_prizes.js');
+var security = require('./my_modules/security.js');
 
 
 //Middleware//////////////////////////////////////////////////////////////////////Middleware////////////////////////////////////////////////////////////////////
@@ -46,43 +46,38 @@ app.use(sessions(
 
 
 //Intercepta la coneccion entrante y busca sessions
-app.use(function(req, res, next){
-	if(req.session && req.session.userName){
-		User.findOne({userName: req.session.user.userName}, function(err, foundUser){
-			if(foundUser){
-				req.user = foundUser;
-				delete req.user.password;
-				req.session.user = req.user;
-			}
-			else{
-				next();
-			}
-		})
-	}
-	else{
-		next();
-	}
-})
+// app.use(function(req, res, next){
+// 	if(req.session && req.session.user){
+// 		User.findOne({userName: req.session.user.userName}, function(err, foundUser){
+// 			if(foundUser){
+// 				req.user = foundUser;
+// 				delete req.user.password;
+// 				req.session.user = req.user;
+// 			}
+// 			else{
+// 				next();
+// 			}
+// 		})
+// 	}
+// 	else{
+// 		next();
+// 	}
+// });
 
 function requireLogin(req, res, next){
 	if(!req.session.user){
 		req.session.reset();
-		res.render('login', {
-			title: 'Login',
-			errorMessage: "Para ver la página inicia sesión, gracias."
+		renderPage('/login', res, {
+			errorMessage: "Debe iniciar sesión, gracias."
 		});
 	}
 	else{
 		next();
 	}
 }
-
-
-
 function checkRoleAdmin(req, res, next){
 	if(req.session.user.role !== 'admin'){
-		res.render('login', {
-			title: 'Login',
+		renderPage('/login', res, {
 			errorMessage: "Debe iniciar sesión como Administrador, gracias."
 		});
 	}
@@ -90,12 +85,20 @@ function checkRoleAdmin(req, res, next){
 		next();
 	}
 }
-
 function checkRoleUser(req, res, next){
 	if(req.session.user.role !== 'user'){
-		res.render('login', {
-			title: 'Login',
+		renderPage('/login', res, {
 			errorMessage: "Debe iniciar sesión como Usuario, gracias."
+		});
+	}
+	else{
+		next();
+	}
+}
+function checkRoleEditor(req, res, next){
+	if(req.session.user.role !== 'editor'){
+		renderPage('/login', res, {
+			errorMessage: "Debe iniciar sesión como Usuario, editor."
 		});
 	}
 	else{
@@ -173,28 +176,42 @@ var Winner = mongoose.model('Winner', winnerSchema);
 
 //GET///////////////////////////////////////////////////////////////////////////
 app.get('/', function(req, res){
-	res.redirect('/ganadores');
+	res.redirect('/home');
 });
 
-app.get('/login', function(req, res){
+app.get('/home', function(req, res){
+	renderPage('/home', res, {
+		errorMessage: null
+	});
+});
+
+app.get('/login', requireLogin, function(req, res){
 	renderPage('/login', res, {
 		errorMessage: null
 	});
 });
 
-app.get('/register', function(req, res){
+app.get('/logout', requireLogin, function(req, res){
+	if(req.session.user) console.log('\n>>>' + req.session.user.userName + ' has logged out.');
+	req.session.reset();
+	renderPage('/login', res, {
+		errorMessage: null
+	});
+});
+
+app.get('/register', requireLogin, checkRoleAdmin, function(req, res){
 	renderPage('/register', res, {
 		errorMessage: null
 	});
 });
 
-app.get('/premios', function(req, res){
+app.get('/premios', requireLogin, function(req, res){
 	renderPage('/premios', res, {
 		errorMessage: null
 	});
 });
 
-app.get('/ganadores', function(req, res){
+app.get('/ganadores', requireLogin, function(req, res){
 	renderPage('/ganadores', res, {
 		errorMessage: null
 	});
@@ -209,6 +226,13 @@ app.get('/*', function(req, res){
 function renderPage(address, res, variables){
 	var data = {};
 	switch(address){
+		case '/home':
+		data = {
+			title: 'Inicio',
+			errorMessage: variables.errorMessage
+		};
+		break;
+
 		case '/login':
 		data = {
 			title: 'Inicio de Sesión',
@@ -290,8 +314,6 @@ app.post('/login', function(req, res){
 	var name = req.body.user.toLowerCase();
 	var pass = req.body.pass;
 	security.login(name, pass).then(function(login_eval){
-		console.log('>>> login_eval.user');
-		console.log(login_eval.user);
 		if(login_eval.user){
 			console.log('\n::: Log entry ::: ' + login_eval.user.userName + ' has logged in.');
 			req.session.user = login_eval.user;
@@ -344,11 +366,11 @@ app.post('/register', function(req, res){
 	}
 });
 
-app.get('/logout', requireLogin, function(req, res){
-	console.log('\n>>>' + req.session.user.userName + ' has logged out.');
-	req.session.reset();
-	res.redirect('/login');
-});
+// app.get('/logout', requireLogin, function(req, res){
+// 	console.log('\n>>>' + req.session.user.userName + ' has logged out.');
+// 	req.session.reset();
+// 	res.redirect('/login');
+// });
 
 
 //Socket.IO///////////////////////////////////////////////////////////////////////Socket.IO/////////////////////////////////////////////////////////////////////
