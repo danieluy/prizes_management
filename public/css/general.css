@@ -175,7 +175,7 @@ span.capitalize{
 	text-transform: capitalize !important;
 }
 
-ul#notes{
+/*ul#notes{
 	display: block;
 	position: fixed;
 	top:0px;
@@ -183,7 +183,7 @@ ul#notes{
 	z-index: 10;
 	height: 60px;
 	padding: 10px;
-}
+}*/
 
 
 .info-card{
@@ -231,7 +231,14 @@ ul#notes{
 	transition: all 0.3s ease-out;
 }
 
-
+div#ctrlWrapper p{
+	text-align: center;
+}
+div#ctrlWrapper i{
+	font-weight: 700;
+	line-height: 40px;
+	color: #f55;
+}
 
 
 
