@@ -426,7 +426,7 @@ io.sockets.on('connection', function(socket){
 					gender: _data.gender || null,
 					phone: _data.phone || null,
 					mail: _data.mail || null,
-					prizes: [{'id': _data.prize, 'handed': false, 'granted': Date(Date.now())}]
+					prizes: [{'id': _data.prize, 'handed': false}]
 				});
 				newWinner.save(function(err){
 					if(err){

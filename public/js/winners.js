@@ -98,23 +98,20 @@
 		var handed_prizes = [];
 		for (var i = 0; i < _winner.prizes.length; i++) {
 			var id = _winner.prizes[i].id;
-			var date = new Date(_winner.prizes[i].granted);
-			var granted = date.getDate().toString() + '/' + (date.getMonth() + 1).toString() + '/' +  date.getFullYear().toString() + ' - ' + date.getHours() + ':' + date.getMinutes() + ' hrs.';
 			if(!_winner.prizes[i].handed){
-				unhanded_prizes.push(gatherInfo(id, granted));
+				unhanded_prizes.push(gatherInfo(id));
 			}
 			else{
-				handed_prizes.push(gatherInfo(id, granted));
+				handed_prizes.push(gatherInfo(id));
 			}
 		}
 		return {unhanded: unhanded_prizes, handed: handed_prizes};
 	}
-	var gatherInfo = function(_id, _granted){
+	var gatherInfo = function(_id){
 		var i = 0;
 		var found = false;
 		while (i < g_prizes.length && !found) {
 			if(_id === g_prizes[i]._id){
-				g_prizes[i].granted = _granted;
 				found = g_prizes[i];
 			}
 			i++;
@@ -130,7 +127,6 @@
 			for (var i = 0; i < _prizes.unhanded.length; i++) {
 				var prize = _prizes.unhanded[i];
 				concat += '<div class="result">';
-				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
 				concat += '<label>Tipo </label><span class="result-data">' + prize.type + '</span>';
 				concat += '<label>Descripción </label><span class="result-data">' + prize.description + '</span>';
 				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';
@@ -141,7 +137,6 @@
 			for (var i = 0; i < _prizes.handed.length; i++) {
 				var prize = _prizes.handed[i];
 				concat += '<div class="result">';
-				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
 				concat += '<label>Tipo </label><span class="result-data">' + prize.type + '</span>';
 				concat += '<label>Descripción </label><span class="result-data">' + prize.description + '</span>';
 				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';

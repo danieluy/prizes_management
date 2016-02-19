@@ -98,7 +98,7 @@ String.prototype.capitalize = function(){
 			})
 		}
 		else{
-			updatedPrizes.push({'id': selGrantPrize.value, 'handed': false, 'granted': Date(Date.now())});
+			updatedPrizes.push({'id': selGrantPrize.value, 'handed': false});
 			socket.emit('grantPrizeAnyway', {
 				ci: txtGrantCi.value,
 				updatedPrizes: updatedPrizes
