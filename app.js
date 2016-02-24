@@ -4,11 +4,19 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var ip = require('ip');
+// var ip = require('ip');
 fs = require('fs');
 
+//Configuration/////////////////////////////////////////////////////////////////
+const config = require('./config.json');
+
+var hostIp = config.connection.lan.ip;
+var port = config.connection.lan.port;
+
+var db_ip = config.connection.database.ip;
+var db_name = config.connection.database.name;
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/rcrmc2016');
+mongoose.connect('mongodb://' + db_ip + '/' + db_name);
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -112,16 +120,40 @@ app.use(express.static(__dirname + '/public'));
 
 
 //Express Locals//////////////////////////////////////////////////////////////////Express Locals////////////////////////////////////////////////////////////////
-var port = 1043;
-var hostIp = ip.address();
-
+app.locals.config = config;
 app.locals.remoteUrl = '';
 
 app.locals.pageUrl = hostIp + ':' + port;
 
 app.locals.pageTitle = 'Radiocero';
 
-
+// app.post('/register', function(req, res){
+// 	var name = req.body.user;
+// 	var pass = req.body.pass;
+// 	if(searchUser(name) === null){
+// 		var newUser = {
+// 			"nombre": name,
+// 			"pass": pass
+// 		}
+// 		users.users.push(newUser);
+//
+// 		fs.writeFile('./data/users.json', JSON.stringify(users), function (err) {
+// 			if (err) throw err;
+// 			loadUsers();
+// 			console.log(users);
+// 			console.log('It\'s saved!');
+// 		});
+//
+// 		// console.log('Se ha guardado un nuevo usuario');
+// 		// res.redirect('/');
+// 	}
+// 	else{
+// 		res.render('register', {
+// 			title: 'Register',
+// 			errorMessage: 'El usuario ingresado ya existe'
+// 		});
+// 	}
+// })
 
 //DB Collections Schemas//////////////////////////////////////////////////////////DB Collections Schemas////////////////////////////////////////////////////////
 var userSchema = mongoose.Schema(

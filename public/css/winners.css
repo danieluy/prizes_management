@@ -62,8 +62,10 @@ div.result label{
 	color: #ffa500;
 }
 div.result .result-data{
+	font-family: Consolas, sans-serif;
+	font-size: 1.2em;
 	display: inline-block;
-    width: 100%;
+	width: 100%;
 }
 div.result a{
 	text-decoration: none;

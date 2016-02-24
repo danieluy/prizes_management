@@ -263,7 +263,8 @@ div#ctrlWrapper i{
 		margin: 60px 0px 0px 0px;
 		max-width: 100%;
 	}
-	section{
+	section,
+	section.w100{
 		padding: 0px;
 		width: calc(100% - 30px);
 		margin: 10px 15px;

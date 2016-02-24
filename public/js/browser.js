@@ -1,6 +1,5 @@
 (function(){
-   // Browser with version  Detection
-   navigator.sayswho= (function(){
+   navigator.sayswho = (function(){
       var N = navigator.appName
       var ua = navigator.userAgent
       var tem;

@@ -3,7 +3,7 @@
 	var url = document.getElementById('pageUrl').innerHTML;
 	var socket = io.connect(url);
 
-	//Winners Search/////////////////////////////////////////////////////////////
+	//Winners Search///////////////////////////////////////////////////////////////Winners Search/////////////////////////////////////////////////////////////
 	var formQuery = document.getElementById('formQuery');
 	var txtQuery = document.getElementById('txtQuery');
 	var resultsCanvas = document.getElementById('results');
@@ -99,27 +99,36 @@
 		for (var i = 0; i < _winner.prizes.length; i++) {
 			var id = _winner.prizes[i].id;
 			var date = new Date(_winner.prizes[i].granted);
-			var granted = date.getDate().toString() + '/' + (date.getMonth() + 1).toString() + '/' +  date.getFullYear().toString() + ' - ' + date.getHours() + ':' + date.getMinutes() + ' hrs.';
+			var granted = formatDateHours(date);
+			var handed = null;
+			date = new Date(_winner.prizes[i].handed);
+			if(date){
+				handed = formatDateHours(date);
+			}
 			if(!_winner.prizes[i].handed){
-				unhanded_prizes.push(gatherInfo(id, granted));
+				unhanded_prizes.push(gatherInfo(id, granted, null));
 			}
 			else{
-				handed_prizes.push(gatherInfo(id, granted));
+				handed_prizes.push(gatherInfo(id, granted, handed));
 			}
 		}
 		return {unhanded: unhanded_prizes, handed: handed_prizes};
 	}
-	var gatherInfo = function(_id, _granted){
+	var gatherInfo = function(_id, _granted, _handed){
 		var i = 0;
 		var found = false;
 		while (i < g_prizes.length && !found) {
 			if(_id === g_prizes[i]._id){
 				g_prizes[i].granted = _granted;
+				if(_handed) g_prizes[i].handed = _handed;
 				found = g_prizes[i];
 			}
 			i++;
 		}
 		return found;
+	}
+	var formatDateHours = function(_date){
+		return _date.getDate().toString() + '/' + (_date.getMonth() + 1).toString() + '/' +  _date.getFullYear().toString() + ' - ' + _date.getHours() + ':' + _date.getMinutes() + ' hrs.';
 	}
 
 	var formatPrizes = function(_prizes, _index){
@@ -130,10 +139,10 @@
 			for (var i = 0; i < _prizes.unhanded.length; i++) {
 				var prize = _prizes.unhanded[i];
 				concat += '<div class="result">';
-				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
 				concat += '<label>Tipo </label><span class="result-data">' + prize.type + '</span>';
 				concat += '<label>Descripción </label><span class="result-data">' + prize.description + '</span>';
 				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';
+				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
 				concat += '<button class="btn-hand-over-prize" winner="' + _index.toString() + '" prize="' + prize._id + '">Entregar</button>';
 				concat += '</div>';
 			}
@@ -141,10 +150,11 @@
 			for (var i = 0; i < _prizes.handed.length; i++) {
 				var prize = _prizes.handed[i];
 				concat += '<div class="result">';
-				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
 				concat += '<label>Tipo </label><span class="result-data">' + prize.type + '</span>';
 				concat += '<label>Descripción </label><span class="result-data">' + prize.description + '</span>';
 				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';
+				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
+				concat += '<label>Entregado </label><span class="result-data">' + prize.handed + '</span>';
 				concat += '</div>';
 			}
 		}

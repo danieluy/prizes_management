@@ -1,13 +1,19 @@
 {
-   "remote":
-   {
-      "url": "201.217.149.74",
-      "port": "1043"
-   },
-   "database":
-   {
-      "url": "localhost",
-      "port": "27017",
-      "name": "rcrmc2016"
+   "connection":{
+      "lan":{
+         "ip": "127.0.0.1",
+         "port": "1043"
+      },
+      "wan":
+      {
+         "ip": "127.0.0.1",
+         "port": "1043"
+      },
+      "database":
+      {
+         "ip": "127.0.0.1",
+         "port": "27017",
+         "name": "rcrmc2016"
+      }
    }
 }
