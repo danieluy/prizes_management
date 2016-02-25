@@ -1,9 +1,13 @@
 (function(){
 
+   fs = require('fs');
    var mongodb = require('mongodb');
-   var ObjectID = require('mongodb').ObjectID;
    var mongo = mongodb.MongoClient;
-   var url = 'mongodb://localhost/rcrmc2016';
+   const config = require('../config.json');
+   var db_ip = config.connection.database.ip;
+   var db_port = config.connection.database.port;
+   var db_name = config.connection.database.name;
+   var url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
 
    exports.userName = function(_userName){
       return new Promise(function(resolve, reject){

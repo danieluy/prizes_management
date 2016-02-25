@@ -13,10 +13,14 @@ const config = require('./config.json');
 var hostIp = config.connection.lan.ip;
 var port = config.connection.lan.port;
 
+var wan_hostIp = config.connection.wan.ip;
+var wan_port = config.connection.wan.port;
+
 var db_ip = config.connection.database.ip;
+var db_port = config.connection.database.port;
 var db_name = config.connection.database.name;
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://' + db_ip + '/' + db_name);
+mongoose.connect('mongodb://' + db_ip + ':' + db_port + '/' + db_name);
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -124,6 +128,8 @@ app.locals.config = config;
 app.locals.remoteUrl = '';
 
 app.locals.pageUrl = hostIp + ':' + port;
+app.locals.wan_pageUrl = wan_hostIp + ':' + wan_port;
+// app.locals.databasePath = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
 
 app.locals.pageTitle = 'Radiocero';
 
