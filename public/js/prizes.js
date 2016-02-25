@@ -6,8 +6,9 @@ String.prototype.capitalize = function(){
 
 (function (){
 
-	var url = document.getElementById('pageUrl').innerHTML;
-	var socket = io.connect(url);
+
+	// var url = document.getElementById('pageUrl').innerHTML;
+	// var socket = io.connect(url);
 
 	//Grant Prize///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

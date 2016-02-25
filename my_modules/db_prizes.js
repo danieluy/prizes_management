@@ -8,6 +8,7 @@
    var db_port = config.connection.database.port;
    var db_name = config.connection.database.name;
    var url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
+   var ObjectID = require('mongodb').ObjectID;
 
    exports.all = function(){
       return new Promise(function(resolve, reject){

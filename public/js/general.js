@@ -1,12 +1,5 @@
 (function (){
 
-	var url = document.getElementById('pageUrl').innerHTML;
-	var wan_url = document.getElementById('wan_pageUrl').innerHTML;
-	var socket = io.connect(url);
-	if(!socket) socket = io.connect(web_url);
-
-
-
 	socket.on('resRenderMessage', function(_data){
 		var info_message = document.getElementById('info_message');
 		var info_error = document.getElementById('info_error');

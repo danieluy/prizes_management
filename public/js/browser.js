@@ -1,4 +1,5 @@
 (function(){
+   
    navigator.sayswho = (function(){
       var N = navigator.appName
       var ua = navigator.userAgent
@@ -10,4 +11,5 @@
    })();
    var browser_version = navigator.sayswho;
    console.log(browser_version);
+   
 }());

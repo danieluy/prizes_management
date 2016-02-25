@@ -1,7 +1,7 @@
 (function (){
 
-	var url = document.getElementById('pageUrl').innerHTML;
-	var socket = io.connect(url);
+	// var url = document.getElementById('pageUrl').innerHTML;
+	// var socket = io.connect(url);
 
 	//Winners Search///////////////////////////////////////////////////////////////Winners Search/////////////////////////////////////////////////////////////
 	var formQuery = document.getElementById('formQuery');
