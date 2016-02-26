@@ -31,6 +31,12 @@
 		socket.emit('reqHandOverPrize', {'winner_ci': winner_ci, 'prize_id': prize_id});
 	}
 
+	var returnPrize = function(){
+		var winner_index = this.getAttribute('winner');
+		var prize_id = this.getAttribute('prize');
+		var winner_ci = g_winners[winner_index].ci;
+		socket.emit('reqReturnPrize', {'winner_ci': winner_ci, 'prize_id': prize_id});
+	}
 
 	//Socket.on//////////////////////////////////////////////////////////////////
 	socket.on('resWinnerResults', function(_results){
@@ -80,6 +86,13 @@
 		if(btn_hand_over_prize.length > 0){
 			for (var i = 0; i < btn_hand_over_prize.length; i++) {
 				btn_hand_over_prize[i].addEventListener('click', handOverPrize);
+			}
+		}
+
+		var btn_return_prize = document.getElementsByClassName('btn-return-prize');
+		if(btn_return_prize.length > 0){
+			for (var i = 0; i < btn_return_prize.length; i++) {
+				btn_return_prize[i].addEventListener('click', returnPrize);
 			}
 		}
 	}
@@ -144,6 +157,7 @@
 				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';
 				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
 				concat += '<button class="btn-hand-over-prize" winner="' + _index.toString() + '" prize="' + prize._id + '">Entregar</button>';
+				concat += '<button class="btn-return-prize" winner="' + _index.toString() + '" prize="' + prize._id + '">Devolver a Stock</button>';
 				concat += '</div>';
 			}
 			if(_prizes.handed.length)concat += '<h2>Premios entregados</h2>';

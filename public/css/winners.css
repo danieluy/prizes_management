@@ -75,7 +75,10 @@ div.result i{
 	vertical-align: middle;
 }
 
-
+button.btn-return-prize{
+	margin-left: 10px;
+	background-color: #bbb;
+}
 
 /*Large devices Desktops (≥1200px)########################################################################################################################*/
 /*@media screen and (min-width: 1200px){}*/

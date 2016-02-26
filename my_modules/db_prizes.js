@@ -119,4 +119,29 @@
      });
    }
 
+   exports.return_stock = function(prize_id){
+     return new Promise(function(resolve, reject){
+        mongo.connect(url, function(err, db){
+           var result = null;
+           if(err){
+              result = reject('ERR_DB - Unable to connect to the database\nfile: db_prizes.js\n' + err.toString());
+           }
+           else{
+              var prizes = db.collection('prizes');
+              var objectId = new ObjectID(prize_id);
+              prizes.update({_id : objectId}, { $inc: { quantity: 1} }, function(err, result){
+                 if(err){
+                    result = reject('ERR_DB - Unable to fetch prizes data\nfile: db_prizes.js\n' + err.toString());
+                 }
+                 else{
+                    result = resolve(result);
+                 }
+                 db.close();
+              });
+           }
+           return result;
+        });
+     });
+   }
+
 }());

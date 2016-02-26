@@ -4,7 +4,6 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-// var ip = require('ip');
 fs = require('fs');
 
 //Configuration/////////////////////////////////////////////////////////////////
@@ -55,26 +54,6 @@ app.use(sessions(
 		}
 	}
 ));
-
-
-//Intercepta la coneccion entrante y busca sessions
-// app.use(function(req, res, next){
-// 	if(req.session && req.session.user){
-// 		User.findOne({userName: req.session.user.userName}, function(err, foundUser){
-// 			if(foundUser){
-// 				req.user = foundUser;
-// 				delete req.user.password;
-// 				req.session.user = req.user;
-// 			}
-// 			else{
-// 				next();
-// 			}
-// 		})
-// 	}
-// 	else{
-// 		next();
-// 	}
-// });
 
 function requireLogin(req, res, next){
 	if(!req.session.user){
@@ -133,33 +112,13 @@ app.locals.wan_pageUrl = wan_hostIp + ':' + wan_port;
 
 app.locals.pageTitle = 'Radiocero';
 
-// app.post('/register', function(req, res){
-// 	var name = req.body.user;
-// 	var pass = req.body.pass;
-// 	if(searchUser(name) === null){
-// 		var newUser = {
-// 			"nombre": name,
-// 			"pass": pass
-// 		}
-// 		users.users.push(newUser);
-//
-// 		fs.writeFile('./data/users.json', JSON.stringify(users), function (err) {
-// 			if (err) throw err;
-// 			loadUsers();
-// 			console.log(users);
-// 			console.log('It\'s saved!');
-// 		});
-//
-// 		// console.log('Se ha guardado un nuevo usuario');
-// 		// res.redirect('/');
-// 	}
-// 	else{
-// 		res.render('register', {
-// 			title: 'Register',
-// 			errorMessage: 'El usuario ingresado ya existe'
-// 		});
-// 	}
-// })
+
+// fs.writeFile('./data/users.json', JSON.stringify(users), function (err) {
+// 	if (err) throw err;
+// 	loadUsers();
+// 	console.log(users);
+// 	console.log('It\'s saved!');
+// });
 
 //DB Collections Schemas//////////////////////////////////////////////////////////DB Collections Schemas////////////////////////////////////////////////////////
 var userSchema = mongoose.Schema(
@@ -404,13 +363,6 @@ app.post('/register', function(req, res){
 	}
 });
 
-// app.get('/logout', requireLogin, function(req, res){
-// 	console.log('\n>>>' + req.session.user.userName + ' has logged out.');
-// 	req.session.reset();
-// 	res.redirect('/login');
-// });
-
-
 //Socket.IO///////////////////////////////////////////////////////////////////////Socket.IO/////////////////////////////////////////////////////////////////////
 io.sockets.on('connection', function(socket){
 
@@ -535,6 +487,36 @@ io.sockets.on('connection', function(socket){
 		});
 	});
 
+	socket.on('reqReturnPrize', function(_data){
+		console.log('reqReturnPrize was called');
+		var winner_ci = _data.winner_ci;
+		var prize_id = _data.prize_id;
+		//Find the winner
+		db_winners.ci(winner_ci).then(function(_winner){
+			//Get the winner prizes
+			var prizes = _winner.prizes;
+			//Change prize status
+			var prizes_changed = removePrize(prizes, prize_id);
+			//Update all winner prizes info
+			db_winners.updateprizes([winner_ci, prizes_changed]).then(function(_write_result){
+				db_prizes.return_stock(prize_id).then(function(_result){
+					io.to(socket.id).emit('resRenderMessage', {
+						message: 'El premio ha sido devuelto al stock.',
+						error: null,
+						instruction: null
+					});
+				});
+			});
+		}).catch(function(err){
+			console.log(err);
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: err.toString(),
+				instruction: null
+			});
+		});
+	});
+
 
 	socket.on('reqPrizeData', function(prize_id){
 		var ids_array = [{'id': prize_id}];
@@ -592,6 +574,17 @@ function changeHandedState(_prizes, _prize_id){
 		i++;
 	}
 	return;
+}
+
+function removePrize(_prizes, _prize_id){
+	var i = 0;
+	var prizes_changed = [];
+	for (var i = 0; i < _prizes.length; i++) {
+		if(_prizes[i].id !== _prize_id || _prizes[i].handed){
+			prizes_changed.push(_prizes[i]);
+		}
+	}
+	return prizes_changed;
 }
 
 function decrPrizeStock(prize_id){
