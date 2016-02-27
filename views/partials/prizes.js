@@ -76,7 +76,7 @@
 	</div>
 </section>
 
-<section class="w100">
+<section>
 	<div class="form-card">
 		<h2>Edición de premios</h2>
 		<form id="prizeEdit" method="post" action="prizeEdit">

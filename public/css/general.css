@@ -7,7 +7,7 @@
 }
 
 body{
-	background-color: #eee;
+	background-color: #ffa500;
 }
 
 header{
@@ -17,18 +17,17 @@ header{
 }
 
 div.sections{
-	max-width: 1200px;
-	margin: 0px auto;
+	position: absolute;
+	left:300px;
+	top:100px;
+	width: calc(100% - 300px);
 }
 
 section{
-	padding: 80px 20px 0px 20px;
-	width: 50%;
+	padding: 0px 20px;
+	/*width it's declared at every media query*/
 	margin: 0px auto;
 	float: left;
-}
-section.w100{
-	width: 100%;
 }
 section h2{
 	font-size: 1.5em;
@@ -239,16 +238,21 @@ div#ctrlWrapper i{
 	line-height: 40px;
 	color: #f55;
 }
-
-
-
 /*Large devices Desktops (≥1200px)########################################################################################################################*/
-/*@media screen and (min-width: 1200px){}*/
+@media screen and (min-width: 1200px){
+	section{
+		width: 33.333333%;
+	}
+}
 
 
 
 /*Medium devices Desktops (≥992px)########################################################################################################################*/
-/*@media screen and (min-width: 992px) and (max-width: 1199px){}*/
+@media screen and (min-width: 992px) and (max-width: 1199px){
+	section{
+		width: 50%;
+	}
+}
 
 
 
