@@ -579,9 +579,13 @@ function changeHandedState(_prizes, _prize_id){
 function removePrize(_prizes, _prize_id){
 	var i = 0;
 	var prizes_changed = [];
+	var one_removed = false;
 	for (var i = 0; i < _prizes.length; i++) {
-		if(_prizes[i].id !== _prize_id || _prizes[i].handed){
+		if(_prizes[i].id !== _prize_id || _prizes[i].handed || !one_removed){
 			prizes_changed.push(_prizes[i]);
+		}
+		else{
+			one_removed = true;
 		}
 	}
 	return prizes_changed;

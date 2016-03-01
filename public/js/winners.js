@@ -154,8 +154,8 @@
 				concat += '<div class="result">';
 				concat += '<label>Tipo </label><span class="result-data">' + prize.type + '</span>';
 				concat += '<label>Descripción </label><span class="result-data">' + prize.description + '</span>';
-				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';
-				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
+				concat += '<label>Espónsor </label><span class="result-data"><small>' + prize.sponsor + '</small></span>';
+				concat += '<label>Otorgado </label><span class="result-data"><small>' + prize.granted + '</small></span>';
 				concat += '<button class="btn-hand-over-prize" winner="' + _index.toString() + '" prize="' + prize._id + '">Entregar</button>';
 				concat += '<button class="btn-return-prize" winner="' + _index.toString() + '" prize="' + prize._id + '">Devolver a Stock</button>';
 				concat += '</div>';
@@ -166,9 +166,9 @@
 				concat += '<div class="result">';
 				concat += '<label>Tipo </label><span class="result-data">' + prize.type + '</span>';
 				concat += '<label>Descripción </label><span class="result-data">' + prize.description + '</span>';
-				concat += '<label>Espónsor </label><span class="result-data">' + prize.sponsor + '</span>';
-				concat += '<label>Otorgado </label><span class="result-data">' + prize.granted + '</span>';
-				concat += '<label>Entregado </label><span class="result-data">' + prize.handed + '</span>';
+				concat += '<label>Espónsor </label><span class="result-data"><small>' + prize.sponsor + '</small></span>';
+				concat += '<label>Otorgado </label><span class="result-data"><small>' + prize.granted + '</small></span>';
+				concat += '<label>Entregado </label><span class="result-data"><small>' + prize.handed + '</small></span>';
 				concat += '</div>';
 			}
 		}
