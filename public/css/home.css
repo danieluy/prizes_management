@@ -1,0 +1,22 @@
+body{
+	background-color:  #ffa500;
+}
+nav#main,
+footer{
+   box-shadow: none;
+}
+section{
+   width: 100%;
+}
+#home h1{
+   text-align: center;
+   color: #fff;
+   font-weight: 500;
+   font-size: 2em;
+}
+#home h2{
+   text-align: center;
+   color: #fff;
+   font-weight: 300;
+   font-size: 1.8em;
+}
