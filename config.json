@@ -1,19 +1,20 @@
 {
-   "connection":{
-      "lan":{
-         "ip": "127.0.0.1",
-         "port": "1043"
-      },
-      "wan":
-      {
-         "ip": "127.0.0.1",
-         "port": "1043"
-      },
-      "database":
-      {
-         "ip": "127.0.0.1",
-         "port": "27017",
-         "name": "rcrmc2016"
-      }
-   }
+  "misc":{
+    "appName": null,
+    "appDescription": null,
+    "allLogo": null
+  },
+  "connection":{
+    "lan":{
+      "ip": "127.0.0.1",
+      "port": "1043"
+    },
+    "database":
+    {
+      "ip": "127.0.0.1",
+      "port": "27017",
+      "name": "rcrmc2016",
+      "password": null
+    }
+  }
 }
