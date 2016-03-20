@@ -30,6 +30,7 @@ var security = require('./my_modules/security.js');
 //Database////////////////////////////////////////////////////////////////////
 var db_winners = require('./my_modules/db_winners.js');
 var db_prizes = require('./my_modules/db_prizes.js');
+var db_users = require('./my_modules/db_users.js');
 
 //Middleware////////////////////////////////////////////////////////////////////
 app.use(bodyParser.urlencoded({extended: false}));
@@ -284,9 +285,23 @@ app.post('/register', function(req, res){
 			role: role
 		};
 
-		db.users.newUser(newUser).then(function(){
-			console.log('Usuario creado!');
-		}).catch();
+		db_users.newUser(newUser).then(function(_result){
+			console.log('Usuario creado con exito!');
+			// io.to(socket.id).emit('resRenderMessage', {
+			// 	message: null,
+			// 	error: null,
+			// 	instruction: null
+			// });
+		}).catch(function(_err){
+			renderPage('/register', res, {
+				errorMessage: _err,
+			});
+			// io.to(socket.id).emit('resRenderMessage', {
+			// 	message: null,
+			// 	error: _err,
+			// 	instruction: null
+			// });
+		});
 
 		// newUser.save(function(err){
 		// 	if(err){
@@ -347,13 +362,13 @@ io.sockets.on('connection', function(socket){
 						clean_info.push(_prizes_info[i][0]);
 					}
 					io.to(socket.id).emit('resAlreadyWinner', [clean_info, _winner.prizes]);//on js/prizes.js > handle the _winner.prizes
-		      }).catch(function(err){
+				}).catch(function(err){
 					io.to(socket.id).emit('resRenderMessage', {
 						message: null,
 						error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err.toString(),
 						instruction: null
 					});
-		      });
+				});
 			}
 			else{
 				var newWinner = new Winner({
@@ -377,11 +392,11 @@ io.sockets.on('connection', function(socket){
 				decrPrizeStock(_data.prize.id);
 			}
 		}).catch(function(err){
-				io.to(socket.id).emit('resRenderMessage', {
-					message: null,
-					error: err.toString(),
-					instruction: null
-				});
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: err.toString(),
+				instruction: null
+			});
 		});
 	});
 
@@ -494,146 +509,146 @@ io.sockets.on('connection', function(socket){
 					updatePrizesList(socket);
 				}
 			});
+		});
 	});
-});
 
-function gatherPrizesIds(_winners){
-	var prizes_ids = [];
-	if(_winners){
-		for (var i = 0; i < _winners.length; i++) {
-			var winner = _winners[i];
-			for (var j = 0; j < winner.prizes.length; j++) {
-				var prize = winner.prizes[j];
-				prizes_ids.push({'id': prize.id});
+	function gatherPrizesIds(_winners){
+		var prizes_ids = [];
+		if(_winners){
+			for (var i = 0; i < _winners.length; i++) {
+				var winner = _winners[i];
+				for (var j = 0; j < winner.prizes.length; j++) {
+					var prize = winner.prizes[j];
+					prizes_ids.push({'id': prize.id});
+				}
 			}
 		}
+		return prizes_ids;
 	}
-	return prizes_ids;
-}
 
-function changeHandedState(_prizes, _prize_id){
-	var i = 0;
-	var one_changed = false;
-	while (i < _prizes.length && !one_changed) {
-		if(_prizes[i].id === _prize_id && !_prizes[i].handed){
-			_prizes[i].handed = true;
-			one_changed = true;
+	function changeHandedState(_prizes, _prize_id){
+		var i = 0;
+		var one_changed = false;
+		while (i < _prizes.length && !one_changed) {
+			if(_prizes[i].id === _prize_id && !_prizes[i].handed){
+				_prizes[i].handed = true;
+				one_changed = true;
+			}
+			i++;
 		}
-		i++;
+		return;
 	}
-	return;
-}
 
-function removePrize(_prizes, _prize_id){
-	var i = 0;
-	var prizes_changed = [];
-	var one_removed = false;
-	for (var i = 0; i < _prizes.length; i++) {
-		if(_prizes[i].id !== _prize_id || _prizes[i].handed || !one_removed){
-			prizes_changed.push(_prizes[i]);
-		}
-		else{
-			one_removed = true;
-		}
-	}
-	return prizes_changed;
-}
-
-function decrPrizeStock(prize_id){
-	var ids_array = [{'id': prize_id}];
-	findPrizes(ids_array).then(function(array_value){
-		var foundPrize = array_value[0];
-		var decremented = foundPrize.quantity - 1;
-		Prize.update({_id: foundPrize._id}, {quantity: decremented}, null, function(err, updatedWinner){
-			if(err){
-				console.log('Prize.decrement >> ' + err);
+	function removePrize(_prizes, _prize_id){
+		var i = 0;
+		var prizes_changed = [];
+		var one_removed = false;
+		for (var i = 0; i < _prizes.length; i++) {
+			if(_prizes[i].id !== _prize_id || _prizes[i].handed || !one_removed){
+				prizes_changed.push(_prizes[i]);
 			}
 			else{
-				updatePrizesList();
+				one_removed = true;
 			}
-		});
-	}).catch(function(err){
-		console.log(err);
-	});
-}
-
-//Database Handlers///////////////////////////////////////////////////////////////Database Handlers/////////////////////////////////////////////////////////////
-
-//Prize's codes/////////////////////////////////////////////////////////////////
-function findPrizes(ids_array){
-	return Promise.all(stackPromises(ids_array)).then(function(_prizes){
-		return _prizes;
-	}).catch(function(err){
-		console.log('ERR_DB0005 - No se pudo recuperar la lista de tipos de premios.\n' + err);
-	});
-}
-function stackPromises(ids_array){
-	var stack = [];
-	for(var i=0; i<ids_array.length; i++){
-		stack.push(findPrize(ids_array[i].id));
+		}
+		return prizes_changed;
 	}
-	return stack;
-}
-function findPrize(id){
-	return new Promise(function(resolve, reject){
-		Prize.findById(id, function(err, _prize){
-			if(err) return reject(err);
-			return resolve(_prize);
+
+	function decrPrizeStock(prize_id){
+		var ids_array = [{'id': prize_id}];
+		findPrizes(ids_array).then(function(array_value){
+			var foundPrize = array_value[0];
+			var decremented = foundPrize.quantity - 1;
+			Prize.update({_id: foundPrize._id}, {quantity: decremented}, null, function(err, updatedWinner){
+				if(err){
+					console.log('Prize.decrement >> ' + err);
+				}
+				else{
+					updatePrizesList();
+				}
+			});
+		}).catch(function(err){
+			console.log(err);
 		});
-	});
-}
+	}
 
-function updatePrizesList(socket){
-	db_prizes.all().then(function(_data){
-		var prizes = _data;
-		var active_prizes = db_prizes.active(prizes);
-		var sorted_prizes = db_prizes.sort_type(active_prizes);
-		io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
-	}).catch(function(err){
-		console.log(err);
-		io.to(socket.id).emit('resRenderMessage', {
-			message: null,
-			error: err,
-			instruction: null
+	//Database Handlers///////////////////////////////////////////////////////////////Database Handlers/////////////////////////////////////////////////////////////
+
+	//Prize's codes/////////////////////////////////////////////////////////////////
+	function findPrizes(ids_array){
+		return Promise.all(stackPromises(ids_array)).then(function(_prizes){
+			return _prizes;
+		}).catch(function(err){
+			console.log('ERR_DB0005 - No se pudo recuperar la lista de tipos de premios.\n' + err);
 		});
-	});
-}
-
-function updateSponsorsList(socket){
-	db_prizes.distinct('sponsor').then(function(_sponsors){
-		io.sockets.emit('resUpdateSponsorsList', _sponsors);
-	}).catch(function(){
-		console.log(err);
-		io.to(socket.id).emit('resRenderMessage', {
-			message: null,
-			error: 'ERR_DB - No se puede mostrar la lista de espónsors\n' + err,
-			instruction: null
+	}
+	function stackPromises(ids_array){
+		var stack = [];
+		for(var i=0; i<ids_array.length; i++){
+			stack.push(findPrize(ids_array[i].id));
+		}
+		return stack;
+	}
+	function findPrize(id){
+		return new Promise(function(resolve, reject){
+			Prize.findById(id, function(err, _prize){
+				if(err) return reject(err);
+				return resolve(_prize);
+			});
 		});
-	});
-}
+	}
 
-function updatePrizesTypeList(socket){
-	db_prizes.distinct('type').then(function(_prizes_types){
-		io.sockets.emit('resUpdatePrizesTypeList', _prizes_types);
-	}).catch(function(){
-		console.log(err);
-		io.to(socket.id).emit('resRenderMessage', {
-			message: null,
-			error: 'ERR_DB - No se puede mostrar la lista de tipos de premios\n' + err,
-			instruction: null
+	function updatePrizesList(socket){
+		db_prizes.all().then(function(_data){
+			var prizes = _data;
+			var active_prizes = db_prizes.active(prizes);
+			var sorted_prizes = db_prizes.sort_type(active_prizes);
+			io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
+		}).catch(function(err){
+			console.log(err);
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: err,
+				instruction: null
+			});
 		});
+	}
+
+	function updateSponsorsList(socket){
+		db_prizes.distinct('sponsor').then(function(_sponsors){
+			io.sockets.emit('resUpdateSponsorsList', _sponsors);
+		}).catch(function(){
+			console.log(err);
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: 'ERR_DB - No se puede mostrar la lista de espónsors\n' + err,
+				instruction: null
+			});
+		});
+	}
+
+	function updatePrizesTypeList(socket){
+		db_prizes.distinct('type').then(function(_prizes_types){
+			io.sockets.emit('resUpdatePrizesTypeList', _prizes_types);
+		}).catch(function(){
+			console.log(err);
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: 'ERR_DB - No se puede mostrar la lista de tipos de premios\n' + err,
+				instruction: null
+			});
+		});
+	}
+
+
+	//Server port configuration///////////////////////////////////////////////////////Server port configuration/////////////////////////////////////////////////////
+	server.listen(port, function(){
+		console.log('Listening on: ' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
 	});
-}
 
-
-//Server port configuration///////////////////////////////////////////////////////Server port configuration/////////////////////////////////////////////////////
-server.listen(port, function(){
-	console.log('Listening on: ' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
-});
-
-//Others////////////////////////////////////////////////////////////////////////
-String.prototype.capitalize = function(){
-	return this.replace(/(?:^|\s)\S/g, function(a){
-		return a.toUpperCase();
-	});
-};
+	//Others////////////////////////////////////////////////////////////////////////
+	String.prototype.capitalize = function(){
+		return this.replace(/(?:^|\s)\S/g, function(a){
+			return a.toUpperCase();
+		});
+	};
