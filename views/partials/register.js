@@ -10,7 +10,6 @@
             <label for="selRole">Tipo de usuario: </label>
             <select id="selRole" name="role">
                <option value="user">Usuario</option>
-               <option value="edit">Editor</option>
                <option value="admin">Administrador</option>
             </select>
             <button type="submit">Crear</button>

@@ -1,8 +1,13 @@
 {
   "misc":{
-    "appName": null,
-    "appDescription": null,
-    "allLogo": null
+    "appName": "Gestión de Premios",
+    "appDescription": "Herramienta de gestión y control de premios",
+    "appLogo": null
+  },
+  "session":{
+    "secret": "SYF!$·VW$B%3vb4b46rbv6HW$%&GB·bge4wv",
+    "durationHours": 4,
+    "activeDurationHours": 0.25
   },
   "connection":{
     "lan":{

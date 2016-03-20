@@ -1,26 +1,22 @@
-//Change to see what happen on Git from the terminal
-//Modules Requiring & App Settings////////////////////////////////////////////////Modules Requiring & App Settings//////////////////////////////////////////////
+"use strict"
+//Dependencies//////////////////////////////////////////////////////////////////
 var bodyParser = require("body-parser");
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-fs = require('fs');
+var fs = require('fs');
 
 //Configuration/////////////////////////////////////////////////////////////////
-const config = require('./config.json');
+var config = require('./config.json');
 
 var hostIp = config.connection.lan.ip;
 var port = config.connection.lan.port;
 
-var wan_hostIp = config.connection.wan.ip;
-var wan_port = config.connection.wan.port;
-
 var db_ip = config.connection.database.ip;
 var db_port = config.connection.database.port;
 var db_name = config.connection.database.name;
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://' + db_ip + ':' + db_port + '/' + db_name);
+var db_pass = config.connection.database.password;
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -28,33 +24,32 @@ app.set('views', __dirname + '/views');
 
 //Security//////////////////////////////////////////////////////////////////////
 var sessions = require('client-sessions');
-
-
-//My Modules////////////////////////////////////////////////////////////////////
-var proto = require('./my_modules/proto.js');
-var db_winners = require('./my_modules/db_winners.js');
-var db_prizes = require('./my_modules/db_prizes.js');
 var security = require('./my_modules/security.js');
 
 
-//Middleware//////////////////////////////////////////////////////////////////////Middleware////////////////////////////////////////////////////////////////////
+//Database////////////////////////////////////////////////////////////////////
+var db_winners = require('./my_modules/db_winners.js');
+var db_prizes = require('./my_modules/db_prizes.js');
+
+//Middleware////////////////////////////////////////////////////////////////////
 app.use(bodyParser.urlencoded({extended: false}));
 
-//Cookies
-app.use(sessions(
+//Session Config.
+var secret = config.session.secret;
+var duration = config.session.durationHours;
+var activeDuration = config.session.activeDurationHours;
+app.use(sessions({
+	cookieName: 'session',
+	secret: secret,
+	duration: duration * 60 * 60 * 1000,
+	activeDuration: activeDuration * 60 * 60 * 1000,
+	cookie:
 	{
-		cookieName: 'session',
-		secret: 'SYF"!$·VW$B%3vb4b46rbv6HW$%&GB·bge4wv4wg6wgv36875fwe4t"·%"he4GV·%t32c5y',
-		duration: 8 * 60 * 60 * 1000,
-		activeDuration: 1 * 60 * 60 * 1000,
-		cookie:
-		{
-			ephemeral: false,
-			httpOnly: true,
-			secure: false
-		}
+		ephemeral: false,
+		httpOnly: false,
+		secure: false
 	}
-));
+}));
 
 function requireLogin(req, res, next){
 	if(!req.session.user){
@@ -103,12 +98,10 @@ app.use(express.static(__dirname + '/public'));
 
 
 
-//Express Locals//////////////////////////////////////////////////////////////////Express Locals////////////////////////////////////////////////////////////////
-app.locals.config = config;
-app.locals.remoteUrl = '';
+//Express Locals////////////////////////////////////////////////////////////////
+//app.locals.config = config;
 
 app.locals.pageUrl = hostIp + ':' + port;
-app.locals.wan_pageUrl = wan_hostIp + ':' + wan_port;
 // app.locals.databasePath = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
 
 app.locals.pageTitle = 'Radiocero';
@@ -121,56 +114,7 @@ app.locals.pageTitle = 'Radiocero';
 // 	console.log('It\'s saved!');
 // });
 
-//DB Collections Schemas//////////////////////////////////////////////////////////DB Collections Schemas////////////////////////////////////////////////////////
-var userSchema = mongoose.Schema(
-	{
-		userName: {type:String, unique: true},
-		password: String,
-		email: String,
-		role: String,
-		set_date: Date
-	},
-	{
-		collection: 'users'
-	}
-);
-var User = mongoose.model('User', userSchema);
-
-var prizeSchema = mongoose.Schema(
-	{
-		type: String,
-		sponsor: String,
-		description: String,
-		quantity: Number,
-		set_date: Date,
-		due_date: Date,
-		note: String
-	},
-	{
-		collection: 'prizes'
-	}
-);
-var Prize = mongoose.model('Prize', prizeSchema);
-
-var winnerSchema = mongoose.Schema(
-	{
-		ci: {type:String, unique: true},
-		name1: String,
-		lastname1: String,
-		facebook: String,
-		gender: String,
-		phone: String,
-		mail: String,
-		prizes: Array
-	},
-	{
-		collection: 'winners'
-	}
-);
-var Winner = mongoose.model('Winner', winnerSchema);
-
-
-//Routing/////////////////////////////////////////////////////////////////////GET Routing///////////////////////////////////////////////////////////////////
+//Routing///////////////////////////////////////////////////////////////////////
 
 //GET///////////////////////////////////////////////////////////////////////////
 app.get('/', function(req, res){
@@ -197,7 +141,7 @@ app.get('/logout', requireLogin, function(req, res){
 	});
 });
 
-app.get('/register', requireLogin, checkRoleAdmin, function(req, res){
+app.get('/register', /*requireLogin, checkRoleAdmin,*/ function(req, res){
 	renderPage('/register', res, {
 		errorMessage: null
 	});
@@ -333,29 +277,32 @@ app.post('/register', function(req, res){
 
 	if(name && pass && role){
 
-		var newUser = new User({
+		var newUser = {
 			userName: name,
 			password: pass,
 			email: email || null,
-			role: role,
-			set_date: Date.now()
-		});
+			role: role
+		};
 
-		newUser.save(function(err){
-			if(err){
-				var error = 'Ha ocurrido un error, inténtelo de nuevo. Gracias.'
-				if(err.code === 11000){
-					error = 'El nombre de usuario ya existe, elija otro. Gracias.'
-				}
-				renderPage('/register', res, {
-					errorMessage: error,
-				});
-			}
-			else{
-				console.log('El usuario ' + name + ' se ha agregado correctamente.');
-				res.redirect('/');
-			}
-		});
+		db.users.newUser(newUser).then(function(){
+			console.log('Usuario creado!');
+		}).catch();
+
+		// newUser.save(function(err){
+		// 	if(err){
+		// 		var error = 'Ha ocurrido un error, inténtelo de nuevo. Gracias.'
+		// 		if(err.code === 11000){
+		// 			error = 'El nombre de usuario ya existe, elija otro. Gracias.'
+		// 		}
+		// 		renderPage('/register', res, {
+		// 			errorMessage: error,
+		// 		});
+		// 	}
+		// 	else{
+		// 		console.log('El usuario ' + name + ' se ha agregado correctamente.');
+		// 		res.redirect('/');
+		// 	}
+		// });
 	}
 	else{
 		renderPage('/register', res, {
@@ -683,3 +630,10 @@ function updatePrizesTypeList(socket){
 server.listen(port, function(){
 	console.log('Listening on: ' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
 });
+
+//Others////////////////////////////////////////////////////////////////////////
+String.prototype.capitalize = function(){
+	return this.replace(/(?:^|\s)\S/g, function(a){
+		return a.toUpperCase();
+	});
+};
