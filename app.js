@@ -286,7 +286,9 @@ app.post('/register', function(req, res){
 		};
 
 		db_users.newUser(newUser).then(function(_result){
-			console.log('Usuario creado con exito!');
+			renderPage('/register', res, {
+				errorMessage: _result,
+			});
 			// io.to(socket.id).emit('resRenderMessage', {
 			// 	message: null,
 			// 	error: null,
@@ -302,22 +304,6 @@ app.post('/register', function(req, res){
 			// 	instruction: null
 			// });
 		});
-
-		// newUser.save(function(err){
-		// 	if(err){
-		// 		var error = 'Ha ocurrido un error, inténtelo de nuevo. Gracias.'
-		// 		if(err.code === 11000){
-		// 			error = 'El nombre de usuario ya existe, elija otro. Gracias.'
-		// 		}
-		// 		renderPage('/register', res, {
-		// 			errorMessage: error,
-		// 		});
-		// 	}
-		// 	else{
-		// 		console.log('El usuario ' + name + ' se ha agregado correctamente.');
-		// 		res.redirect('/');
-		// 	}
-		// });
 	}
 	else{
 		renderPage('/register', res, {

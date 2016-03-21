@@ -9,7 +9,7 @@
    var db_name = config.connection.database.name;
    var url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
 
-   exports.userName = function(_userName){
+   var userName = exports.userName = function(_userName){
       return new Promise(function(resolve, reject){
          mongo.connect(url, function(err, db){
             var result = null;
@@ -32,40 +32,43 @@
          });
       });
    }
-
+   
    exports.newUser = function(_newUser){
+      //_newUser = {userName: name, password: pass, email: email || null, role: role}
       return new Promise(function(resolve, reject){
-         if(checkUserName(_newUser.userName)){
-            result = reject ('El nombre de usuario "' + _newUser.userName + '" ya está en uso, seleccione otro, gracias.')
-         }
-         else{
-            mongo.connect(url, function(err, db){
-               var result = resolve(true);
-               if(err){
-                  result = reject('ERR_DB - Unable to connect to the database\nfile: db_users.js\n' + err.toString());
-               }
-               else{
-                  var users = db.collection('users');
-                  users.insert(
-                     {
-                        userName: _newUser.userName,
-                        password: _newUser.password,
-                        email: _newUser.email,
-                        role: _newUser.role,
-                        set_date: Date.now()
-                     }
-                  )
-                  db.close();
-               }
-            });
-         }
+         var result = null;
+         userName(_newUser.userName).then(function(_user){
+            console.log('>>> _user');
+            console.log(_user);
+            if(!_user){
+               mongo.connect(url, function(err, db){
+                  if(err){
+                     result = reject('ERR_DB - Unable to connect to the database\nfile: db_users.js\n' + err.toString());
+                  }
+                  else{
+                     var users = db.collection('users');
+                     users.insert(
+                        {
+                           userName: _newUser.userName,
+                           password: _newUser.password,
+                           email: _newUser.email,
+                           role: _newUser.role,
+                           set_date: Date.now()
+                        }
+                     )
+                     db.close();
+                     result = resolve ('El usuaio "' + _newUser.userName + '" se ha creado con exito.')
+                  }
+               });
+            }
+            else{
+               result = reject ('El nombre de usuario "' + _newUser.userName + '" ya está en uso, seleccione otro, gracias.');
+            }
+         }).catch(function(_err){
+            result = reject ('ERR_DB - Unable to check the user name\nfile: db_users.js\n' + err.toString());
+         });
          return result;
       });
    }
-
-   function checkUserName(_userName){
-      //COMPLETAR ESTA CUESTION, REMPLAZAR POR UN EXPORT PARA USAR DESDE APP.JS
-   }
-
 
 }());
