@@ -263,7 +263,7 @@ app.post('/login', function(req, res){
 			res.redirect('/');
 		}
 		else{
-			throw login_eval.err;
+			console.log(login_eval.err);;
 		}
 	}).catch(function(err){
 		console.log(err);/************************************************************************************************************/
@@ -289,20 +289,20 @@ app.post('/register', function(req, res){
 			renderPage('/register', res, {
 				errorMessage: _result,
 			});
-			// io.to(socket.id).emit('resRenderMessage', {
-			// 	message: null,
-			// 	error: null,
-			// 	instruction: null
-			// });
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: null,
+				instruction: null
+			});
 		}).catch(function(_err){
 			renderPage('/register', res, {
 				errorMessage: _err,
 			});
-			// io.to(socket.id).emit('resRenderMessage', {
-			// 	message: null,
-			// 	error: _err,
-			// 	instruction: null
-			// });
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				error: _err,
+				instruction: null
+			});
 		});
 	}
 	else{

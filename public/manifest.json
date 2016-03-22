@@ -26,8 +26,7 @@
          "sizes": "24x24",
          "type": "image/png"
       }
-   ]
-   /*,
+   ],
    "splash_screens": [
       {
          "src": "splash/lowres",
@@ -42,5 +41,5 @@
          "sizes": "1920x1080",
          "density": 3
       }
-   ]*/
+   ]
 }

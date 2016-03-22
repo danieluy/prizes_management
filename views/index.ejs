@@ -32,22 +32,27 @@
 		<script src="js/navbar.js" type="text/javascript" defer></script>
 		<script src="js/browser.js" type="text/javascript" defer></script>
 
-		<!--Home-->
+		<!-- Home -->
 		<% if(title === 'Inicio'){ %>
 			<link href="css/home.css" rel="stylesheet" type="text/css">
 		<% } %>
 
-		<!--Ganadores-->
+		<!-- Ganadores -->
 		<% if(title === 'Ganadores'){ %>
 			<script src="js/winners.js" type="text/javascript" defer></script>
 			<link href="css/winners.css" rel="stylesheet" type="text/css">
 		<% } %>
 
-		<!--Premios-->
+		<!-- Premios -->
 		<% if(title === 'Premios'){ %>
 			<script src="js/prizes.js" type="text/javascript" defer></script>
 			<script src="js/validations.js" type="text/javascript" defer></script>
 			<link href="css/prizes.css" rel="stylesheet" type="text/css">
+		<% } %>
+
+		<!-- Alta de Usuario -->
+		<% if(title === 'Alta de Usuario'){ %>
+			<script src="js/register.js" type="text/javascript" defer></script>
 		<% } %>
 	</head>
 
