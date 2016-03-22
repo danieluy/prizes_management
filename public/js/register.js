@@ -1,4 +1,5 @@
 (function(){
+
    var form = document.getElementsByTagName('form');
    var name = document.getElementById('txtName');
    var pass = document.getElementById('txtPass');
@@ -9,6 +10,7 @@
    form[0].addEventListener('submit', function(e){
       e.preventDefault();
       if(pass.value === pass2.value){
+         pass2.setCustomValidity('');
          socket.emit('reqNewUser', {
             name: name.value,
             pass: pass.value,
@@ -17,8 +19,7 @@
          });
       }
       else{
-         //Provisory message
-         alert('Las contraseñas no coinsiden')
+         infoHub.render('alert', 'Las contraseñas no coinsiden');
       }
    });
 

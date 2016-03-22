@@ -21,6 +21,12 @@ var db_pass = config.connection.database.password;
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
+//Logger////////////////////////////////////////////////////////////////////////
+var log = require('./my_modules/log.js');
+for (var i = 0; i < 5; i++) {
+	log.event(i + ' - Entrada en el registro');
+}
+
 
 //Security//////////////////////////////////////////////////////////////////////
 var sessions = require('client-sessions');
@@ -106,14 +112,6 @@ app.locals.pageUrl = hostIp + ':' + port;
 // app.locals.databasePath = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
 
 app.locals.pageTitle = 'Radiocero';
-
-
-// fs.writeFile('./data/users.json', JSON.stringify(users), function (err) {
-// 	if (err) throw err;
-// 	loadUsers();
-// 	console.log(users);
-// 	console.log('It\'s saved!');
-// });
 
 //Routing///////////////////////////////////////////////////////////////////////
 
@@ -270,50 +268,42 @@ app.post('/login', function(req, res){
 	});
 });
 
-app.post('/register', function(req, res){
-	var name = req.body.user.toLowerCase();
-	var pass = security.hashpass(req.body.pass);
-	var email = req.body.email;
-	var role = req.body.role;
-
-	if(name && pass && role){
-
-		var newUser = {
-			userName: name,
-			password: pass,
-			email: email || null,
-			role: role
-		};
-
-		db_users.newUser(newUser).then(function(_result){
-			renderPage('/register', res, {
-				errorMessage: _result,
-			});
-			io.to(socket.id).emit('resRenderMessage', {
-				message: null,
-				error: null,
-				instruction: null
-			});
-		}).catch(function(_err){
-			renderPage('/register', res, {
-				errorMessage: _err,
-			});
-			io.to(socket.id).emit('resRenderMessage', {
-				message: null,
-				error: _err,
-				instruction: null
-			});
-		});
-	}
-	else{
-		renderPage('/register', res, {
-			errorMessage: 'Alguno de los valores requeridos no fue completado',
-		});
-	}
-});
-
-//Socket.IO///////////////////////////////////////////////////////////////////////Socket.IO/////////////////////////////////////////////////////////////////////
+//Socket.IO/////////////////////////////////////////////////////////////////////
 io.sockets.on('connection', function(socket){
+
+	socket.on('reqNewUser', function(form){
+		var newUser = {
+			userName: form.name,
+			password: form.pass,
+			email: form.email.length > 0 ? form.email : null,
+			role: form.role
+		};
+		if(newUser.userName && newUser.password && newUser.role){
+			db_users.newUser(newUser).then(function(_result){
+				io.to(socket.id).emit('resRenderMessage', {
+					message: _result,
+					alert: null,
+					error: null,
+					instruction: null
+				});
+			}).catch(function(_err){
+				io.to(socket.id).emit('resRenderMessage', {
+					message: null,
+					alert: _err,
+					error: null,
+					instruction: null
+				});
+			});
+		}
+		else{
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				alert: null,
+				error: 'Alguno de los valores requeridos no fue completado',
+				instruction: null
+			});
+		}
+	});
 
 	socket.on('reqWinnerSearch', function(txtQuery){
 		if(txtQuery.txt !== ''){
@@ -351,6 +341,7 @@ io.sockets.on('connection', function(socket){
 				}).catch(function(err){
 					io.to(socket.id).emit('resRenderMessage', {
 						message: null,
+						alert: null,
 						error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err.toString(),
 						instruction: null
 					});
@@ -380,6 +371,7 @@ io.sockets.on('connection', function(socket){
 		}).catch(function(err){
 			io.to(socket.id).emit('resRenderMessage', {
 				message: null,
+				alert: null,
 				error: err.toString(),
 				instruction: null
 			});
@@ -419,6 +411,7 @@ io.sockets.on('connection', function(socket){
 				//User feedback
 				io.to(socket.id).emit('resRenderMessage', {
 					message: 'El premio ha sido entregado al ganador.',
+					alert: null,
 					error: null,
 					instruction: null
 				});
@@ -430,6 +423,7 @@ io.sockets.on('connection', function(socket){
 			console.log(err);
 			io.to(socket.id).emit('resRenderMessage', {
 				message: null,
+				alert: null,
 				error: err.toString(),
 				instruction: null
 			});
@@ -451,6 +445,7 @@ io.sockets.on('connection', function(socket){
 				db_prizes.return_stock(prize_id).then(function(_result){
 					io.to(socket.id).emit('resRenderMessage', {
 						message: 'El premio ha sido devuelto al stock.',
+						alert: null,
 						error: null,
 						instruction: null
 					});
@@ -460,6 +455,7 @@ io.sockets.on('connection', function(socket){
 			console.log(err);
 			io.to(socket.id).emit('resRenderMessage', {
 				message: null,
+				alert: null,
 				error: err.toString(),
 				instruction: null
 			});
@@ -558,83 +554,86 @@ io.sockets.on('connection', function(socket){
 		});
 	}
 
-	//Database Handlers///////////////////////////////////////////////////////////////Database Handlers/////////////////////////////////////////////////////////////
+//Database Handlers//////////////////////////////////////////////////////////
 
-	//Prize's codes/////////////////////////////////////////////////////////////////
-	function findPrizes(ids_array){
-		return Promise.all(stackPromises(ids_array)).then(function(_prizes){
-			return _prizes;
-		}).catch(function(err){
-			console.log('ERR_DB0005 - No se pudo recuperar la lista de tipos de premios.\n' + err);
-		});
-	}
-	function stackPromises(ids_array){
-		var stack = [];
-		for(var i=0; i<ids_array.length; i++){
-			stack.push(findPrize(ids_array[i].id));
-		}
-		return stack;
-	}
-	function findPrize(id){
-		return new Promise(function(resolve, reject){
-			Prize.findById(id, function(err, _prize){
-				if(err) return reject(err);
-				return resolve(_prize);
-			});
-		});
-	}
-
-	function updatePrizesList(socket){
-		db_prizes.all().then(function(_data){
-			var prizes = _data;
-			var active_prizes = db_prizes.active(prizes);
-			var sorted_prizes = db_prizes.sort_type(active_prizes);
-			io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
-		}).catch(function(err){
-			console.log(err);
-			io.to(socket.id).emit('resRenderMessage', {
-				message: null,
-				error: err,
-				instruction: null
-			});
-		});
-	}
-
-	function updateSponsorsList(socket){
-		db_prizes.distinct('sponsor').then(function(_sponsors){
-			io.sockets.emit('resUpdateSponsorsList', _sponsors);
-		}).catch(function(){
-			console.log(err);
-			io.to(socket.id).emit('resRenderMessage', {
-				message: null,
-				error: 'ERR_DB - No se puede mostrar la lista de espónsors\n' + err,
-				instruction: null
-			});
-		});
-	}
-
-	function updatePrizesTypeList(socket){
-		db_prizes.distinct('type').then(function(_prizes_types){
-			io.sockets.emit('resUpdatePrizesTypeList', _prizes_types);
-		}).catch(function(){
-			console.log(err);
-			io.to(socket.id).emit('resRenderMessage', {
-				message: null,
-				error: 'ERR_DB - No se puede mostrar la lista de tipos de premios\n' + err,
-				instruction: null
-			});
-		});
-	}
-
-
-	//Server port configuration///////////////////////////////////////////////////////Server port configuration/////////////////////////////////////////////////////
-	server.listen(port, function(){
-		console.log('Listening on: ' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
+//Prize's codes/////////////////////////////////////////////////////////////////
+function findPrizes(ids_array){
+	return Promise.all(stackPromises(ids_array)).then(function(_prizes){
+		return _prizes;
+	}).catch(function(err){
+		console.log('ERR_DB0005 - No se pudo recuperar la lista de tipos de premios.\n' + err);
 	});
-
-	//Others////////////////////////////////////////////////////////////////////////
-	String.prototype.capitalize = function(){
-		return this.replace(/(?:^|\s)\S/g, function(a){
-			return a.toUpperCase();
+}
+function stackPromises(ids_array){
+	var stack = [];
+	for(var i=0; i<ids_array.length; i++){
+		stack.push(findPrize(ids_array[i].id));
+	}
+	return stack;
+}
+function findPrize(id){
+	return new Promise(function(resolve, reject){
+		Prize.findById(id, function(err, _prize){
+			if(err) return reject(err);
+			return resolve(_prize);
 		});
-	};
+	});
+}
+
+function updatePrizesList(socket){
+	db_prizes.all().then(function(_data){
+		var prizes = _data;
+		var active_prizes = db_prizes.active(prizes);
+		var sorted_prizes = db_prizes.sort_type(active_prizes);
+		io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
+	}).catch(function(err){
+		console.log(err);
+		io.to(socket.id).emit('resRenderMessage', {
+			message: null,
+			alert: null,
+			error: err,
+			instruction: null
+		});
+	});
+}
+
+function updateSponsorsList(socket){
+	db_prizes.distinct('sponsor').then(function(_sponsors){
+		io.sockets.emit('resUpdateSponsorsList', _sponsors);
+	}).catch(function(){
+		console.log(err);
+		io.to(socket.id).emit('resRenderMessage', {
+			message: null,
+			alert: null,
+			error: 'ERR_DB - No se puede mostrar la lista de espónsors\n' + err,
+			instruction: null
+		});
+	});
+}
+
+function updatePrizesTypeList(socket){
+	db_prizes.distinct('type').then(function(_prizes_types){
+		io.sockets.emit('resUpdatePrizesTypeList', _prizes_types);
+	}).catch(function(){
+		console.log(err);
+		io.to(socket.id).emit('resRenderMessage', {
+			message: null,
+			alert: null,
+			error: 'ERR_DB - No se puede mostrar la lista de tipos de premios\n' + err,
+			instruction: null
+		});
+	});
+}
+
+
+//Server port configuration/////////////////////////////////////////////////////
+server.listen(port, function(){
+	console.log('Listening on: ' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
+});
+
+//Others////////////////////////////////////////////////////////////////////////
+String.prototype.capitalize = function(){
+	return this.replace(/(?:^|\s)\S/g, function(a){
+		return a.toUpperCase();
+	});
+};
