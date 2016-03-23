@@ -23,9 +23,10 @@ app.set('views', __dirname + '/views');
 
 //Logger////////////////////////////////////////////////////////////////////////
 var log = require('./my_modules/log.js');
-for (var i = 1; i <= 5; i++) {
-	log.event(i + ' - Entrada en el registro');
-}
+// Testing function
+// for (var i = 1; i <= 5; i++) {
+// 	log.event(i + ' - Entrada en el registro');
+// }
 
 
 //Security//////////////////////////////////////////////////////////////////////
@@ -133,7 +134,8 @@ app.get('/login', requireLogin, function(req, res){
 });
 
 app.get('/logout', requireLogin, function(req, res){
-	if(req.session.user) console.log('\n>>>' + req.session.user.userName + ' has logged out.');
+	if(req.session.user)
+	log.event(req.session.user.userName + ' has logged out.');
 	req.session.reset();
 	renderPage('/login', res, {
 		errorMessage: null
@@ -286,6 +288,7 @@ io.sockets.on('connection', function(socket){
 					error: null,
 					instruction: null
 				});
+				log.event('Nuevo ' + (newUser.role === 'admin' ? 'administrador' : 'usuario') + ' creado: ' + newUser.userName + ' - ' + ((newUser.email) ? (newUser.email) : 'sin email'));
 			}).catch(function(_err){
 				io.to(socket.id).emit('resRenderMessage', {
 					message: null,

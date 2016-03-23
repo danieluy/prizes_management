@@ -1,10 +1,1 @@
-1 - Entrada en el registro
-3 - Entrada en el registro
-5 - Entrada en el registro
-2 - Entrada en el registro
-4 - Entrada en el registro
-2019 - 1 - Entrada en el registro
-2019 - 3 - Entrada en el registro
-2019 - 4 - Entrada en el registro
-2019 - 5 - Entrada en el registro
-2019 - 2 - Entrada en el registro
+20160323101752 - Nuevo administrador creado: admin - stecnico@ho.com.uy
