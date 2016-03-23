@@ -6,18 +6,21 @@
    exports.login = function(name, pass){
       return new Promise(function(resolve, reject){
          db_users.userName(name).then(function(user){
-            if(user.length === 1 && bcrypt.compareSync(pass, user[0].password)){
-               return resolve({'user': {'userName': user[0].userName, 'role': user[0].role}, 'err': null});
+            if(user && bcrypt.compareSync(pass, user.password)){
+               return resolve({eval: true, user: {'userName': user.userName, 'role': user.role}});
+            }
+            else{
+               return resolve({eval: false, user: null});
             }
          }).catch(function(err){
-            console.log(err);
-            return reject({'user': null, 'err': "Los datos ingresados son incorrectos, inténtelo nuevamente.\n" + err});
+            return reject('ERR_DB - There was a problem connecting to the user\'s database.\nfile: security.js\n' + err.toString());
          });
       });
    }
 
    exports.hashpass = function(_pass){
-      return bcrypt.hashSync(_pass, bcrypt.genSaltSync(10));
+      var hash = bcrypt.hashSync(_pass, bcrypt.genSaltSync(10));
+      return hash;
    }
 
 }());

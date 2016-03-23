@@ -8,6 +8,7 @@
    var db_port = config.connection.database.port;
    var db_name = config.connection.database.name;
    var url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
+   var security = require('./security.js');
 
    var userName = exports.userName = function(_userName){
       return new Promise(function(resolve, reject){
@@ -32,14 +33,12 @@
          });
       });
    }
-   
+
    exports.newUser = function(_newUser){
       //_newUser = {userName: name, password: pass, email: email || null, role: role}
       return new Promise(function(resolve, reject){
          var result = null;
          userName(_newUser.userName).then(function(_user){
-            console.log('>>> _user');
-            console.log(_user);
             if(!_user){
                mongo.connect(url, function(err, db){
                   if(err){
@@ -47,10 +46,13 @@
                   }
                   else{
                      var users = db.collection('users');
+                     var hash = security.hashpass(_newUser.password);
+                     console.log('>>> hash');
+                     console.log(hash);
                      users.insert(
                         {
                            userName: _newUser.userName,
-                           password: _newUser.password,
+                           password: hash,
                            email: _newUser.email,
                            role: _newUser.role,
                            set_date: Date.now()

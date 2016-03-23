@@ -10,7 +10,6 @@
    form[0].addEventListener('submit', function(e){
       e.preventDefault();
       if(pass.value === pass2.value){
-         pass2.setCustomValidity('');
          socket.emit('reqNewUser', {
             name: name.value,
             pass: pass.value,

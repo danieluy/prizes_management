@@ -142,7 +142,7 @@ app.get('/logout', requireLogin, function(req, res){
 	});
 });
 
-app.get('/register', /*requireLogin, checkRoleAdmin,*/ function(req, res){
+app.get('/register', requireLogin, checkRoleAdmin, function(req, res){
 	renderPage('/register', res, {
 		errorMessage: null
 	});
@@ -254,19 +254,24 @@ app.post('/newPrize', function(req, res){
 
 //Sessions handling/////////////////////////////////////////////////////////////
 app.post('/login', function(req, res){
-	var name = req.body.user.toLowerCase();
+	var userName = req.body.user.toLowerCase();
 	var pass = req.body.pass;
-	security.login(name, pass).then(function(login_eval){
-		if(login_eval.user){
-			console.log('\n::: Log entry ::: ' + login_eval.user.userName + ' has logged in.');
+	security.login(userName, pass).then(function(login_eval){
+		if(login_eval.eval){
+			log.event(login_eval.user.userName + ' has logged in.');
 			req.session.user = login_eval.user;
 			res.redirect('/');
 		}
 		else{
-			console.log(login_eval.err);;
+			renderPage('/login', res, {
+				errorMessage: 'Los datos ingresados no son correctos, intentelo de nuevo.'
+			});
 		}
 	}).catch(function(err){
-		console.log(err);/************************************************************************************************************/
+		renderPage('/login', res, {
+			errorMessage: err
+		});
+		log.error(err);
 	});
 });
 
