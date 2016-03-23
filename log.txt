@@ -1,6 +1,0 @@
-0 - Entrada en el registro
- - 1 - Entrada en el registro
- - 4 - Entrada en el registro
- - 2 - Entrada en el registro
- - 3 - Entrada en el registro
- - 
