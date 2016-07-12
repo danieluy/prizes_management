@@ -59,26 +59,26 @@
 	<body>
 
 		<header>
-			<% include partials/navbar.js %>
+			<% include partials/navbar.ejs %>
 		</header>
 
 		<div class="sections">
 
 			<!-- SECTIONS -->
 			<% if(title === 'Inicio'){ %>
-				<% include partials/home.js %>
+				<% include partials/home.ejs %>
 			<% } %>
 			<% if(title === 'Premios'){ %>
-				<% include partials/prizes.js %>
+				<% include partials/prizes.ejs %>
 			<% } %>
 			<% if(title === 'Ganadores'){ %>
-				<% include partials/winners.js %>
+				<% include partials/winners.ejs %>
 			<% } %>
 			<% if(title === 'Inicio de Sesión'){ %>
-				<% include partials/login.js %>
+				<% include partials/login.ejs %>
 			<% } %>
 			<% if(title === 'Alta de Usuario'){ %>
-				<% include partials/register.js %>
+				<% include partials/register.ejs %>
 			<% } %>
 
 		</div>

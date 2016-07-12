@@ -41,6 +41,7 @@ String.prototype.capitalize = function(){
 
 	selEditPrize.addEventListener('change', function(){
 		var sel_id = selEditPrize.value;
+		console.log('sel_id', sel_id);
 		socket.emit('reqPrizeData', sel_id);
 		socket.on('resPrizeData', function(_prize){
 			sel_prize_type.value = _prize.type;
@@ -54,7 +55,7 @@ String.prototype.capitalize = function(){
 
 	var formatDate = function(_string){
 		var parsed_date = Date.parse(_string)
-		parsed_date += 86400000;//Adds a day that got lost due to the time in the stored data.
+		parsed_date += 86400000;//Adds a day, not sure why this is needed
 		var date = new Date(parsed_date);
 		var year = date.getFullYear().toString();
 		var month = (date.getMonth() + 1).toString();
