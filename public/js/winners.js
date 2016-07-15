@@ -4,12 +4,12 @@
 	// var socket = io.connect(url);
 
 	//Winners Search///////////////////////////////////////////////////////////////Winners Search/////////////////////////////////////////////////////////////
-	var formQuery = document.getElementById('formQuery');
-	var txtQuery = document.getElementById('txtQuery');
-	var resultsCanvas = document.getElementById('results');
-	var g_winners = null;
-	var g_prizes = null;
-	var g_render_undo = null;
+	const formQuery = document.getElementById('formQuery');
+	const txtQuery = document.getElementById('txtQuery');
+	const resultsCanvas = document.getElementById('results');
+	let g_winners = null;
+	let g_prizes = null;
+	let g_render_undo = null;
 
 
 	//Socket.emit////////////////////////////////////////////////////////////////
@@ -19,7 +19,12 @@
 			socket.emit('reqWinnerSearch', {txt: txtQuery.value});
 		}
 		else{
-			resultsCanvas.innerHTML = '<div class="result" style="text-align:center"><label><i class="material-icons">&#xE5D8;</i> Ingrese un término de búsqueda. <i class="material-icons">&#xE5D8;</i></label></div>';
+			resultsCanvas.innerHTML =
+				'<div class="result" style="text-align:center">'+
+					'<label>'+
+						'<i class="material-icons">&#xE5D8;</i> Ingrese un término de búsqueda. <i class="material-icons">&#xE5D8;</i>'+
+					'</label>'+
+				'</div>';
 		}
 	});
 
@@ -47,7 +52,10 @@
 			displayResults();
 		}
 		else{
-			resultsCanvas.innerHTML = '<div class="result" style="text-align:center"><label>No se encontraron resultados.</label></div>';
+			resultsCanvas.innerHTML =
+				'<div class="result" style="text-align:center">'+
+					'<label>No se encontraron resultados.</label>'+
+				'</div>';
 		}
 	});
 

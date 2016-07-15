@@ -216,32 +216,23 @@ function renderPage(address, res, options){
 //POST /////////////////////////////////////////////////////////////////////////
 app.post('/newPrize', function(req, res){
 
-	var type = req.body.type.toLowerCase();
-	var sponsor = req.body.sponsor.toLowerCase();
-	var description = req.body.description.toLowerCase();
-	var quantity = parseInt(req.body.quantity);
-	var due_date = req.body.due_date;
-	var note = req.body.note.toLowerCase();
+	let type = req.body.type.toLowerCase();
+	let sponsor = req.body.sponsor.toLowerCase();
+	let description = req.body.description.toLowerCase();
+	let quantity = parseInt(req.body.quantity);
+	let due_date = req.body.due_date;
+	let note = req.body.note.toLowerCase();
 
 	if(type && sponsor && description && quantity){
-		var newPrize = new Prize({
-			type: type,
-			sponsor: sponsor,
-			description: description,
-			quantity: quantity,
-			set_date: Date.now(),
-			due_date: due_date,
-			note: note
-		});
-		newPrize.save(function(err){
-			if(err){
-				renderPage('/premios', res, {
-					errorMessage: 'Ha ocurrido un error, inténtelo de nuevo. Gracias.'
-				});
-			}
-			else{
-				res.redirect('/premios');
-			}
+		const newPrize = db_prizes.Prize(type, sponsor, description, quantity, Date.now(), due_date, note);
+		newPrize.save()
+		.then( res.redirect('/premios') )
+		.catch( (err) => {
+			renderPage('/premios', res, {
+				errorMessage:
+					'Ha ocurrido un error, inténtelo de nuevo. Gracias.'+
+					'\nDetalles: ' + err
+			})
 		});
 		updateSponsorsList();
 		updatePrizesList();
@@ -320,7 +311,7 @@ io.sockets.on('connection', function(socket){
 			db_winners.query(txtQuery.txt).then( (_winners) => {
 				if(_winners){
 					var ids_array = gatherPrizesIds(_winners);
-					findPrizes(ids_array).then(function(_prizes){
+					db_prizes.ids(ids_array).then(function(_prizes){
 						io.to(socket.id).emit('resWinnerResults', [_winners, _prizes]);
 					}).catch(function(err){
 						console.log(err);
@@ -475,7 +466,7 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('reqPrizeData', function(prize_id){
 		var ids_array = [prize_id];
-		findPrizes(ids_array).then(function(array){
+		db_prizes.ids(ids_array).then(function(array){
 			var foundPrize = array[0];
 			io.to(socket.id).emit('resPrizeData', foundPrize);
 		}).catch(function(err){
@@ -548,7 +539,8 @@ io.sockets.on('connection', function(socket){
 
 	function decrPrizeStock(prize_id){
 		var ids_array = [prize_id];
-		findPrizes(ids_array).then(function(array_value){
+		db_prizes.ids(ids_array)
+		.then(function(array_value){
 			var foundPrize = array_value[0];
 			var decremented = foundPrize.quantity - 1;
 			Prize.update({_id: foundPrize._id}, {quantity: decremented}, null, function(err, updatedWinner){
@@ -559,7 +551,8 @@ io.sockets.on('connection', function(socket){
 					updatePrizesList();
 				}
 			});
-		}).catch(function(err){
+		})
+		.catch(function(err){
 			console.log(err);
 		});
 	}
@@ -567,38 +560,15 @@ io.sockets.on('connection', function(socket){
 	//Database Handlers///////////////////////////////////////////////////////////
 
 	//Prize's codes///////////////////////////////////////////////////////////////
-	function findPrizes(ids_array){
-		Promise.all( () => {
-
-			var stack = [];
-
-			for(var i=0; i < ids_array.length; i++){
-				stack.push( () => {
-					return new Promise( (resolve, reject) => {
-						Prize.findById(ids_array[i], function(err, _prize){
-							if(err) return reject(err);
-							return resolve(_prize);
-						});
-					});
-				});
-			}
-
-			return stack;
-
-		}).then( (prizes_arr) => {//The returned value is an array because that is how the Promies.All() function returns values
-			return prizes_arr;
-		}).catch( (err) => {
-			console.log('ERR_DB0005 - No se pudo recuperar la lista de tipos de premios.\n' + err);
-		});
-	}
-
 	function updatePrizesList(socket){
-		db_prizes.all().then(function(_data){
+		db_prizes.all()
+		.then(function(_data){
 			var prizes = _data;
 			var active_prizes = db_prizes.active(prizes);
 			var sorted_prizes = db_prizes.sort_type(active_prizes);
 			io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
-		}).catch(function(err){
+		})
+		.catch(function(err){
 			console.log(err);
 			io.to(socket.id).emit('resRenderMessage', {
 				message: null,
