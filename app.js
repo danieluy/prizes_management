@@ -565,6 +565,7 @@ io.sockets.on('connection', function(socket){
 		.then(function(_data){
 			var prizes = _data;
 			var active_prizes = db_prizes.active(prizes);
+			console.log(active_prizes);
 			var sorted_prizes = db_prizes.sort_type(active_prizes);
 			io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
 		})

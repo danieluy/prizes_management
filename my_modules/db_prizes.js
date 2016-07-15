@@ -116,19 +116,16 @@
     );
   }
 
-  exports.active = function (unfiltered){
-    var filtered = [];
-    var todayDate = new Date().getTime();
-    for (var i = 0; i < unfiltered.length; i++) {
-      var onePrize = unfiltered[i];
-      if(onePrize.due_date === null){
-        filtered.push(onePrize);
-      }
-      else if(onePrize.quantity > 0 && onePrize.due_date && onePrize.due_date.getTime() >= todayDate){
-        filtered.push(onePrize);
-      }
+  exports.active =  (unfiltered) => {
+    const active = [];
+    const todayDate = new Date().getTime();
+    for (let i = 0; i < unfiltered.length; i++) {
+      if(unfiltered[i].quantity > 0 && unfiltered[i].due_date === '')
+        active.push(unfiltered[i]);
+      else if(unfiltered[i].quantity > 0 && unfiltered[i].due_date != '' && unfiltered[i].due_date.getTime() >= todayDate)
+        active.push(unfiltered[i]);
     };
-    return filtered;
+    return active;
   }
 
   exports.sort_type = function(unsorted){
