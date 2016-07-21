@@ -349,16 +349,17 @@ io.sockets.on('connection', function(socket){
 				});
 			}
 			else{
-				var newWinner = new Winner({
-					ci: _data.ci,
-					name1: _data.name1 || null,
-					lastname1: _data.lastname1 || null,
-					facebook: _data.facebook || null,
-					gender: _data.gender || null,
-					phone: _data.phone || null,
-					mail: _data.mail || null,
-					prizes: [{'id': _data.prize, 'handed': false, 'granted': Date(Date.now())}]
-				});
+				//------------------------------   WORKING ON THIS   ----------------------------------------------------------------------------------------------------
+				// var newWinner = new Winner({
+				// 	ci: _data.ci,
+				// 	name1: _data.name1 || null,
+				// 	lastname1: _data.lastname1 || null,
+				// 	facebook: _data.facebook || null,
+				// 	gender: _data.gender || null,
+				// 	phone: _data.phone || null,
+				// 	mail: _data.mail || null,
+				// 	prizes: [{'id': _data.prize, 'handed': false, 'granted': (Date.now())}]
+				// });
 				newWinner.save(function(err){
 					if(err){
 						io.to(socket.id).emit('saveWinnerError', err);
@@ -432,7 +433,6 @@ io.sockets.on('connection', function(socket){
 	});
 
 	socket.on('reqReturnPrize', function(_data){
-		console.log('reqReturnPrize was called');
 		var winner_ci = _data.winner_ci;
 		var prize_id = _data.prize_id;
 		//Find the winner
@@ -488,7 +488,6 @@ io.sockets.on('connection', function(socket){
 					console.log('Prize.update >> ' + err);
 				}
 				else{
-					console.log(updatedPrize);
 					updatePrizesList(socket);
 				}
 			});
@@ -615,8 +614,8 @@ io.sockets.on('connection', function(socket){
 	});
 
 	//Others////////////////////////////////////////////////////////////////////////
-	String.prototype.capitalize = function(){
-		return this.replace(/(?:^|\s)\S/g, function(a){
-			return a.toUpperCase();
-		});
-	};
+	// String.prototype.capitalize = function(){
+	// 	return this.replace(/(?:^|\s)\S/g, function(a){
+	// 		return a.toUpperCase();
+	// 	});
+	// };

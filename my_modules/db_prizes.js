@@ -12,15 +12,15 @@
   const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
   const ObjectID = require('mongodb').ObjectID;
 
-  exports.Prize = (type, sponsor, description, quantity, set_date, due_date, note) => {
+  exports.Prize = (_type, _sponsor, _description, _quantity, _set_date, _due_date, _note) => {
+    let type = _type,
+        sponsor = _sponsor,
+        description = _description,
+        quantity = _quantity,
+        set_date = _set_date || Date.now(),
+        due_date = _due_date || null,
+        note = _note || null
     return {
-      type: type || '',
-      sponsor: sponsor || '',
-      description: description || '',
-      quantity: quantity || '',
-      set_date: set_date || Date.now(),
-      due_date: due_date || null,
-      note: note || null,
       save: () => {
         return new Promise( (resolve, reject) => {
           mongo.connect(url, (err, db) => {
@@ -41,13 +41,12 @@
               )
               .then( () => {
                 result = resolve();
-                db.close();
               })
               .catch( (err) => {
                 result = reject('ERR_DB - Unable to insert in the database\nFile: db_prizes.js');
-                db.close();
               });
             }
+            db.close();
             return result;
           });
         });
