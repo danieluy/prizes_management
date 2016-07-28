@@ -11,25 +11,21 @@
 
 
 
-  //------------------------------   WORKING ON THIS   ----------------------------------------------------------------------------------------------------
-  exports.Winner = (_ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prize) => {
-    let ci = _ci,
-        name1 = _name || null,
-        lastname1 = _lastname || null,
-        facebook = _facebook || null,
-        gender = _gender || null,
-        phone = _phone || null,
-        mail = _mail || null,
-        prizes = [
-          {
-            'id': _prize,
-            'handed': false,
-            'granted': Date.now()
-          }
-        ]
-
+  //------------------------------   WORKING ON THIS   -------------------------------------------//
+  exports.Winner = (ci, name, lastname, facebook, gender, phone, mail, prize) => {
     return {
-      // save: () => {
+      ci: ci,
+      name1: name || null,
+      lastname1: lastname || null,
+      facebook: facebook || null,
+      gender: gender || null,
+      phone: phone || null,
+      mail: mail || null,
+      prizes: [],
+      addPrize: () => {
+        this.prizes.push({ 'id': prize, 'handed': false, 'granted': Date.now() });
+      },
+      save: () => {
       //   return new Promise( (resolve, reject) => {
       //     mongo.connect(url, (err, db) => {
       //       let result = null;
@@ -58,7 +54,7 @@
       //       return result;
       //     });
       //   });
-      // }
+      }
     }
   }
 

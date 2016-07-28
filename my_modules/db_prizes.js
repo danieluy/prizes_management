@@ -12,7 +12,7 @@
   const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
   const ObjectID = require('mongodb').ObjectID;
 
-  exports.Prize = (_type, _sponsor, _description, _quantity, _set_date, _due_date, _note) => {
+  exports.Prize = function (_type, _sponsor, _description, _quantity, _set_date, _due_date, _note){
     let type = _type,
         sponsor = _sponsor,
         description = _description,
@@ -25,7 +25,7 @@
         return new Promise( (resolve, reject) => {
           mongo.connect(url, (err, db) => {
             let result = null;
-            if(err) result = reject('ERR_DB - Unable to connect to the database\nFile: db_prizes.js');
+            if(err) result = reject('ERR_DB - Unable to connect to the database');
             else{
               const prizes = db.collection('prizes');
               prizes.insert(
@@ -43,7 +43,7 @@
                 result = resolve();
               })
               .catch( (err) => {
-                result = reject('ERR_DB - Unable to insert in the database\nFile: db_prizes.js');
+                result = reject('ERR_DB - Unable to insert in the database');
               });
             }
             db.close();
@@ -59,13 +59,13 @@
       mongo.connect(url, function(err, db){
         var result = null;
         if(err){
-          result = reject('ERR_DB - Unable to connect to the database\nFile: db_prizes.js');
+          result = reject('ERR_DB - Unable to connect to the database\n' + err);
         }
         else{
           var prizes = db.collection('prizes');
           prizes.find().toArray(function(err, data){
             if(err){
-              result = reject('ERR_DB - Unable to fetch prizes data\nFile: db_prizes.js');
+              result = reject('ERR_DB - Unable to fetch prizes data\n' + err);
             }
             else{
               result = resolve(data);
@@ -115,26 +115,17 @@
     );
   }
 
-  exports.active =  (unfiltered) => {
-    const active = [];
-    const todayDate = new Date().getTime();
-    for (let i = 0; i < unfiltered.length; i++) {
-      if(unfiltered[i].quantity > 0 && unfiltered[i].due_date === '')
-        active.push(unfiltered[i]);
-      else if(unfiltered[i].quantity > 0 && unfiltered[i].due_date != '' && unfiltered[i].due_date.getTime() >= todayDate)
-        active.push(unfiltered[i]);
-    };
-    return active;
+  //  Test the dates  ----------------------------------------------------------
+  exports.active =  (prizes) => {
+    return prizes.filter((prize) => {
+      return ((prize.quantity > 0 && !prize.due_date) || (prize.quantity > 0 && prize.due_date && prize.due_date >= new Date()))
+    })
   }
 
-  exports.sort_type = function(unsorted){
-    var sorted = unsorted.sort(function(a, b){
-      var sort = 0;
-      if(a.type > b.type) sort = 1;
-      else if(a.type < b.type) sort = -1;
-      return sort;
+  exports.sort_type = function(prizes){
+    return prizes.sort((a, b) => {
+      return a.type >= b.type ? 1 : -1;
     });
-    return sorted;
   }
 
   exports.distinct = function(field){

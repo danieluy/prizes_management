@@ -38,19 +38,20 @@ const security = require('./my_modules/security.js');
 const db_winners = require('./my_modules/db_winners.js');
 const db_prizes = require('./my_modules/db_prizes.js');
 const db_users = require('./my_modules/db_users.js');
+const Prize = db_prizes.Prize;
 
 //Middleware////////////////////////////////////////////////////////////////////
 app.use(bodyParser.urlencoded({extended: false}));
 
 //Session Config.
-const secret = config.session.secret;
-const duration = config.session.durationHours;
-const activeDuration = config.session.activeDurationHours;
+const session_secret = config.session.secret;
+const session_duration = config.session.durationHours;
+const session_active_duration = config.session.activeDurationHours;
 app.use(sessions({
 	cookieName: 'session',
-	secret: secret,
-	duration: duration * 60 * 60 * 1000,
-	activeDuration: activeDuration * 60 * 60 * 1000,
+	secret: session_secret,
+	duration: session_duration * 60 * 60 * 1000,
+	activeDuration: session_active_duration * 60 * 60 * 1000,
 	cookie:
 	{
 		ephemeral: false,
@@ -90,16 +91,6 @@ function checkRoleUser(req, res, next){
 		next();
 	}
 }
-// function checkRoleEditor(req, res, next){
-// 	if(req.session.user.role !== 'editor'){
-// 		renderPage('/login', res, {
-// 			errorMessage: "Debe iniciar sesión como Usuario, editor."
-// 		});
-// 	}
-// 	else{
-// 		next();
-// 	}
-// }
 
 //Public folders
 app.use(express.static(__dirname + '/public'));
@@ -110,8 +101,6 @@ app.use(express.static(__dirname + '/public'));
 //app.locals.config = config;
 
 app.locals.pageUrl = hostIp + ':' + port;
-// app.locals.databasePath = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
-
 app.locals.pageTitle = 'Radiocero';
 
 //Routing///////////////////////////////////////////////////////////////////////
@@ -124,50 +113,80 @@ app.get('/', function(req, res){
 });
 
 app.get('/home', function(req, res){
-	renderPage('/home', res, {
+	res.render('index', {
+		title: 'Inicio',
 		errorMessage: null
 	});
 });
 
+//  Login  ---------------------------------------------------------------------
 app.get('/login', requireLogin, function(req, res){
-	renderPage('/login', res, {
+	res.render('index', {
+		title: 'Inicio de Sesión',
 		errorMessage: null
+	});
+});
+
+app.post('/login', function(req, res){
+	var userName = req.body.user.toLowerCase();
+	var pass = req.body.pass;
+	security.login(userName, pass).then(function(login_eval){
+		if(login_eval.eval){
+			log.event(login_eval.user.userName + ' has logged in.');
+			req.session.user = login_eval.user;
+			res.redirect('back');
+		}
+		else{
+			res.render('index', {
+				title: 'Inicio de Sesión',
+				errorMessage: 'Los datos ingresados no son correctos, intentelo de nuevo.'
+			});
+		}
+	}).catch(function(err){
+		log.error(err);
+		res.render('index', {
+			title: 'Inicio de Sesión',
+			errorMessage: err
+		});
 	});
 });
 
 app.get('/logout', requireLogin, function(req, res){
-	if(req.session.user)
-	log.event(req.session.user.userName + ' has logged out.');
-	req.session.reset();
-	renderPage('/login', res, {
-		errorMessage: null
-	});
+	if(req.session.user){
+		log.event(req.session.user.userName + ' has logged out.');
+		req.session.reset();
+	}
+	res.redirect('/');
 });
 
 app.get('/register', requireLogin, checkRoleAdmin, function(req, res){
-	renderPage('/register', res, {
+	res.render('index', {
+		title: 'Alta de Usuario',
 		errorMessage: null
 	});
 });
 
 app.get('/premios', requireLogin, function(req, res){
-	renderPage('/premios', res, {
+	res.render('index', {
+		title: 'Premios',
 		errorMessage: null
 	});
 });
 
-app.get('/ganadores', requireLogin, function(req, res){
-	renderPage('/ganadores', res, {
-		errorMessage: null
-	});
-});
+// app.get('/ganadores', requireLogin, function(req, res){
+// 	renderPage('/ganadores', res, {
+// 		errorMessage: null
+// 	});
+// });
 
 app.get('/*', function(req, res){
-	res.render('404', {title: '404'});
+	res.render('404', {
+		title: '404'
+	});
 });
 
 
-
+// DELETEEEEEEEEEEEEEEEE  ------------------------------------------------------
 function renderPage(address, res, options){
 	var data = {};
 	switch(address){
@@ -216,15 +235,15 @@ function renderPage(address, res, options){
 //POST /////////////////////////////////////////////////////////////////////////
 app.post('/newPrize', function(req, res){
 
-	let type = req.body.type.toLowerCase();
-	let sponsor = req.body.sponsor.toLowerCase();
-	let description = req.body.description.toLowerCase();
-	let quantity = parseInt(req.body.quantity);
-	let due_date = req.body.due_date;
-	let note = req.body.note.toLowerCase();
+	let type = req.body.type.toLowerCase(),
+			sponsor = req.body.sponsor.toLowerCase(),
+			description = req.body.description.toLowerCase(),
+			quantity = parseInt(req.body.quantity),
+			due_date = req.body.due_date,
+			note = req.body.note.toLowerCase();
 
 	if(type && sponsor && description && quantity){
-		const newPrize = db_prizes.Prize(type, sponsor, description, quantity, Date.now(), due_date, note);
+		const newPrize = new Prize(type, sponsor, description, quantity, Date.now(), due_date, note);
 		newPrize.save()
 		.then( res.redirect('/premios') )
 		.catch( (err) => {
@@ -246,27 +265,27 @@ app.post('/newPrize', function(req, res){
 });
 
 //Sessions handling/////////////////////////////////////////////////////////////
-app.post('/login', function(req, res){
-	var userName = req.body.user.toLowerCase();
-	var pass = req.body.pass;
-	security.login(userName, pass).then(function(login_eval){
-		if(login_eval.eval){
-			log.event(login_eval.user.userName + ' has logged in.');
-			req.session.user = login_eval.user;
-			res.redirect('/');
-		}
-		else{
-			renderPage('/login', res, {
-				errorMessage: 'Los datos ingresados no son correctos, intentelo de nuevo.'
-			});
-		}
-	}).catch(function(err){
-		renderPage('/login', res, {
-			errorMessage: err
-		});
-		log.error(err);
-	});
-});
+// app.post('/login', function(req, res){
+// 	var userName = req.body.user.toLowerCase();
+// 	var pass = req.body.pass;
+// 	security.login(userName, pass).then(function(login_eval){
+// 		if(login_eval.eval){
+// 			log.event(login_eval.user.userName + ' has logged in.');
+// 			req.session.user = login_eval.user;
+// 			res.redirect('/');
+// 		}
+// 		else{
+// 			renderPage('/login', res, {
+// 				errorMessage: 'Los datos ingresados no son correctos, intentelo de nuevo.'
+// 			});
+// 		}
+// 	}).catch(function(err){
+// 		renderPage('/login', res, {
+// 			errorMessage: err
+// 		});
+// 		log.error(err);
+// 	});
+// });
 
 //Socket.IO/////////////////////////////////////////////////////////////////////
 io.sockets.on('connection', function(socket){
@@ -562,27 +581,26 @@ io.sockets.on('connection', function(socket){
 	function updatePrizesList(socket){
 		db_prizes.all()
 		.then(function(_data){
-			var prizes = _data;
-			var active_prizes = db_prizes.active(prizes);
-			console.log(active_prizes);
-			var sorted_prizes = db_prizes.sort_type(active_prizes);
-			io.sockets.emit('resUpdatePrizesList', sorted_prizes);//Emits for every user conected
+			const active_sorted_prizes = db_prizes.sort_type(db_prizes.active(_data));
+			io.sockets.emit('resUpdatePrizesList', active_sorted_prizes);
 		})
 		.catch(function(err){
 			console.log(err);
 			io.to(socket.id).emit('resRenderMessage', {
 				message: null,
 				alert: null,
-				error: err,
+				error: 'ERROR_AT_METHOD_updatePrizesList()\n' + err,
 				instruction: null
 			});
 		});
 	}
 
 	function updateSponsorsList(socket){
-		db_prizes.distinct('sponsor').then(function(_sponsors){
+		db_prizes.distinct('sponsor')
+		.then(function(_sponsors){
 			io.sockets.emit('resUpdateSponsorsList', _sponsors);
-		}).catch(function(){
+		})
+		.catch(function(){
 			console.log(err);
 			io.to(socket.id).emit('resRenderMessage', {
 				message: null,
