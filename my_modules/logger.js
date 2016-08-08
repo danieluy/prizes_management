@@ -22,7 +22,9 @@
       var hrs = date.getHours().toString();
       var min = date.getMinutes().toString();
       var sec = date.getSeconds().toString();
-      return (day.length > 1 ? day : '0' + day) + '/' + (month.length > 1 ? month : '0' + month) + '/' + year + ' ' + (hrs.length > 1 ? hrs : '0' + hrs) + ':' + (min.length > 1 ? min : '0' + min) + ':' + (sec.length > 1 ? sec : '0' + sec);
+      return
+        '[[' + (day.length > 1 ? day : '0' + day) + '/' + (month.length > 1 ? month : '0' + month) + '/' + year + ' ' +
+        (hrs.length > 1 ? hrs : '0' + hrs) + ':' + (min.length > 1 ? min : '0' + min) + ':' + (sec.length > 1 ? sec : '0' + sec) + ']]';
    }
 
 }());

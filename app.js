@@ -22,10 +22,10 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
 //Logger////////////////////////////////////////////////////////////////////////
-const log = require('./my_modules/log.js');
+const log = require('./my_modules/logger.js');
 // Testing function
 // for (var i = 1; i <= 5; i++) {
-// 	log.event(i + ' - Entrada en el registro');
+// 	log.event('Log entry #' + i);
 // }
 
 
@@ -39,6 +39,7 @@ const db_winners = require('./my_modules/db_winners.js');
 const db_prizes = require('./my_modules/db_prizes.js');
 const db_users = require('./my_modules/db_users.js');
 const Prize = db_prizes.Prize;
+const Winner = db_winners.Winner;
 
 //Middleware////////////////////////////////////////////////////////////////////
 app.use(bodyParser.urlencoded({extended: false}));
@@ -243,7 +244,7 @@ app.post('/newPrize', function(req, res){
 			note = req.body.note.toLowerCase();
 
 	if(type && sponsor && description && quantity){
-		const newPrize = new Prize(type, sponsor, description, quantity, Date.now(), due_date, note);
+		const newPrize = new Prize(type, sponsor, description, quantity, due_date, note);
 		newPrize.save()
 		.then( res.redirect('/premios') )
 		.catch( (err) => {
@@ -346,48 +347,68 @@ io.sockets.on('connection', function(socket){
 	});
 
 	socket.on('reqGrantPrizeIf', function(_data){
-		db_winners.ci(_data.ci).then(function(_winner){
+		db_winners.ci(_data.ci)
+		.then((_winner) => {
 			if(_winner){
+
 				var prizes_id = [];
 				for (var i = 0; i < _winner.prizes.length; i++) {
 					prizes_id.push(_winner.prizes[i].id);
 				}
-				db_prizes.ids(prizes_id).then(function(_prizes_info){
-					var clean_info = [];
-					for (var i = 0; i < _prizes_info.length; i++) {
-						clean_info.push(_prizes_info[i][0]);
-					}
+
+				db_prizes.ids(prizes_id)
+				.then(function(_prizes_info){
+					// var clean_info = [];
+					// for (var i = 0; i < _prizes_info.length; i++) {
+					// 	clean_info.push(_prizes_info[i][0]);
+					// }
+					const clean_info = _prizes_info.map(prize_info => prize_info[0]);
 					io.to(socket.id).emit('resAlreadyWinner', [clean_info, _winner.prizes]);//on js/prizes.js > handle the _winner.prizes
-				}).catch(function(err){
+				})
+				.catch(function(err){
 					io.to(socket.id).emit('resRenderMessage', {
 						message: null,
 						alert: null,
-						error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err.toString(),
+						error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err,
 						instruction: null
 					});
 				});
 			}
 			else{
-				//------------------------------   WORKING ON THIS   ----------------------------------------------------------------------------------------------------
-				// var newWinner = new Winner({
-				// 	ci: _data.ci,
-				// 	name1: _data.name1 || null,
-				// 	lastname1: _data.lastname1 || null,
-				// 	facebook: _data.facebook || null,
-				// 	gender: _data.gender || null,
-				// 	phone: _data.phone || null,
-				// 	mail: _data.mail || null,
-				// 	prizes: [{'id': _data.prize, 'handed': false, 'granted': (Date.now())}]
-				// });
-				newWinner.save(function(err){
-					if(err){
-						io.to(socket.id).emit('saveWinnerError', err);
-					}
-					else{
-						io.to(socket.id).emit('saveWinnerOk', 'El premio se ha otorgado con exito.');
-					}
+				const newWinner = new Winner(
+					// params: _id, _ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prizes[]
+					null,
+					_data.ci,
+					_data.name,
+					_data.lastname,
+					_data.facebook,
+					_data.gender,
+					_data.phone,
+					_data.mail,
+					[{
+						'id': _data.prize,
+						'handed': false,
+						'granted': (Date.now())
+					}]
+				);
+				newWinner.save()
+				.then(() => {
+					io.to(socket.id).emit('resRenderMessage', {
+						message: 'El premio se ha otorgado con exito.',
+						alert: null,
+						error: null,
+						instruction: null
+					});
 				})
-				decrPrizeStock(_data.prize.id);
+				.catch((err) => {
+					io.to(socket.id).emit('resRenderMessage', {
+						message: null,
+						alert: null,
+						error: err.toString(),
+						instruction: null
+					});
+				});
+				// decrPrizeStock(_data.prize.id);
 			}
 		}).catch(function(err){
 			io.to(socket.id).emit('resRenderMessage', {
@@ -482,7 +503,6 @@ io.sockets.on('connection', function(socket){
 		});
 	});
 
-
 	socket.on('reqPrizeData', function(prize_id){
 		var ids_array = [prize_id];
 		db_prizes.ids(ids_array).then(function(array){
@@ -493,23 +513,23 @@ io.sockets.on('connection', function(socket){
 		});
 	});
 
-	socket.on('reqUpdatePrize', function(data){
-		Prize.update({_id: data.id},
-			{
-				type: data.type,
-				sponsor: data.sponsor,
-				description: data.description,
-				quantity: data.quantity,
-				due_date: data.due_date,
-				note: data.note
-			}, null, function(err, updatedPrize){
-				if(err){
-					console.log('Prize.update >> ' + err);
-				}
-				else{
-					updatePrizesList(socket);
-				}
-			});
+	socket.on('reqUpdatePrize', (data) => {
+		// Prize.update({_id: data.id},
+		// 	{
+		// 		type: data.type,
+		// 		sponsor: data.sponsor,
+		// 		description: data.description,
+		// 		quantity: data.quantity,
+		// 		due_date: data.due_date,
+		// 		note: data.note
+		// 	}, null, function(err, updatedPrize){
+		// 		if(err){
+		// 			console.log('Prize.update >> ' + err);
+		// 		}
+		// 		else{
+		// 			updatePrizesList(socket);
+		// 		}
+		// 	});
 		});
 	});
 

@@ -12,45 +12,55 @@
   const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
   const ObjectID = require('mongodb').ObjectID;
 
-  exports.Prize = function (_type, _sponsor, _description, _quantity, _set_date, _due_date, _note){
+  exports.Prize = function (_type, _sponsor, _description, _quantity, _due_date, _note){
+
     let type = _type,
         sponsor = _sponsor,
         description = _description,
         quantity = _quantity,
-        set_date = _set_date || Date.now(),
-        due_date = _due_date || null,
+        set_date = Date.now(),
+        due_date = _due_date ? new Date(_due_date).getTime() : null,
         note = _note || null
-    return {
-      save: () => {
-        return new Promise( (resolve, reject) => {
-          mongo.connect(url, (err, db) => {
-            let result = null;
-            if(err) result = reject('ERR_DB - Unable to connect to the database');
-            else{
-              const prizes = db.collection('prizes');
-              prizes.insert(
-                {
-                  type: type,
-                  sponsor: sponsor,
-                  description: description,
-                  quantity: quantity,
-                  set_date: set_date,
-                  due_date: due_date,
-                  note: note
-                }
-              )
-              .then( () => {
-                result = resolve();
-              })
-              .catch( (err) => {
-                result = reject('ERR_DB - Unable to insert in the database');
-              });
-            }
-            db.close();
-            return result;
-          });
+
+    const save = () => {
+      return new Promise((resolve, reject) => {
+        mongo.connect(url, (err, db) => {
+          let result = null;
+          if(err) result = reject('ERR_DB - Unable to connect to the database');
+          else{
+            const prizes = db.collection('prizes');
+            prizes.insert(
+              {
+                type: type,
+                sponsor: sponsor,
+                description: description,
+                quantity: quantity,
+                set_date: set_date,
+                due_date: due_date,
+                note: note
+              }
+            )
+            .then( () => {
+              result = resolve();
+            })
+            .catch( (err) => {
+              result = reject('ERR_DB - Unable to insert into the database');
+            });
+          }
+          db.close();
+          return result;
         });
-      }
+      });
+    }
+
+    const update = () => {
+      // functionality goes here ;)
+      return;
+    }
+
+    return {
+      save: save,
+      update: update
     }
   }
 

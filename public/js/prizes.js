@@ -1,43 +1,38 @@
-String.prototype.capitalize = function(){
-	return this.replace(/(?:^|\s)\S/g, function(a){
-		return a.toUpperCase();
-	});
-};
-
 (function (){
 
 
 	// var url = document.getElementById('pageUrl').innerHTML;
 	// var socket = io.connect(url);
 
-	//Grant Prize///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	var formGrant = document.getElementById('formGrant');
-	var txtGrantCi = document.getElementById('txtGrantCi');
-	var txtGrantName1 = document.getElementById('txtGrantName1');
-	var txtGrantLastname1 = document.getElementById('txtGrantLastname1');
-	var lstGrantGender = document.getElementById('lstGrantGender');
-	var txtGrantFacebook = document.getElementById('txtGrantFacebook');
-	var txtGrantPhone = document.getElementById('txtGrantPhone');
-	var txtGrantMail = document.getElementById('txtGrantMail');
-	var selGrantPrize = document.getElementById('selGrantPrize');
-	var selEditPrize = document.getElementById('selEditPrize');
-	var subConditional = document.getElementById('subConditional');
-	var subAnyway = document.getElementById('subAnyway');
-	var subCancel = document.getElementById('subCancel');
 	var divPrevPrizes = document.getElementById('divPrevPrizes');
 	var sponsorsList = document.getElementById('sponsorsList');
 	var prizesTypeList  = document.getElementById('prizesTypeList');
-	var selEditPrize = document.getElementById('selEditPrize');
+	var updatedPrizes = [];
+	var g_grant_anyway = false;
+
+	//  Prize edition  ///////////////////////////////////////////////////////////
+
 	var prizeEdit = document.getElementById('prizeEdit');
+	var selEditPrize = document.getElementById('selEditPrize');
 	var sel_prize_type = document.getElementById('sel_prize_type');
 	var sel_prize_sponsor = document.getElementById('sel_prize_sponsor');
 	var sel_prize_description = document.getElementById('sel_prize_description');
 	var sel_prize_quantity = document.getElementById('sel_prize_quantity');
 	var sel_prize_due_date = document.getElementById('sel_prize_due_date');
 	var sel_prize_note = document.getElementById('sel_prize_note');
-	var grantAnyway = false;
-	var updatedPrizes = [];
+
+	prizeEdit.addEventListener('submit', function(e){
+		// e.preventDefault();
+		// socket.emit('reqUpdatePrize', {
+		// 	id: selEditPrize.value,
+		// 	type: sel_prize_type.value,
+		// 	sponsor: sel_prize_sponsor.value,
+		// 	description: sel_prize_description.value,
+		// 	quantity: sel_prize_quantity.value,
+		// 	due_date: sel_prize_due_date.value,
+		// 	note: sel_prize_note.value
+		// });
+	});
 
 	selEditPrize.addEventListener('change', function(){
 		var sel_id = selEditPrize.value;
@@ -53,45 +48,29 @@ String.prototype.capitalize = function(){
 		});
 	});
 
-	var formatDate = function(_string){
-		var parsed_date = Date.parse(_string)
-		parsed_date += 86400000;//Adds a day, not sure why this is needed
-		var date = new Date(parsed_date);
-		var year = date.getFullYear().toString();
-		var month = (date.getMonth() + 1).toString();
-		var day = date.getDate().toString();
-		console.log(parsed_date);
-		return year + '-' + (month.length > 1 ? month : '0' + month) + '-' + (day.length > 1 ? day : '0' + day);
-	}
+	//  Prize creation  //////////////////////////////////////////////////////////
 
-	prizeEdit.addEventListener('submit', function(e){
-		e.preventDefault();
-		socket.emit('reqUpdatePrize', {
-			id: selEditPrize.value,
-			type: sel_prize_type.value,
-			sponsor: sel_prize_sponsor.value,
-			description: sel_prize_description.value,
-			quantity: sel_prize_quantity.value,
-			due_date: sel_prize_due_date.value,
-			note: sel_prize_note.value
-		});
-	});
-
-	subAnyway.addEventListener('click', function(){
-		grantAnyway = true;
-	});
-	subCancel.addEventListener('click', function(){
-		location.reload();
-	});
+	var subAnyway = document.getElementById('subAnyway');
+	var subCancel = document.getElementById('subCancel');
+	var subConditional = document.getElementById('subConditional');
+	var formGrant = document.getElementById('formGrant');
+	var txtGrantCi = document.getElementById('txtGrantCi');
+	var txtGrantName1 = document.getElementById('txtGrantName1');
+	var txtGrantLastname1 = document.getElementById('txtGrantLastname1');
+	var lstGrantGender = document.getElementById('lstGrantGender');
+	var txtGrantFacebook = document.getElementById('txtGrantFacebook');
+	var txtGrantPhone = document.getElementById('txtGrantPhone');
+	var txtGrantMail = document.getElementById('txtGrantMail');
+	var selGrantPrize = document.getElementById('selGrantPrize');
 
 	formGrant.addEventListener('submit', function(e){
 		e.preventDefault();
-		checkIfPrize();
-		if(!grantAnyway){
+		// checkIfPrize(); this doesn't exist
+		if(!g_grant_anyway){
 			socket.emit('reqGrantPrizeIf', {
 				ci: txtGrantCi.value,
-				name1: txtGrantName1.value,
-				lastname1: txtGrantLastname1.value,
+				name: txtGrantName1.value,
+				lastname: txtGrantLastname1.value,
 				gender: lstGrantGender.value === 'no selection' ? null : lstGrantGender.value,
 				facebook: txtGrantFacebook.value,
 				phone: txtGrantPhone.value,
@@ -108,6 +87,15 @@ String.prototype.capitalize = function(){
 		}
 	}, false);
 
+	subAnyway.addEventListener('click', function(){
+		g_grant_anyway = true;
+	});
+
+	subCancel.addEventListener('click', function(){
+		location.reload();
+	});
+
+	// Socket.IO  ////////////////////////////////////////////////////////////////
 
 	socket.emit('reqUpdateData');
 
@@ -182,6 +170,20 @@ String.prototype.capitalize = function(){
 		};
 	});
 
+
+	// General purpose  //////////////////////////////////////////////////////////
+
+	var formatDate = function(date_string){
+		var parsed_date = Date.parse(date_string)
+		parsed_date += 86400000;//Adds a day, not sure why this is needed
+		var date = new Date(parsed_date);
+		var year = date.getFullYear().toString();
+		var month = (date.getMonth() + 1).toString();
+		var day = date.getDate().toString();
+		console.log(parsed_date);
+		return year + '-' + (month.length > 1 ? month : '0' + month) + '-' + (day.length > 1 ? day : '0' + day);
+	}
+
 	var showHideGrant = function(){
 		subConditional.classList.toggle('hidden');
 		subCancel.classList.toggle('hidden');
@@ -193,5 +195,11 @@ String.prototype.capitalize = function(){
 		var body = document.getElementsByTagName('body');
 		body[0].scrollTop = spot.offsetTop;
 	}
+
+	String.prototype.capitalize = function(){
+		return this.replace(/(?:^|\s)\S/g, function(a){
+			return a.toUpperCase();
+		});
+	};
 
 }());

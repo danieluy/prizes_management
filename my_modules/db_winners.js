@@ -1,60 +1,68 @@
 (function(){
+  'use strict'
 
-  fs = require('fs');
-  var mongodb = require('mongodb');
-  var mongo = mongodb.MongoClient;
+  const fs = require('fs');
+  const mongodb = require('mongodb');
+  const mongo = mongodb.MongoClient;
   const config = require('../config.json');
-  var db_ip = config.connection.database.ip;
-  var db_port = config.connection.database.port;
-  var db_name = config.connection.database.name;
-  var url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
+  const db_ip = config.connection.database.ip;
+  const db_port = config.connection.database.port;
+  const db_name = config.connection.database.name;
+  const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
 
+  const Winner = exports.Winner = function (_id, _ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prizes){
 
+    let id = _id || null;
+    let ci = _ci;
+    let name = _name || null;
+    let lastname = _lastname || null;
+    let facebook = _facebook || null;
+    let gender = _gender || null;
+    let phone = _phone || null;
+    let mail = _mail || null;
+    const prizes = _prizes;
 
-  //------------------------------   WORKING ON THIS   -------------------------------------------//
-  exports.Winner = (ci, name, lastname, facebook, gender, phone, mail, prize) => {
+    const addPrize = (prize_id) => {
+      prizes.push({ 'id': prize, 'handed': false, 'granted': Date.now() });
+      save();
+    }
+
+    const save = () => {
+      return new Promise( (resolve, reject) => {
+        mongo.connect(url, (err, db) => {
+          if(err){
+            return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
+          }
+          else{
+            const winners = db.collection('winners');
+            const winner_to_save = {
+              ci: ci,
+              name: name,
+              lastname: lastname,
+              facebook: facebook,
+              gender: gender,
+              phone: phone,
+              mail: mail,
+              prizes: prizes
+            }
+            winners.insert(winner_to_save, (err, WriteResult) => {
+              db.close();
+              if(err){
+                return reject('ERROR_DB - There was a problem inserting data - db_winners module - Returned ERROR: ' + err);
+              }
+              else{
+                id = WriteResult.insertedIds[0];
+                return resolve();
+              }
+            });
+          }
+        });
+      });
+    }
+
     return {
-      ci: ci,
-      name1: name || null,
-      lastname1: lastname || null,
-      facebook: facebook || null,
-      gender: gender || null,
-      phone: phone || null,
-      mail: mail || null,
-      prizes: [],
-      addPrize: () => {
-        this.prizes.push({ 'id': prize, 'handed': false, 'granted': Date.now() });
-      },
-      save: () => {
-      //   return new Promise( (resolve, reject) => {
-      //     mongo.connect(url, (err, db) => {
-      //       let result = null;
-      //       if(err) result = reject('ERR_DB - Unable to connect to the database\nFile: db_prizes.js');
-      //       else{
-      //         const prizes = db.collection('prizes');
-      //         prizes.insert(
-      //           {
-      //             type: type,
-      //             sponsor: sponsor,
-      //             description: description,
-      //             quantity: quantity,
-      //             set_date: set_date,
-      //             due_date: due_date,
-      //             note: note
-      //           }
-      //         )
-      //         .then( () => {
-      //           result = resolve();
-      //         })
-      //         .catch( (err) => {
-      //           result = reject('ERR_DB - Unable to insert in the database\nFile: db_prizes.js');
-      //         });
-      //       }
-      //       db.close();
-      //       return result;
-      //     });
-      //   });
-      }
+      addPrize: addPrize ,
+      save: save
     }
   }
 
@@ -63,7 +71,7 @@
       mongo.connect(url, function(err, db){
         var result;
         if(err){
-          result = reject('ERR_DB - Unable to connect to the database<br>file: db_winners.js<br>' + err.toString());
+          result = reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
         }
         else{
           var winners = db.collection('winners');
@@ -71,15 +79,15 @@
           winners.find({$or:
             [
               {'ci': _regExpr},
-              {'name1': _regExpr},
-              {'lastname1': _regExpr},
+              {'name': _regExpr},
+              {'lastname': _regExpr},
               {'facebook': _regExpr},
               {'phone': _regExpr},
               {'mail': _regExpr}
             ]
           }).toArray(function(err, data){
             if(err){
-              result = reject('ERR_DB - Unable to fetch winners data<br>file: db_winners.js<br>' + err.toString());
+              result = reject('ERR_DB - Unable to fetch winners data - db_winners module - Returned ERROR: ' + err);
             }
             else if(data.length > 0){
               result = resolve(data);
@@ -95,37 +103,34 @@
     });
   };
 
-  exports.ci = function(_ci){
+  exports.ci = (_ci) => {
     return new Promise(function(resolve, reject){
       mongo.connect(url, function(err, db){
         var result = null;
-        if(err) return reject('ERR_DB - Unable to connect to the database<br>file: db_winners.js<br>' + err.toString());
+        if(err) return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
         var winners = db.collection('winners');
-        winners.findOne({ci: _ci}, function(err, data){
+        winners.findOne({ci: _ci}, function(err, found_winner){
+          db.close();
           if(err){
-            result = reject('ERR_DB - Unable to fetch winners data<br>file: db_winners.js<br>' + err.toString());
+            return reject('ERR_DB - Unable to fetch winners data - db_winners module - Returned ERROR: ' + err);
           }
           else{
-            result = resolve(data);
+            return resolve(found_winner);
           }
-          db.close();
         });
-        return result;
       });
     });
   };
 
-  exports.updateprizes = function(_data){
-    var winner_ci = _data[0];
-    var updated_prizes = _data[1];
+  exports.updatePrizes = function(winner_ci, updated_prizes){
     return new Promise(function(resolve, reject){
       mongo.connect(url, function(err, db){
         var result = null;
-        if(err) return reject('ERR_DB - Unable to connect to the database<br>file: db_winners.js<br>' + err.toString());
+        if(err) return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
         var winners = db.collection('winners');
         winners.update({ci: winner_ci}, {$set: {prizes: updated_prizes}}, function(err, write_result){
           if(err){
-            result = reject('ERR_DB - Unable to fetch winners data<br>file: db_winners.js<br>' + err.toString());
+            result = reject('ERR_DB - Unable to fetch winners data - db_winners module - Returned ERROR: ' + err);
           }
           else{
             result = resolve(write_result);
@@ -143,12 +148,12 @@
         var result = null;
         if(err) return reject('ERR_DB - Unable to connect to the database\n' + err);
         var winners = db.collection('winners');
-        winners.find({}).toArray(function(err, data){
+        winners.find({}).toArray(function(err, found_winners){
           if(err){
             result = reject('ERR_DB - Unable to fetch to the winners data\n' + err);
           }
           else if(data.length){
-            result = resolve(data);
+            result = resolve(found_winners);
           }
           db.close();
         });
