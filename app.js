@@ -346,37 +346,32 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 
+	// WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS WORKING ON THIS
 	socket.on('reqGrantPrizeIf', function(_data){
 		db_winners.ci(_data.ci)
 		.then((_winner) => {
-			if(_winner){
-
-				var prizes_id = [];
-				for (var i = 0; i < _winner.prizes.length; i++) {
-					prizes_id.push(_winner.prizes[i].id);
-				}
-
-				db_prizes.ids(prizes_id)
-				.then(function(_prizes_info){
-					// var clean_info = [];
-					// for (var i = 0; i < _prizes_info.length; i++) {
-					// 	clean_info.push(_prizes_info[i][0]);
-					// }
-					const clean_info = _prizes_info.map(prize_info => prize_info[0]);
-					io.to(socket.id).emit('resAlreadyWinner', [clean_info, _winner.prizes]);//on js/prizes.js > handle the _winner.prizes
-				})
-				.catch(function(err){
-					io.to(socket.id).emit('resRenderMessage', {
-						message: null,
-						alert: null,
-						error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err,
-						instruction: null
-					});
-				});
+			if(_winner){// Handles the pre-existing Winner's cases
+				var prizes_id = _winner.getPrizes.map(prize => prize.id);
+				// db_prizes.ids(prizes_id)
+				// .then(function(_prizes_info){
+				// 	// var clean_info = [];
+				// 	// for (var i = 0; i < _prizes_info.length; i++) {
+				// 	// 	clean_info.push(_prizes_info[i][0]);
+				// 	// }
+				// 	const clean_info = _prizes_info.map(prize_info => prize_info[0]);
+				// 	io.to(socket.id).emit('resAlreadyWinner', [clean_info, _winner.prizes]);//on js/prizes.js > handle the _winner.prizes
+				// })
+				// .catch(function(err){
+				// 	io.to(socket.id).emit('resRenderMessage', {
+				// 		message: null,
+				// 		alert: null,
+				// 		error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err,
+				// 		instruction: null
+				// 	});
+				// });
 			}
-			else{
-				const newWinner = new Winner(
-					// params: _id, _ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prizes[]
+			else{// Handles the new Winner's cases
+				const newWinner = new Winner(// params: _id, _ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prizes[]
 					null,
 					_data.ci,
 					_data.name,
@@ -392,7 +387,7 @@ io.sockets.on('connection', function(socket){
 					}]
 				);
 				newWinner.save()
-				.then(() => {
+				.then((WriteResult) => {
 					io.to(socket.id).emit('resRenderMessage', {
 						message: 'El premio se ha otorgado con exito.',
 						alert: null,
@@ -648,7 +643,7 @@ io.sockets.on('connection', function(socket){
 
 	//Server port configuration/////////////////////////////////////////////////////
 	server.listen(port, function(){
-		console.log('Listening on: ' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
+		console.log('Listening on: http://' + hostIp + ':' + port + '\nPress Ctrl-C to terminate.');
 	});
 
 	//Others////////////////////////////////////////////////////////////////////////
