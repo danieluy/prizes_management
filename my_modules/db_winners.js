@@ -33,6 +33,7 @@
       return new Promise( (resolve, reject) => {
         mongo.connect(url, (err, db) => {
           if(err){
+            db.close();
             return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
           }
           else{
@@ -49,9 +50,7 @@
             }
             winners.insert(winner_to_save, (err, WriteResult) => {
               db.close();
-              if(err){
-                return reject('ERROR_DB - There was a problem inserting data - db_winners module - Returned ERROR: ' + err);
-              }
+              if(err) return reject('ERROR_DB - There was a problem inserting data - db_winners module - Returned ERROR: ' + err);
               else{
                 id = ObjectID(WriteResult.insertedIds[0]);
                 return resolve(WriteResult);
@@ -71,7 +70,7 @@
       addPrize: addPrize,
       save: save,
       // Public Properties
-      getPrizes: prizes
+      getPrizes: () => prizes
     }
   }
 

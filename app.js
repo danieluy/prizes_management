@@ -244,7 +244,8 @@ app.post('/newPrize', function(req, res){
 			note = req.body.note.toLowerCase();
 
 	if(type && sponsor && description && quantity){
-		const newPrize = new Prize(type, sponsor, description, quantity, due_date, note);
+		// new Prize(_id, _type, _sponsor, _description, _quantity, _due_date, _note)
+		const newPrize = new Prize(null, type, sponsor, description, quantity, due_date, note);
 		newPrize.save()
 		.then( res.redirect('/premios') )
 		.catch( (err) => {
@@ -351,24 +352,22 @@ io.sockets.on('connection', function(socket){
 		db_winners.ci(_data.ci)
 		.then((_winner) => {
 			if(_winner){// Handles the pre-existing Winner's cases
-				var prizes_id = _winner.getPrizes.map(prize => prize.id);
-				// db_prizes.ids(prizes_id)
-				// .then(function(_prizes_info){
-				// 	// var clean_info = [];
-				// 	// for (var i = 0; i < _prizes_info.length; i++) {
-				// 	// 	clean_info.push(_prizes_info[i][0]);
-				// 	// }
-				// 	const clean_info = _prizes_info.map(prize_info => prize_info[0]);
-				// 	io.to(socket.id).emit('resAlreadyWinner', [clean_info, _winner.prizes]);//on js/prizes.js > handle the _winner.prizes
-				// })
-				// .catch(function(err){
-				// 	io.to(socket.id).emit('resRenderMessage', {
-				// 		message: null,
-				// 		alert: null,
-				// 		error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err,
-				// 		instruction: null
-				// 	});
-				// });
+				var prizes_id = _winner.getPrizes().map(prize => prize.id);
+				db_prizes.ids(prizes_id)
+				.then((_prizes_array) => {
+					const prizes_info = _prizes_array.map((prize) => prize.getInfo());
+					// console.log('prizes_info');
+					// console.log(prizes_info);
+					io.to(socket.id).emit('resAlreadyWinner', [prizes_info, _winner.prizes]);//on js/prizes.js > handle the _winner.prizes
+				})
+				.catch((err) => {
+					io.to(socket.id).emit('resRenderMessage', {
+						message: null,
+						alert: null,
+						error: 'ERR_DB - There was a problem trying to fetch data from the database<br>file: app.js<br>' + err,
+						instruction: null
+					});
+				});
 			}
 			else{// Handles the new Winner's cases
 				const newWinner = new Winner(// params: _id, _ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prizes[]
@@ -403,7 +402,18 @@ io.sockets.on('connection', function(socket){
 						instruction: null
 					});
 				});
-				// decrPrizeStock(_data.prize.id);
+				db_prizes.decrPrizeStock(_data.prize.id, 1)
+				.then(() => {
+					console.log('Prize\'s stock successfuly updated');
+				})
+				.catch((err) => {
+					io.to(socket.id).emit('resRenderMessage', {
+						message: null,
+						alert: null,
+						error: err.toString(),
+						instruction: null
+					});
+				});
 			}
 		}).catch(function(err){
 			io.to(socket.id).emit('resRenderMessage', {
@@ -425,7 +435,18 @@ io.sockets.on('connection', function(socket){
 			}
 		});
 		var lastPrize = data.updatedPrizes[data.updatedPrizes.length-1];
-		decrPrizeStock(lastPrize.id);
+		db_prizes.decrPrizeStock(lastPrize.id, 1)
+		.then(() => {
+			console.log('Prize\'s stock successfuly updated');
+		})
+		.catch((err) => {
+			io.to(socket.id).emit('resRenderMessage', {
+				message: null,
+				alert: null,
+				error: err.toString(),
+				instruction: null
+			});
+		});
 	});
 
 	socket.on('reqUpdateData', function(){
@@ -570,25 +591,25 @@ io.sockets.on('connection', function(socket){
 		return prizes_changed;
 	}
 
-	function decrPrizeStock(prize_id){
-		var ids_array = [prize_id];
-		db_prizes.ids(ids_array)
-		.then(function(array_value){
-			var foundPrize = array_value[0];
-			var decremented = foundPrize.quantity - 1;
-			Prize.update({_id: foundPrize._id}, {quantity: decremented}, null, function(err, updatedWinner){
-				if(err){
-					console.log('Prize.decrement >> ' + err);
-				}
-				else{
-					updatePrizesList();
-				}
-			});
-		})
-		.catch(function(err){
-			console.log(err);
-		});
-	}
+	// function decrPrizeStock(prize_id){
+	// 	var ids_array = [prize_id];
+	// 	db_prizes.ids(ids_array)
+	// 	.then(function(array_value){
+	// 		var foundPrize = array_value[0];
+	// 		var decremented = foundPrize.quantity - 1;
+	// 		Prize.update({_id: foundPrize._id}, {quantity: decremented}, null, function(err, updatedWinner){
+	// 			if(err){
+	// 				console.log('Prize.decrement >> ' + err);
+	// 			}
+	// 			else{
+	// 				updatePrizesList();
+	// 			}
+	// 		});
+	// 	})
+	// 	.catch(function(err){
+	// 		console.log(err);
+	// 	});
+	// }
 
 	//Database Handlers///////////////////////////////////////////////////////////
 

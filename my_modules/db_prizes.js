@@ -1,6 +1,6 @@
-(function(){
+"use strict";
 
-  "use strict"
+(function(){
 
   const fs = require('fs');
   const mongodb = require('mongodb');
@@ -12,9 +12,12 @@
   const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
   const ObjectID = require('mongodb').ObjectID;
 
-  exports.Prize = function (_type, _sponsor, _description, _quantity, _due_date, _note){
 
-    let type = _type,
+
+  const Prize = function(_id, _type, _sponsor, _description, _quantity, _due_date, _note){
+
+    let id = _id || null,
+        type = _type,
         sponsor = _sponsor,
         description = _description,
         quantity = _quantity,
@@ -25,32 +28,39 @@
     const save = () => {
       return new Promise((resolve, reject) => {
         mongo.connect(url, (err, db) => {
-          let result = null;
-          if(err) result = reject('ERR_DB - Unable to connect to the database');
+          if(err){
+            db.close();
+            return reject('ERR_DB - Unable to connect to the database - db_prizes module - Returned ERROR: ' + err);
+          }
           else{
             const prizes = db.collection('prizes');
-            prizes.insert(
-              {
-                type: type,
-                sponsor: sponsor,
-                description: description,
-                quantity: quantity,
-                set_date: set_date,
-                due_date: due_date,
-                note: note
+            const prize_to_save = {
+              type: type,
+              sponsor: sponsor,
+              description: description,
+              quantity: quantity,
+              set_date: set_date,
+              due_date: due_date,
+              note: note
+            }
+            prizes.insert(prize_to_save, (err, WriteResult) => {
+              db.close();
+              if(err) return reject('ERROR_DB - There was a problem inserting data - db_prizes module - Returned ERROR: ' + err);
+              else{
+                id = ObjectID(WriteResult.insertedIds[0]);
+                return resolve(WriteResult);
               }
-            )
-            .then( () => {
-              result = resolve();
-            })
-            .catch( (err) => {
-              result = reject('ERR_DB - Unable to insert into the database');
             });
           }
-          db.close();
-          return result;
         });
       });
+    }
+
+    const decrStock = (_amount) => {
+      if(quantity - _amount >= 0){
+        quantity = quantity - _amount;
+        save().then(() => quantity).catch(() => -1)
+      }
     }
 
     const update = () => {
@@ -58,13 +68,34 @@
       return;
     }
 
+    const getInfo = () => {
+      const data = {
+        id: id,
+        type: type,
+        sponsor: sponsor,
+        description: description,
+        quantity: quantity,
+        set_date: set_date,
+        due_date: due_date,
+        note: note
+      }
+      console.log('<<< data >>>');
+      console.log(data);
+      return {
+        data
+      }
+    }
+
     return {
       save: save,
-      update: update
+      update: update,
+      decrStock: decrStock,
+      getId: () => id,
+      getInfo: getInfo
     }
   }
 
-  exports.all = function(){
+  const all = function(){
     return new Promise(function(resolve, reject){
       mongo.connect(url, function(err, db){
         var result = null;
@@ -88,7 +119,7 @@
     });
   }
 
-  const id = exports.id = function(_id){
+  const id = function(_id){
     return new Promise(function(resolve, reject){
       mongo.connect(url, function(err, db){
         var result = null;
@@ -103,7 +134,7 @@
               result = reject('ERR_DB - Unable to fetch prizes data\nfile: db_prizes.js');
             }
             else{
-              result = resolve(data);
+              result = resolve(new Prize(data._id, data.type, data.sponsor, data.description, data.quantity, data.due_date, data.note));
             }
             db.close();
           });
@@ -113,32 +144,40 @@
     });
   }
 
-  exports.ids = (_ids_array) => {
+  const ids = (_ids_array) => {
     return Promise.all(
-      (() => {
-        let stack = [];
-        for(let i=0; i < _ids_array.length; i++){
-          stack.push( id(_ids_array[i]) );
-        }
-        return stack;
-      }())
+      // Resturns an array containing a new Promise for each id in the _ids_array
+      (() => _ids_array.map((_id) => id(_id)))()
     );
   }
 
+  const decrPrizeStock = (_prizeId, _amount) => {
+    return new Promise((resolve, reject) => {
+      id(_prizeId)
+      .then((_prize) => {
+        if(_prize.decrStock(_amount) >= 0) return resolve();
+        else return reject('ERR_DB - Unable to connect to the database - db_prizes module - Returned ERROR: Stock insuficiente id:'+_prize.getId())
+      })
+      .catch((err) => {
+        reject('ERR_DB - Unable to connect to the database - db_prizes module - Returned ERROR: ' + err);
+      });
+    });
+  }
+
   //  Test the dates  ----------------------------------------------------------
-  exports.active =  (prizes) => {
+  const active =  (prizes) => {
     return prizes.filter((prize) => {
       return ((prize.quantity > 0 && !prize.due_date) || (prize.quantity > 0 && prize.due_date && prize.due_date >= new Date()))
     })
   }
 
-  exports.sort_type = function(prizes){
+  const sort_type = function(prizes){
     return prizes.sort((a, b) => {
       return a.type >= b.type ? 1 : -1;
     });
   }
 
-  exports.distinct = function(field){
+  const distinct = function(field){
     return new Promise(function(resolve, reject){
       mongo.connect(url, function(err, db){
         var result = null;
@@ -162,7 +201,7 @@
     });
   }
 
-  exports.return_stock = function(prize_id){
+  const return_stock = function(prize_id){
     return new Promise(function(resolve, reject){
       mongo.connect(url, function(err, db){
         var result = null;
@@ -186,5 +225,17 @@
       });
     });
   }
+
+  module.exports = {
+    Prize: Prize,
+    all: all,
+    id: id,
+    ids: ids,
+    decrPrizeStock: decrPrizeStock,
+    active: active,
+    sort_type: sort_type,
+    distinct: distinct,
+    return_stock: return_stock
+  };
 
 }());
