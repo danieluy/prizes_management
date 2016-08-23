@@ -9,17 +9,15 @@
     "durationHours": 4,
     "activeDurationHours": 0.25
   },
-  "connection":{
-    "lan":{
-      "ip": "127.0.0.1",
-      "port": "1043"
-    },
-    "database":
-    {
-      "ip": "127.0.0.1",
-      "port": "27017",
-      "name": "rcrmc2016",
-      "password": null
-    }
+  "network":{
+    "ip": "localhost",
+    "port": "1043"
+  },
+  "database":
+  {
+    "ip": "localhost",
+    "port": "27017",
+    "name": "rcrmc2016",
+    "password": null
   }
 }

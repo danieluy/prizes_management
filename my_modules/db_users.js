@@ -1,76 +1,75 @@
+
+"use strict";
 (function(){
-   "use strict"
-   var fs = require('fs');
-   var mongodb = require('mongodb');
-   var mongo = mongodb.MongoClient;
-   var config = require('../config.json');
-   var db_ip = config.connection.database.ip;
-   var db_port = config.connection.database.port;
-   var db_name = config.connection.database.name;
-   var url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
-   var security = require('./security.js');
+  const fs = require('fs');
+  const mongodb = require('mongodb');
+  const mongo = mongodb.MongoClient;
+  const config = require('../config.json');
+  const db_ip = config.database.ip;
+  const db_port = config.database.port;
+  const db_name = config.database.name;
+  const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
+  const security = require('./security.js');
+  const ObjectID = require('mongodb').ObjectID;
 
-   var userName = exports.userName = function(_userName){
-      return new Promise(function(resolve, reject){
-         mongo.connect(url, function(err, db){
-            var result = null;
-            if(err){
-               result = reject('ERR_DB - Unable to connect to the database\nfile: db_users.js\n' + err.toString());
-            }
-            else{
-               var users = db.collection('users');
-               users.find({userName: _userName}).toArray(function(err, _data){
-                  if(err){
-                     result = reject('ERR_DB - Unable to fetch users data\nfile: db_users.js\n' + err.toString());
-                  }
-                  else{
-                     result = resolve(_data[0]);
-                  }
-                  db.close();
-               });
-            }
-            return result;
-         });
-      });
-   }
+  const User = function(user_info){
+    if(!user_info.userName || !user_info.password || !user_info.role){
+      throw new Exception('ERROR: To create a new user, "userName", "password" and "role", must be provided');
+      return;
+    }
+    if(user_info.role !== 'admin' && user_info.role !== 'user'){
+      throw new Exception('ERROR: The new user\'s "role" can only be "admin" or "user"');
+      return;
+    }
+    let id = user_info.id ? ObjectID(user_info.id) : null,
+        userName = user_info.userName,
+        password = user_info.password,
+        email = user_info.email,
+        role = user_info.role,
+        set_date = user_info.set_date || Date.now();
+    return {
+      getId: () => id.valueOf(),
+      getUserName: () => userName,
+      setUserName: (_userName) => {userName = _userName},
+      getEmail: () => email,
+      setEmail: (_email) => {email = _email},
+      getRole: () => role,
+      setRole: (_role) => {role = _role},
+      getSet_date: () => set_date
+    }
+  }
 
-   exports.newUser = function(_newUser){
-      //_newUser = {userName: name, password: pass, email: email || null, role: role}
-      return new Promise(function(resolve, reject){
-         var result = null;
-         userName(_newUser.userName).then(function(_user){
-            if(!_user){
-               mongo.connect(url, function(err, db){
-                  if(err){
-                     result = reject('ERR_DB - Unable to connect to the database\nfile: db_users.js\n' + err.toString());
-                  }
-                  else{
-                     var users = db.collection('users');
-                     var hash = security.hashpass(_newUser.password);
-                     console.log('>>> hash');
-                     console.log(hash);
-                     users.insert(
-                        {
-                           userName: _newUser.userName,
-                           password: hash,
-                           email: _newUser.email,
-                           role: _newUser.role,
-                           set_date: Date.now()
-                        }
-                     )
-                     db.close();
-                     result = resolve ('El usuaio "' + _newUser.userName + '" se ha creado con exito.')
-                  }
-               });
-            }
-            else{
-               result = reject ('El nombre de usuario "' + _newUser.userName + '" ya está en uso, seleccione otro, gracias.');
-            }
-         }).catch(function(_err){
-            result = reject ('ERR_DB - Unable to check the user name\nfile: db_users.js\n' + err.toString());
-         });
-         return result;
+  const findUserName = (_userName) => {
+    return new Promise(function(resolve, reject){
+      mongo.connect(url, function(err, db){
+        if(err){
+          db.close();
+          return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
+        }
+        else{
+          var users = db.collection('users');
+          users.find({userName: _userName}).toArray((err, array) => {
+            db.close();
+            if(err) return reject('ERR_DB - Unable to fetch prizes data - db_users module - Returned ERROR: ' + err);
+            return resolve(array.map((r) => {
+              return new User({
+                id: r._id,
+            		userName: r.userName,
+            		password: r.password,
+            		email: r.email,
+            		role: r.role,
+            		set_date: r.set_date
+              });
+            }));
+          });
+        }
       });
-   }
+    });
+  }
+
+  module.exports = {
+    User: User,
+    findUserName: findUserName
+  };
 
 }());
