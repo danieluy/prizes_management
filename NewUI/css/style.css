@@ -1,0 +1,89 @@
+/*--  Global Variables  ------------------------------------------------------*/
+html{
+  --white-color: #EEEEEE;
+  --grey-color: #888888;
+  --black-color: #333333;
+  --primary-color: #FB6202;
+  --accent-color: #02AA40;
+  --nav-width: 200px;
+}
+/*vsplit*/
+/*--  Reset  -----------------------------------------------------------------*/
+*, html{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  color: var(--black-color);
+}
+body{
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  background-color: var(--white-color);
+  color: var(--black-color);
+}
+/*--  Header  -----------------------------------------------------------------*/
+header{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: var(--nav-width);
+  height: 100vh;
+}
+header nav{
+  width: 100%;
+  overflow: auto;
+}
+div.nav-header{
+  float: left;
+  width: var(--nav-width);
+  height: 90px;
+}
+div.nav-header img{
+  float: left;
+  margin: 30px 15px;
+  width: 30px;
+  height: 30px;
+}
+div.nav-header span{
+  display: inline-block;
+  line-height: 90px;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+ul.nav-options{
+  list-style-type: none;
+  width: 100%;
+  padding-left: 15px;
+}
+ul.nav-options li a{
+  display: block;
+  width: calc(var(--nav-width) - 15px);
+  height: 60px;
+  line-height: 60px;
+  color: var(--black-color);
+  cursor: pointer;
+  transition: all 300ms linear;
+}
+ul.nav-options li a:hover{
+  background-color: #CCCCCC;
+}
+ul.nav-options li.menu-title{
+  font-size: .7em;
+  font-weight: 500;
+  line-height: 40px;
+  color: var(--grey-color );
+  text-transform: uppercase;
+}
+/*--  Pages  -----------------------------------------------------------------*/
+section.page{
+  position: absolute;
+  top: 0px;
+  left: 200px;
+  width: calc(100% - 200px);
+  min-width: 600px;
+  height: 100vh;
+  padding: 20px;
+}
