@@ -13,6 +13,7 @@ const fs = require('fs');
 //  Configuration  /////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 const db_users = require('./my_modules/db_users.js');
+db_users.init();// maybe move to a init stuff section
 const User = db_users.User;
 const config = require('./config.json');
 // Server parameters
