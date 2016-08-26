@@ -22,10 +22,11 @@ body{
   font-size: 16px;
   background-color: var(--white-color);
   color: var(--black-color);
+  overflow: hidden;
 }
 /*--  Header  -----------------------------------------------------------------*/
 header{
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   width: var(--nav-width);
@@ -79,11 +80,37 @@ ul.nav-options li.menu-title{
 }
 /*--  Pages  -----------------------------------------------------------------*/
 section.page{
-  position: absolute;
+  position: repative;
+  margin-left: 200px;
   top: 0px;
   left: 200px;
   width: calc(100% - 200px);
   min-width: 600px;
   height: 100vh;
   padding: 20px;
+}
+div.content-card{
+  width: 50%;
+  min-width: 600px;
+  height: 100%;
+  overflow-y: auto;
+  margin: 0px auto;
+  border-radius: 3px;
+  background-color: #FFFFFF;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
+}
+div.content-card::-webkit-scrollbar {
+  display: none;
+}
+/*--  Animations  -----------------------------------------------------------------*/
+.fadeIn{
+  animation: fadeIn 800ms;
+}
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
 }
