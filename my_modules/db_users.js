@@ -1,4 +1,3 @@
-
 "use strict";
 const fs = require('fs'),
       mongodb = require('mongodb'),
@@ -11,19 +10,6 @@ const fs = require('fs'),
       security = require('./security.js'),
       ObjectID = require('mongodb').ObjectID;
 let g_current_userNames = [];
-
-// const init = () => {
-//   // pre-fetch the user names so that it can use them to check if the new user name already exists
-//   let interval = setInterval(()=>{
-//     findAll()
-//     .then((results) => {
-//       if(results.length)
-//         clearInterval(interval);
-//       g_current_userNames = results.map((result) => result.getUserName());
-//     })
-//     .catch((err) => {console.error('ERROR Can\'t fetch the current user names - db_users module - Returned ERROR: ' + err)});
-//   },500)
-// }
 
 const User = function(user_info){
   if(!user_info.userName || !user_info.password || !user_info.role)
@@ -44,42 +30,39 @@ const User = function(user_info){
     return new Promise((resolve, reject) => {
       // Check if the userName already exists
       findUserName(userName)
-      .then((result) => {
-        if(result) return reject('The user name "' + userName + '" is already been taken');
+      .then((found) => {
+        if(found) return reject('The user name "' + userName + '" is already been taken');
         mongo.connect(url, function(err, db){
-          if(err){
-            db.close();
-            return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
-          }
+          if(err) return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
           else{
-            var users = db.collection('users');
-            users.insert({
+            const users = db.collection('users');
+            const WriteResult = users.insert({
               'userName': userName,
               'password': password,
               'role': role,
               'email': email,
               'set_date': set_date
-            }, (WriteResult) => {
-              db.close();
-              return resolve(WriteResult);
             });
+            db.close();
+            return resolve('The user "'+userName+'" was saved');
           }
         });
       })
-
+      .catch((err) => {
+        return reject(err);
+      })
     });
-
   }
 
   return {
     getId: () => id.valueOf(),
     getUserName: () => userName,
-    setUserName: (_userName) => {userName = _userName},
     getEmail: () => email,
     setEmail: (_email) => {email = _email},
     getRole: () => role,
     setRole: (_role) => {role = _role},
     getSet_date: () => set_date,
+    getPassword: () => password,
     save: save
   }
 }
@@ -87,12 +70,9 @@ const User = function(user_info){
 const findAll = () => {
   return new Promise(function(resolve, reject){
     mongo.connect(url, function(err, db){
-      if(err){
-        db.close();
-        return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
-      }
+      if(err) return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
       else{
-        var users = db.collection('users');
+        const users = db.collection('users');
         users.find().toArray((err, array) => {
           db.close();
           if(err) return reject('ERR_DB - Unable to fetch prizes data - db_users module - Returned ERROR: ' + err);
@@ -112,15 +92,13 @@ const findAll = () => {
   });
 }
 
+// this method sould use the findOne() mongodb function
 const findUserName = (_userName) => {
   return new Promise(function(resolve, reject){
     mongo.connect(url, function(err, db){
-      if(err){
-        db.close();
-        return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
-      }
+      if(err) return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
       else{
-        var users = db.collection('users');
+        const users = db.collection('users');
         users.find({userName: _userName}).toArray((err, array) => {
           db.close();
           if(err) return reject('ERR_DB - Unable to fetch prizes data - db_users module - Returned ERROR: ' + err);
@@ -143,7 +121,6 @@ const findUserName = (_userName) => {
 }
 
 module.exports = {
-  // init: init,
   User: User,
   findUserName: findUserName
 };
