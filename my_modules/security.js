@@ -20,9 +20,9 @@ const hashpass = (_pass) => bcrypt.hashSync(_pass, bcrypt.genSaltSync(10));
 const requireLogin = (req, res, next) => {
 	if(!req.session.user){
 		req.session.reset();
-		renderPage('/login', res, {
-			errorMessage: "Debe iniciar sesión, gracias."
-		});
+		// renderPage('/login', res, {
+		// 	errorMessage: "Debe iniciar sesión, gracias."
+		// });
 	}
 	else{
 		next();
@@ -31,9 +31,9 @@ const requireLogin = (req, res, next) => {
 
 const checkRoleAdmin = (req, res, next) => {
 	if(req.session.user.role !== 'admin'){
-		renderPage('/login', res, {
-			errorMessage: "Debe iniciar sesión como Administrador, gracias."
-		});
+		// renderPage('/login', res, {
+		// 	errorMessage: "Debe iniciar sesión como Administrador, gracias."
+		// });
 	}
 	else{
 		next();
@@ -42,9 +42,9 @@ const checkRoleAdmin = (req, res, next) => {
 
 const checkRoleUser = (req, res, next) => {
 	if(req.session.user.role !== 'user'){
-		renderPage('/login', res, {
-			errorMessage: "Debe iniciar sesión como Usuario, gracias."
-		});
+		// renderPage('/login', res, {
+		// 	errorMessage: "Debe iniciar sesión como Usuario, gracias."
+		// });
 	}
 	else{
 		next();
