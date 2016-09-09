@@ -11,13 +11,11 @@ function newUser(){
 	const new_user = new User({
 		id: null,
 		userName: 'admin',
-		password: 'lalala1234',
+		password: 'pass1234',
 		email: 'danielsosa.dev@gmail.com',
 		role: 'admin',
 		set_date: null
 	})
-	// console.log(new_user.getUserName());
-	// console.log(new_user);
 	return new_user;
 }
 // newUser();
@@ -43,4 +41,4 @@ function saveUser(){
 		console.error(err);
 	})
 }
-// saveUser()
+saveUser()

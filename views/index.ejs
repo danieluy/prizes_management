@@ -9,6 +9,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/style.css">
+    <script src="/js/index.js"></script>
 </head>
 <body>
     <header>
@@ -37,9 +38,11 @@
     </header>
     <section id="page_home" class="page">
         <h2>Inicio</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+        <form id="form-login" action="/login" method="post">
+          <input type="text" name="userName" placeholder="Nombre de usuario">
+          <input type="password" name="password" placeholder="Contraseña">
+          <button type="submit">Ingresar</button>
+        </form>
     </section>
     <section id="page_winners" class="page">
         <h2>Ganadores</h2>

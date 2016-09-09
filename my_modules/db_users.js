@@ -7,7 +7,7 @@ const fs = require('fs'),
       db_port = config.database.port,
       db_name = config.database.name,
       url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name,
-      security = require('./security.js'),
+      hashPass = require('./security.js').hashPass,
       ObjectID = require('mongodb').ObjectID;
 let g_current_userNames = [];
 
@@ -38,7 +38,7 @@ const User = function(user_info){
             const users = db.collection('users');
             const WriteResult = users.insert({
               'userName': userName,
-              'password': password,
+              'password': hashPass(password),
               'role': role,
               'email': email,
               'set_date': set_date
@@ -63,6 +63,7 @@ const User = function(user_info){
     setRole: (_role) => {role = _role},
     getSet_date: () => set_date,
     getPassword: () => password,
+    // setPassword: (_password) => {password = hashPass(_password)},
     save: save
   }
 }

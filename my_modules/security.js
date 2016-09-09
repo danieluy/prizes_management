@@ -7,15 +7,14 @@ const login = (name, pass) => {
     db_users.findUserName(name)
     .then((user) => {
       if(user && bcrypt.compareSync(pass, user.getPassword()))
-        return resolve({eval: true, user: {'userName': user.userName, 'role': user.role}});
+        return resolve({'userName': user.getUserName(), 'role': user.getRole()});
       else
-        return resolve({eval: false, user: null});
+        return resolve(null);
     })
     .catch((err) => { return reject(err) });
   });
 }
-
-const hashpass = (_pass) => bcrypt.hashSync(_pass, bcrypt.genSaltSync(10));
+const hashPass = (_pass) => bcrypt.hashSync(_pass, bcrypt.genSaltSync(10));
 
 const requireLogin = (req, res, next) => {
 	if(!req.session.user){
@@ -52,8 +51,9 @@ const checkRoleUser = (req, res, next) => {
 }
 
 module.exports = {
+  hashPass: hashPass,
   login: login,
-  reqLogin: requireLogin,
+  requireLogin: requireLogin,
   isAdmin: checkRoleAdmin,
   isUser: checkRoleUser
 };
