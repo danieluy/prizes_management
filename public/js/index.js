@@ -1,16 +1,28 @@
 (function(){
+
   'use strict';
   document.addEventListener("DOMContentLoaded", function(){
-    login_form = document.getElementById('form-login');
-    login_form.addEventListener('submit', handleLoginPOST);
+    document.getElementById('form-login').addEventListener('submit', handleLoginPOST);
   });
-  var login_form;
+
   function handleLoginPOST(e){
     e.preventDefault();
-    console.log('POST request fired');
+    var userName = document.getElementById('login-userName').value;
+    var password = document.getElementById('login-password').value;
+    console.log('handleLoginPOST', userName, password);
+    dsAjax.post({
+      url: window.location.href + 'login',
+      params: {
+        userName: userName,
+        password: password
+      },
+      successCb: function(response){
+        console.log(response);
+      },
+      errorCb: function(response){
+        console.error(response);
+      }
+    });
   }
-  // data = {method: [GET, POST]}
-  function ajax(data, cb){
 
-  }
 })();

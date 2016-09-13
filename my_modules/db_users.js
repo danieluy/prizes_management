@@ -31,6 +31,8 @@ const User = function(user_info){
       // Check if the userName already exists
       findUserName(userName)
       .then((found) => {
+        console.log('findUserName found');
+        console.log(found);
         if(found) return reject('The user name "' + userName + '" is already been taken');
         mongo.connect(url, function(err, db){
           if(err) return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);
@@ -50,7 +52,7 @@ const User = function(user_info){
       })
       .catch((err) => {
         return reject(err);
-      })
+      });
     });
   }
 

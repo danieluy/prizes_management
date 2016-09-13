@@ -20,16 +20,17 @@ router.get('/', function(req, res){
 
 // define the about route
 router.post('/login', function(req, res){
+  console.log('req.url', req.url);
   security.login(req.body.userName, req.body.password)
   .then((user) => {
     console.log('user');
-      console.log(user);
-    if(user) res.json(user);
-    else res.json(null);
+    console.log(user);
+    if(user) res.json({error: null, user: user});
+    else res.status(401).json({error: 'Wrong user name or password.', user: null});
   })
   .catch((err) => {
-    console.error('ERROR_Login - Returned error: ' + err);
-    res.send('ERROR_Login - Returned error: ' + err);
+    console.error('ERROR_Login - router.js module - Returned error: ' + err);
+    res.status(503).json({error: 'There was a problem with the login process, please try again later.', user: null});
   })
 });
 
