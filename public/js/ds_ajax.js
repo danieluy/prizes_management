@@ -19,6 +19,8 @@ var dsAjax = (function (){
     req.send();
   }
   function post (data){
+    console.log('data');
+      console.log(data);
     checkData(data);
     init(data.successCb, data.errorCb);
     req.open('POST', data.url, true);

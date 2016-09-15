@@ -13,25 +13,36 @@ const security = require('./security');
 // Body parser
 router.use(bodyParser.urlencoded({ extended: false }))
 
-// define the home page route
-router.get('/', function(req, res){
+//  home  //////////////////////////////////////////////////////////////////////
+router.get('/', (req, res) => {
   res.render('index');
 });
-
-// define the about route
-router.post('/login', function(req, res){
-  console.log('req.url', req.url);
+//  login  /////////////////////////////////////////////////////////////////////
+router.post('/login', (req, res) => {
   security.login(req.body.userName, req.body.password)
   .then((user) => {
-    console.log('user');
-    console.log(user);
-    if(user) res.json({error: null, user: user});
-    else res.status(401).json({error: 'Wrong user name or password.', user: null});
+    if(user) {
+      req.session.user = user.userName;
+      req.session.role = user.role;
+      res.json({error: null, user: user});
+    }
+    else {
+      req.session.reset();
+      res.status(401).json({error: 'Wrong user name or password.', user: null});
+    }
   })
   .catch((err) => {
     console.error('ERROR_Login - router.js module - Returned error: ' + err);
     res.status(503).json({error: 'There was a problem with the login process, please try again later.', user: null});
   })
 });
+//  logout  ////////////////////////////////////////////////////////////////////
+router.post('/logout', (req, res) => {
+  if(req.session){
+    req.session.reset();
+    res.json({error: null, user: null});
+  }
+});
+
 
 module.exports = router;

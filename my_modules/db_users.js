@@ -1,15 +1,15 @@
 "use strict";
-const fs = require('fs'),
-      mongodb = require('mongodb'),
-      mongo = mongodb.MongoClient,
-      config = require('../config.json'),
-      db_ip = config.database.ip,
-      db_port = config.database.port,
-      db_name = config.database.name,
-      url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name,
-      hashPass = require('./security.js').hashPass,
-      ObjectID = require('mongodb').ObjectID;
-let g_current_userNames = [];
+const fs = require('fs');
+const mongodb = require('mongodb');
+const mongo = mongodb.MongoClient;
+const config = require('../config.json');
+const db_ip = config.database.ip;
+const db_port = config.database.port;
+const db_name = config.database.name;
+const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
+const hashPass = require('./security.js').hashPass;
+const ObjectID = require('mongodb').ObjectID;
+// let g_current_userNames = [];
 
 const User = function(user_info){
   if(!user_info.userName || !user_info.password || !user_info.role)
@@ -18,12 +18,12 @@ const User = function(user_info){
     throw 'ERROR: The new user\'s "role" can only be "admin" or "user"';
 
   // Properties
-  let id = user_info.id ? ObjectID(user_info.id) : null,
-  userName = user_info.userName.toLowerCase(),
-  password = user_info.password,
-  role = user_info.role.toLowerCase(),
-  email = user_info.email ? user_info.email.toLowerCase() : null,
-  set_date = user_info.set_date || Date.now();
+  let id = user_info.id ? ObjectID(user_info.id) : null;
+  let userName = user_info.userName.toLowerCase();
+  let password = user_info.password;
+  let role = user_info.role.toLowerCase();
+  let email = user_info.email ? user_info.email.toLowerCase() : null;
+  let set_date = user_info.set_date || Date.now();
 
   // Methods
   const save = () => {
@@ -31,8 +31,6 @@ const User = function(user_info){
       // Check if the userName already exists
       findUserName(userName)
       .then((found) => {
-        console.log('findUserName found');
-        console.log(found);
         if(found) return reject('The user name "' + userName + '" is already been taken');
         mongo.connect(url, function(err, db){
           if(err) return reject('ERR_DB - Unable to connect to the database - db_users module - Returned ERROR: ' + err);

@@ -33,17 +33,12 @@
             <li><a href="#page_users" class="ancor"><i class="material-icons">&#xE7FE;</i> Agregar usuarios</a></li>
 
             <li class="menu-title">Sesión</li>
-            <li><a href="/logout"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
+            <li><a href="#" id="btn-log-out"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
           </ul>
         </nav>
     </header>
     <section id="page_home" class="page">
         <h2>Inicio</h2>
-        <form id="form-login" action="/login" method="post">
-          <input type="text" name="userName" id="login-userName" placeholder="Nombre de usuario">
-          <input type="password" name="password" id="login-password" placeholder="Contraseña">
-          <button type="submit">Ingresar</button>
-        </form>
     </section>
     <section id="page_winners" class="page">
         <h2>Ganadores</h2>
@@ -67,6 +62,14 @@
         </p>
       </div>
     </section>
+    <div id="login-modal" class="out">
+      <img src="./img/icon_96.png" alt="Logo Radiocero"/>
+      <form id="form-login" action="/login" method="post">
+        <input type="text" name="userName" id="login-userName" placeholder="Nombre de usuario">
+        <input type="password" name="password" id="login-password" placeholder="Contraseña">
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
     <footer></footer>
     <script>
       var ancors = document.getElementsByClassName('ancor');
