@@ -11,7 +11,7 @@ api_router.use((req, res, next) => {
 
 // define the home page route
 api_router.post('/', (req, res) => {
-  res.json({"message":"Json response"});
+  res.json({"message":"JSON response"});
 });
 
 module.exports = api_router;

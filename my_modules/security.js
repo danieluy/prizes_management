@@ -41,21 +41,9 @@ const checkRoleAdmin = (req, res, next) => {
 	}
 }
 
-const checkRoleUser = (req, res, next) => {
-	if(req.session.user.role !== 'user'){
-		// renderPage('/login', res, {
-		// 	errorMessage: "Debe iniciar sesión como Usuario, gracias."
-		// });
-	}
-	else{
-		next();
-	}
-}
-
 module.exports = {
   hashPass: hashPass,
   login: login,
   requireLogin: requireLogin,
-  isAdmin: checkRoleAdmin,
-  isUser: checkRoleUser
+  isAdmin: checkRoleAdmin
 };

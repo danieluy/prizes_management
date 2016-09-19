@@ -41,4 +41,22 @@ function saveUser(){
 		console.error(err);
 	})
 }
-saveUser()
+// saveUser()
+
+// db_prizes  //////////////////////////////////////////////////////////////////
+const db_prizes = require('./my_modules/db_prizes.js');
+const Prize = db_prizes.Prize;
+
+function newPrize(){
+	const newPrize = new Prize({
+		type: 'Entrada de cine',
+		sponsor: 'Movie Center',
+		description: 'The Matrix',
+		stock: '10',
+		set_date: null,
+		due_date: '2016-10-09',
+		note: 'The Matrix es una película de Ciencia Ficción escrita y dirigida por Lana y Lilly Wachowski y protagonizada por Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss y Hugo Weaving. Estrenada en los Estados Unidos el 31 de marzo de 1999.'
+	});
+	return newPrize;
+}
+newPrize().save()

@@ -12,15 +12,11 @@ var dsAjax = (function (){
   }
   function get (data){
     checkData(data);
-    console.log((data.url + '?' + formatParams(data.params)));
-    console.log(JSON.stringify(data, null, 2));
     init(data.successCb, data.errorCb);
     req.open('GET', (data.params ? (data.url + '?' + formatParams(data.params)) : data.url), true);
     req.send();
   }
   function post (data){
-    console.log('data');
-      console.log(data);
     checkData(data);
     init(data.successCb, data.errorCb);
     req.open('POST', data.url, true);

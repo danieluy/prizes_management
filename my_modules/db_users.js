@@ -12,6 +12,7 @@ const ObjectID = require('mongodb').ObjectID;
 // let g_current_userNames = [];
 
 const User = function(user_info){
+  
   if(!user_info.userName || !user_info.password || !user_info.role)
     throw 'ERROR: To create a new user, "userName", "password" and "role", must be provided';
   if(user_info.role.toLowerCase() !== 'admin' && user_info.role.toLowerCase() !== 'user')
@@ -23,7 +24,7 @@ const User = function(user_info){
   let password = user_info.password;
   let role = user_info.role.toLowerCase();
   let email = user_info.email ? user_info.email.toLowerCase() : null;
-  let set_date = user_info.set_date || Date.now();
+  let set_date = user_info.due_date || Date.now();
 
   // Methods
   const save = () => {
@@ -44,7 +45,7 @@ const User = function(user_info){
               'set_date': set_date
             });
             db.close();
-            return resolve('The user "'+userName+'" was saved');
+            return resolve('The user "' + userName + '" was saved');
           }
         });
       })
