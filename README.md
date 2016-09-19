@@ -1,2 +1,1 @@
-# prizes_managment_v2
-Complete rewrite of the previous version.
+# Current developement is under the 0.4.0 branch.
