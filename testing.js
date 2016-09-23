@@ -3,6 +3,21 @@
 //  Testing  ///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+// db  /////////////////////////////////////////////////////////////////////////
+const db = require('./my_modules/db.js');
+
+// db.exists('users', {userName: 'Tyler Durden'})
+// .then((result) => {console.log(result)})
+// .catch((err) => {console.error(err)});
+
+// db.find('users')
+// .then((result) => {console.log(result)})
+// .catch((err) => {console.error(err)});
+
+// db.find('users', {userName: 'admin'})
+// .then((result) => {console.log(result)})
+// .catch((err) => {console.error(err)});
+
 // db_users  ///////////////////////////////////////////////////////////////////
 const db_users = require('./my_modules/db_users.js');
 const User = db_users.User;
@@ -12,14 +27,17 @@ function newUser(){
 		id: null,
 		userName: 'admin',
 		password: 'pass1234',
-		email: 'danielsosa.dev@gmail.com',
-		role: 'admin',
+		email: null,
+		role: 'user',
 		set_date: null
 	})
 	return new_user;
 }
-// newUser();
-// setTimeout(newUser, 1100);
+// const nu = newUser();
+// nu.save()
+// .then((result) => {console.log(result);console.log('Inserted id:', nu.getId())})
+// .catch((err) => {console.error(err)});
+// console.log(nu.getId());
 
 function findUserByName(){
 	let candidate = 'Tyler Durden';
@@ -31,17 +49,6 @@ function findUserByName(){
   .catch((err) => console.error(err))
 }
 // findUserByName();
-
-function saveUser(){
-	newUser().save()
-	.then((WriteResult) => {
-		console.log(WriteResult)
-	})
-	.catch((err) => {
-		console.error(err);
-	})
-}
-// saveUser()
 
 // db_prizes  //////////////////////////////////////////////////////////////////
 const db_prizes = require('./my_modules/db_prizes.js');
@@ -59,4 +66,36 @@ function newPrize(){
 	});
 	return newPrize;
 }
-newPrize().save()
+// newPrize().save().then((result) => {console.log(result)}).catch((err) => {console.error(err)});
+
+function increaseStock(){
+	let value = '2';
+	const np = newPrize();
+	np.save().then((result) => {
+		console.log(result);
+		setTimeout(()=>{
+			np.stockIncrease(value)
+			.then((data) => console.log('data', data))
+			.catch((err) => console.log('err', err))
+			console.log('Original stock =', np.stock());
+			console.log('Increase value =', value);
+			console.log('Increased stock =', np.stock());
+		},1000)
+	}).catch((err) => {console.error(err)});
+}
+// increaseStock()
+
+function decreaseStock(){
+	let value = '5a';
+	const np = newPrize();
+	np.save().then((result) => {
+		console.log(result);
+		setTimeout(()=>{
+			console.log('Original stock =', np.stock());
+			console.log('Decrease value =', value);
+			np.stockDecrease(value);
+			console.log('Decreased stock =', np.stock());
+		},1000)
+	}).catch((err) => {console.error(err)});
+}
+// decreaseStock();

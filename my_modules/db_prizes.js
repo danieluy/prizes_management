@@ -18,30 +18,69 @@ const Prize = function(prize_info){
     throw 'ERROR: The stock value must be a integer';
 
   // Properties
-  let id = prize_info.id ? ObjectID(prize_info.id) : null;
-  let type = prize_info.type.toLowerCase();
-  let sponsor = prize_info.sponsor.toLowerCase();
-  let description = prize_info.description.toLowerCase();
+  let id = prize_info.id;
+  let type = prize_info.type;
+  let sponsor = prize_info.sponsor;
+  let description = prize_info.description;
   let stock = parseInt(prize_info.stock);
-  let set_date = Date.now();
+  let set_date = prize_info.set_date;
+  let update_date = prize_info.update_date;
   let due_date = prize_info.due_date ? new Date(prize_info.due_date).getTime() : null;
-  let note = prize_info.note ? prize_info.note.toLowerCase() : null;
+  let note = prize_info.note ? prize_info.note : null;
 
+  // Returns a new Promise
   const save = () => {
     return new Promise((resolve, reject) => {
       mongo.connect(url, function(err, db){
         if(err) return reject('ERR_DB - Unable to connect to the database - db_prizes module - Returned ERROR: ' + err);
         else{
           const prizes = db.collection('prizes');
-          const WriteResult = prizes.insert({
+          prizes.insert({
             'type': type,
             'sponsor': sponsor,
             'description': description,
             'stock': stock,
-            'set_date': set_date,
+            'set_date': Date.now(),
+            'update_date': null,
             'due_date': due_date,
             'note': note
+          })
+          .then((WriteResult) => {
+            id = WriteResult.ops[0]._id;
+            db.close();
+            return resolve('The prize "' + type + ' - ' + description + '" was saved');
+          })
+          .catch((err) => {
+            db.close();
+            return reject('ERR_DB - There was a problem insertin on the database - db_prizes module - Returned ERROR: ' + err);
           });
+        }
+      });
+    });
+  }
+
+  const update = () => {
+    if(!id)
+      throw "ERROR: A prize can only be edited after it has been saved";
+    return new Promise((resolve, reject) => {
+      mongo.connect(url, function(err, db){
+        if(err) return reject('ERR_DB - Unable to connect to the database - db_prizes module - Returned ERROR: ' + err);
+        else{
+          const prizes = db.collection('prizes');
+          const WriteResult = prizes.update(
+            {
+              _id: ObjectID(id)
+            },
+            {
+              'type': type,
+              'sponsor': sponsor,
+              'description': description,
+              'stock': stock,
+              'update_date': Date.now(),
+              'due_date': due_date,
+              'note': note
+            }
+          );
           db.close();
           return resolve('The prize "' + type + ' - ' + description + '" was saved');
         }
@@ -49,8 +88,41 @@ const Prize = function(prize_info){
     });
   }
 
+  // Returns a promise
+  const stockIncrease = (value) => {
+    return new Promise((resolve, reject) => {
+      if(isNaN(parseInt(value)) || parseInt(value) <= 0)
+        return reject("ERROR: The stock's modifier value must be a integer greater than 0");
+      stock += parseInt(value);
+      update()
+      .then((result) => {
+        return resolve(result);
+      })
+      .catch((err) => {
+        stock -= parseInt(value);
+        return reject(err);
+      })
+    });
+  }
+
+  // Returns a promise
+  const stockDecrease = (value) => {
+    if(isNaN(parseInt(value)) || parseInt(value) <= 0)
+      throw "ERROR: The stock's modifier value must be a integer greater than 0";
+    if(stock - parseInt(value) < 0)
+      throw "ERROR: The decrease value can't be superior to the actual stock";
+    stock -= parseInt(value);
+    return new Promise((resolve, reject) => {
+      update().then()
+    });
+  }
+
   return {
-    save: save
+    save: save,
+    stockIncrease: stockIncrease,
+    stockDecrease: stockDecrease,
+    update: update,
+    stock: () => stock
   }
 
 }
