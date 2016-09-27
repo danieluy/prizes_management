@@ -1,17 +1,15 @@
 "use strict";
-const fs = require('fs');
-const mongodb = require('mongodb');
-const mongo = mongodb.MongoClient;
-const config = require('../config.json');
-const db_ip = config.database.ip;
-const db_port = config.database.port;
-const db_name = config.database.name;
-const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
-const hashPass = require('./security.js').hashPass;
-const ObjectID = require('mongodb').ObjectID;
-
+// const fs = require('fs');
+// const mongodb = require('mongodb');
+// const mongo = mongodb.MongoClient;
+// const config = require('../config.json');
+// const db_ip = config.database.ip;
+// const db_port = config.database.port;
+// const db_name = config.database.name;
+// const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
+// const ObjectID = require('mongodb').ObjectID;
 const db = require('./db.js');
-// let g_current_userNames = [];
+const hashPass = require('./security.js').hashPass;
 
 const User = function(user_info){
 
@@ -30,6 +28,8 @@ const User = function(user_info){
 
   // Methods
   const save = () => {
+    if(id)
+      throw "ERROR: This prize has already been saved, try using the update method";
     return new Promise((resolve, reject) => {
       // Check if the userName already exists
       db.exists('users', {userName: userName})

@@ -77,7 +77,7 @@ const exists = (collection, query) => {
       if(err)
         return reject('ERR_DB - Unable to connect to the database - db.js module - Returned ERROR: ' + err);
       let key = Object.keys(query)[0];
-      let regEx = new RegExp(query[key], "i");
+      let regEx = new RegExp(("^"+query[key]+"$"), "i");
       db.collection(collection)
       .findOne({ [key] : { $regex : regEx } })
       .then((result) => {
@@ -91,7 +91,31 @@ const exists = (collection, query) => {
     });
   });
 }
-
+/*
+* Params String: collection, Object: update {query: {key: value}, values: {key: value [, ...]}}
+* Returns Json: WriteResult
+*/
+const update = (collection, update) => {
+  if(!collection || !update || !update.query || !update.values)
+    throw "Collection and update must be provided";
+  return new Promise(function(resolve, reject){
+    mongo.connect(url, function(err, db){
+      if(err)
+        return reject('ERR_DB - Unable to connect to the database - db.js module - Returned ERROR: ' + err);
+      db.collection(collection)
+      .update(update.query, { $set : update.values })
+      .then((WriteResult) => {
+        let result = JSON.stringify(WriteResult);
+        db.close();
+        return resolve(result);
+      })
+      .catch((err) => {
+        db.close();
+        return reject('ERR_DB - There was a problem updating a document of the "' + collection + '" collection on the database - db.js module - Returned ERROR: ' + err);
+      });
+    });
+  });
+}
 
 module.exports = {
   insert: insert,

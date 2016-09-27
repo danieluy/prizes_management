@@ -6,9 +6,9 @@
 // db  /////////////////////////////////////////////////////////////////////////
 const db = require('./my_modules/db.js');
 
-// db.exists('users', {userName: 'Tyler Durden'})
-// .then((result) => {console.log(result)})
-// .catch((err) => {console.error(err)});
+db.exists('users', {userName: 'Tyler Durden'})
+.then((result) => {console.log(result)})
+.catch((err) => {console.error(err)});
 
 // db.find('users')
 // .then((result) => {console.log(result)})
