@@ -13,9 +13,9 @@ const hashPass = require('./security.js').hashPass;
 
 const User = function(user_info){
 
-  if(!user_info.userName || !user_info.password || !user_info.role)
+  if (!user_info.userName || !user_info.password || !user_info.role)
     throw 'ERROR: To create a new user, "userName", "password" and "role", must be provided';
-  if(user_info.role.toLowerCase() !== 'admin' && user_info.role.toLowerCase() !== 'user')
+  if (user_info.role.toLowerCase() !== 'admin' && user_info.role.toLowerCase() !== 'user')
     throw 'ERROR: The new user\'s "role" can only be "admin" or "user"';
 
   // Properties
@@ -33,8 +33,8 @@ const User = function(user_info){
     return new Promise((resolve, reject) => {
       // Check if the userName already exists
       db.exists('users', {userName: userName})
-      .then((exists) => {
-        if(exists)
+      .then((result) => {
+        if(result)
           return reject('The user name "' + userName + '" is already been taken');
         db.insert('users', {
           'userName': userName,
@@ -44,9 +44,8 @@ const User = function(user_info){
           'set_date': set_date
         })
         .then((WriteResult) => {
-          const result = JSON.parse(WriteResult);
-          id = result.ops[0]._id;
-          return resolve(result);
+          id = WriteResult.ops[0]._id;
+          return resolve(WriteResult);
         })
         .catch((err) => {
           return reject(err);
@@ -90,28 +89,30 @@ const findAll = () => {
       return resolve(null);
     })
     .catch((err) => {
-      return reject('ERR_DB - Unable to fetch prizes data - db_users module - Returned ERROR: ' + err);
+      return reject('ERR_DB - Unable to fetch prizes data - Users module - Returned ERROR: ' + err);
     });
   });
 }
 
 const findByName = (userName) => {
+  if(!userName)
+    throw "The parameter userName must be provided";
   return new Promise(function(resolve, reject){
-    db.find('users', {userName: userName})
-    .then((results) => {
-      if(results.length)
+    db.findOne('users', {userName: userName.toString()})
+    .then((result) => {
+      if(result)
         return resolve (new User({
-          id: results[0]._id,
-          userName: results[0].userName,
-          password: results[0].password,
-          email: results[0].email,
-          role: results[0].role,
-          set_date: results[0].set_date
+          id: result._id,
+          userName: result.userName,
+          password: result.password,
+          email: result.email,
+          role: result.role,
+          set_date: result.set_date
         }));
       return resolve(null);
     })
     .catch((err) => {
-      return reject('ERR_DB - Unable to fetch prizes data - db_users module - Returned ERROR: ' + err);
+      return reject('ERR_DB - Unable to fetch prizes data - Users module - Returned ERROR: ' + err);
     });
   });
 }

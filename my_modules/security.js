@@ -1,10 +1,10 @@
 "use strict";
-const db_users = require('./db_users');
+const Users = require('./Users');
 const bcrypt = require('bcryptjs');
 
 const login = (name, pass) => {
   return new Promise((resolve, reject) => {
-    db_users.findByName(name)
+    Users.findByName(name)
     .then((user) => {
       if(user && bcrypt.compareSync(pass, user.getPassword()))
         return resolve({'userName': user.getUserName(), 'role': user.getRole()});

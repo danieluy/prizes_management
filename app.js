@@ -6,18 +6,18 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const router = require('./my_modules/router.js');
-const api_router = require('./my_modules/api_router.js');
+const api_router = require('./my_modules/api-router.js');
 const io = require('socket.io').listen(server);
 const fs = require('fs');
 const log = require('./my_modules/logger.js');
-const db_users = require('./my_modules/db_users.js');
+const Users = require('./my_modules/users.js');
+const User = Users.User;
 const config = require('./config.json');
 const sessions = require('client-sessions');
 const security = require('./my_modules/security.js');
 ////////////////////////////////////////////////////////////////////////////////
 //  Configuration  /////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-const User = db_users.User;
 // Server parameters
 const srv_params = {
 	ip: config.network.ip,
