@@ -1,134 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link href="./img/icon_24.png" rel="icon" type="image/png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Radiocero Premios</title>
-    <!-- CDNs -->
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/index.js"></script>
-    <script src="js/ds_ajax.js"></script>
+  <link href="./img/icon_24.png" rel="icon" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Radiocero Premios</title>
+  <!-- CDNs -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/info-hub.css">
+  <script src="js/index.js"></script>
+  <script src="js/ds-ajax.js"></script>
+  <script src="js/info-hub.js"></script>
 </head>
 <body>
-    <header>
-        <!-- Nav Bar -->
-        <nav>
-          <div class="nav-header">
-            <a href="http://www.radiocero.com.uy/" target="_blank">
-              <img src="./img/icon_48.png" alt="Icono Radiocero"/>
-              <span>Radiocero</span>
-            </a>
-          </div>
-          <ul class="nav-options">
+  <header>
+    <!-- Nav Bar -->
+    <nav>
+      <div class="nav-header">
+        <a href="http://www.radiocero.com.uy/" target="_blank">
+          <img src="./img/icon_48.png" alt="Icono Radiocero"/>
+          <span>Radiocero</span>
+        </a>
+      </div>
+      <ul class="nav-options">
 
-            <li class="menu-title">Usuarios</li>
-            <li><a href="#page_home" class="ancor"><i class="material-icons">&#xE88A;</i> Inicio</a></li>
-            <li><a href="#page_winners" class="ancor"><i class="material-icons">&#xE838;</i> Ganadores</a></li>
-            <li><a href="#page_pizes" class="ancor"><i class="material-icons">&#xE838;</i> Premios</a></li>
+        <li class="menu-title">Usuarios</li>
+        <li><a href="#page_home" class="ancor"><i class="material-icons">&#xE88A;</i> Inicio</a></li>
+        <li><a href="#page_winners" class="ancor"><i class="material-icons">&#xE838;</i> Ganadores</a></li>
+        <li><a href="#page_pizes" class="ancor"><i class="material-icons">&#xE838;</i> Premios</a></li>
 
-            <li class="menu-title">Administradores</li>
-            <li><a href="#page_users" class="ancor"><i class="material-icons">&#xE7FE;</i> Agregar usuarios</a></li>
+        <li class="menu-title">Administradores</li>
+        <li><a href="#page_users" class="ancor"><i class="material-icons">&#xE7FE;</i> Agregar usuarios</a></li>
 
-            <li class="menu-title">Sesión</li>
-            <li><a href="#" id="btn-log-out"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
-          </ul>
-        </nav>
-    </header>
-    <section id="page_home" class="page">
-        <h2>Inicio</h2>
-    </section>
-    <section id="page_winners" class="page">
-        <h2>Ganadores</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-    </section>
-    <section id="page_pizes" class="page">
-      <div class="content-card">
-        <ul class="content-tabs">
-          <li class="content-tab">
-            <h2>Entregar Premio</h2>
-          </li>
-          <li class="content-tab">
-            <h2>Nuevo Premio</h2>
-          </li>
-          <li class="content-tab">
-            <h2>Editar Premio</h2>
-          </li>
-        </ul>
-        <div class="content-forms">
-          <div class="content-form">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+        <li class="menu-title">Sesión</li>
+        <li><a href="#" id="btn-log-out"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+  <section id="page_home" class="page">
+    <h2>Inicio</h2>
+  </section>
+  <section id="page_winners" class="page">
+    <h2>Ganadores</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+  </section>
+  <section id="page_pizes" class="page">
+    <div class="content-card">
+      <!-- <ul class="content-tabs">
+        <li class="content-tab">
+          <h2>Entregar Premio</h2>
+        </li>
+        <li class="content-tab">
+          <h2>Nuevo Premio</h2>
+        </li>
+        <li class="content-tab">
+          <h2>Editar Premio</h2>
+        </li>
+      </ul> -->
+      <div class="content-forms">
+        <div class="content-form">
+          <h2>Nuevo Premio</h2>
+          <form id="form-new-prize"><!-- input new prize data -->
 
-          </div>
-            <div class="content-form">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+            <label for="txt-type">Tipo *</label>
+            <input list="prizes-type-list" id="txt-type" placeholder="Tipo de premio" autocomplete="off" required>
+            <datalist id="prizes-type-list"><!-- It's filled from JS --></datalist>
 
-            </div>
-              <div class="content-form">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
+            <label for="txt-description">Descripción *</label>
+            <input type="text" id="txt-description" placeholder="Descripción del premio" required>
 
-              </div>
+
+            <label for="txt-sponsor">Espónsor *</label>
+            <input type="text" id="txt-sponsor" placeholder="Nombre del espónsor" required>
+
+            <label for="txt-stock">Stock *</label>
+            <input type="number" id="txt-stock" placeholder="Stock inicial" min="0" required>
+
+            <label for="date-duedate">Vencimiento</label>
+            <input type="date" id="date-duedate">
+
+            <label for="txt-note">Notas</label>
+            <textarea id="txt-note" placeholder="Comentarios sobre el premio"></textarea>
+
+            <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
+            <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
+          </form>
+
         </div>
       </div>
-    </section>
-    <section id="page_users" class="page">
-      <div class="content-card">
-        <ul class="content-tabs">
-          <li class="content-tab">Nuevo Usuario</li>
-        </ul>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-      </div>
-    </section>
-    <div id="login-modal" class="out">
-      <img src="./img/icon_96.png" alt="Logo Radiocero"/>
-      <form id="form-login" action="/login" method="post">
-        <input type="text" name="userName" id="login-userName" placeholder="Nombre de usuario">
-        <input type="password" name="password" id="login-password" placeholder="Contraseña">
-        <button type="submit">Ingresar</button>
-      </form>
     </div>
-    <footer></footer>
-    <script>
-      var ancors = document.getElementsByClassName('ancor');
-      for (var i = 0; i < ancors.length; i++) {
-        ancors[i].addEventListener('click', fadeIn);
-      }
-      function fadeIn(e){
-        var page_id = e.target.getAttribute('href').slice(1);
-        var page = document.getElementById(page_id);
-        page.classList.add('fadeIn');
-        setTimeout(function(){ page.classList.remove('fadeIn') },900);
-      }
-    </script>
+  </section>
+  <section id="page_users" class="page">
+    <div class="content-card">
+
+      <div class="content-forms">
+        <div class="content-form">
+          <h2>Nuevo Usuario</h2>
+          <form><!-- input new user data -->
+            <label for="txt-userName">Nombre *</label>
+            <input type="text" id="txt-userName" placeholder="Nombre de usuario" required>
+
+            <label for="txt-password">Contraseña *</label>
+            <input type="password" id="txt-password" placeholder="Contraseña" required>
+
+            <label for="txt-password2">Repetir contraseña *</label>
+            <input type="password" id="txt-password2" placeholder="Repetir contraseña" required>
+
+            <label for="sel-role">Permisos de usuario *</label>
+            <select id="sel-role" required>
+              <option value="admin">Administrador</option>
+              <option value="user" selected>Usuario</option>
+            </select>
+
+            <label for="date-email">Email</label>
+            <input type="email" id="date-email" placeholder="Email">
+
+            <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
+            <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="login-modal" class="out">
+    <img src="./img/icon_96.png" alt="Logo Radiocero"/>
+    <form id="form-login" action="/login" method="post">
+      <input type="text" name="userName" id="login-userName" placeholder="Nombre de usuario">
+      <input type="password" name="password" id="login-password" placeholder="Contraseña">
+      <button type="submit">Ingresar</button>
+    </form>
+  </div>
+  <footer></footer>
+  <script>
+  var ancors = document.getElementsByClassName('ancor');
+  for (var i = 0; i < ancors.length; i++) {
+    ancors[i].addEventListener('click', fadeIn);
+  }
+  function fadeIn(e){
+    var page_id = e.target.getAttribute('href').slice(1);
+    var page = document.getElementById(page_id);
+    page.classList.add('fadeIn');
+    setTimeout(function(){ page.classList.remove('fadeIn') },900);
+  }
+  </script>
+
+  <div id="info-hub"></div>
 </body>
 </html>

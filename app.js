@@ -22,7 +22,7 @@ const security = require('./my_modules/security.js');
 const srv_params = {
 	ip: config.network.ip,
 	port: config.network.port,
-	url: function(){ return 'http://' + this.ip + ':' + this.port }
+	url: function() { return 'http://' + this.ip + ':' + this.port }
 }
 // Database parameters
 const db_params = {
@@ -57,19 +57,6 @@ app.use(sessions({
 }));
 //  Public folder
 app.use(express.static(__dirname + '/public'));
-// Session
-app.use(sessions({
-	cookieName: 'session',
-	secret: session.secret,
-	duration: session.duration * 60 * 60 * 1000,
-	activeDuration: session.active_duration * 60 * 60 * 1000,
-	cookie:
-	{
-		ephemeral: false,
-		httpOnly: false,
-		secure: false
-	}
-}));
 // Routing
 app.use('/', router);
 app.use('/api', api_router);

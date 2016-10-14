@@ -57,13 +57,13 @@ let g_prize_id = null;
 
 function newPrize() {
 	const newPrize = new Prize({
-		type: 'Entrada de cine',
-		sponsor: 'Movie Center',
-		description: 'The Matrix',
-		stock: 10,
+		type: 'Estadía',
+		sponsor: 'Hotel Colonia',
+		description: 'Dos nochesw con desayuno',
+		stock: 2,
 		set_date: null,
-		due_date: '2016-10-09',
-		note: 'The Matrix es una película de Ciencia Ficción escrita y dirigida por Lana y Lilly Wachowski y protagonizada por Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss y Hugo Weaving. Estrenada en los Estados Unidos el 31 de marzo de 1999.'
+		due_date: '2016-12-01', // yyyy-MM-dd
+		note: null
 	});
 	return newPrize;
 }
@@ -74,6 +74,7 @@ function newPrize() {
 // 	console.log('g_prize_id:', g_prize_id);
 // })
 // .catch((err) => { console.error(err) });
+
 
 function increaseStock(value) {
 	Prizes.findById('57f2664bcd9bb9fc0a323711')
@@ -91,7 +92,7 @@ function increaseStock(value) {
 	})
 	.catch((err) => { console.error(err) });
 }
-increaseStock('10')
+// increaseStock('10')
 
 
 function decreaseStock(value) {

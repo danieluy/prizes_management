@@ -3,8 +3,8 @@ html{
   --white-color: #EEEEEE;
   --grey-color: #888888;
   --black-color: #333333;
-  --primary-color: #FB6202;
-  --accent-color: #02AA40;
+  --primary-color: #F58500;
+  --accent-color: #0240AA;
   --nav-width: 200px;
 }
 /*vsplit*/
@@ -145,6 +145,9 @@ div.content-forms{
   height: calc(100vh - 90px);
   overflow-y: auto;
 }
+div.content-forms::-webkit-scrollbar {
+  display: none;
+}
 div.content-form{
   border-radius: 3px;
   background-color: #FFFFFF;
@@ -152,10 +155,94 @@ div.content-form{
   margin: 20px 10px;
   padding: 20px;
 }
-div.content-forms::-webkit-scrollbar {
-  display: none;
+div.content-form h2{
+  line-height: 80px;
+  font-size: 2.5em;
+  color: var(--primary-color);
+  font-weight: 100;
 }
-/*--  Animations  -----------------------------------------------------------------*/
+div.content-form label{
+  display: block;
+  line-height: 30px;
+  text-transform: uppercase;
+  font-size: .7em;
+  font-weight: 700;
+  color: #888;
+  margin-top: 15px;
+}
+div.content-form input,
+div.content-form select,
+div.content-form textarea{
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-style: none;
+  border-radius: 3px;
+  line-height: 40px;
+  padding: 0px 10px;
+  height: 40px;
+  transition: background-color 300ms ease-in-out;
+}
+div.content-form textarea{
+  line-height: 20px;
+  padding: 10px 10px 0px 10px;
+}
+div.content-form select,
+div.content-form input[type="date"]{
+  color: #A9A9A9;
+}
+div.content-form input:hover,
+div.content-form select:hover,
+div.content-form textarea:hover{
+  background-color: #eee;
+}
+div.content-form input:invalid,
+div.content-form select:invalid,
+div.content-form textarea:invalid {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+div.content-form input:invalid::-webkit-input-placeholder,
+div.content-form select:invalid::-webkit-input-placeholder,
+div.content-form textarea:invalid::-webkit-input-placeholder {
+  color: var(--white-color);
+}
+div.content-form input:valid,
+div.content-form select:valid,
+div.content-form textarea:valid {
+  /*border-left: 5px solid rgba(0, 200, 0, 0.1);*/
+}
+div.content-form button[type="submit"]{
+  margin-top: 30px;
+}
+/*--  Buttons  ---------------------------------------------------------------*/
+button{
+  border-style: none;
+  border-radius: 3px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 20px;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: box-shadow 300ms ease-in-out;
+}
+button:hover{
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+button:active{
+  transition: box-shadow 50ms ease-in-out;
+  box-shadow: none;
+}
+button.btn-ok{
+  background-color: var(--primary-color);
+  color: #fff;
+}
+button.btn-cancel{
+  background-color: #fff;
+  color: var(--primary-color);
+}
+/*--  Animations  ------------------------------------------------------------*/
 .fadeIn{
   animation: fadeIn 800ms;
 }

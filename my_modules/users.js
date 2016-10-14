@@ -86,7 +86,7 @@ const findAll = () => {
             set_date: result.set_date
           });
         }));
-      return resolve(null);
+      return resolve([]);
     })
     .catch((err) => {
       return reject('ERR_DB - Unable to fetch prizes data - Users module - Returned ERROR: ' + err);

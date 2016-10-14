@@ -1,0 +1,53 @@
+/*--  Info HUB  --------------------------------------------------------------*/
+#info-hub .message-ok{
+	z-index: 10;
+	background-color: #585;
+}
+#info-hub .message-alert{
+	z-index: 10;
+	background-color: #f80;
+}
+#info-hub .message-error{
+	z-index: 10;
+	background-color: #f55;
+}
+#info-hub .info-card{
+	position: fixed;
+	bottom: 10px;
+	left: calc(50% - 250px);
+	width: 500px;
+	margin: 0px auto;
+	overflow: auto;
+	border-radius: 3px;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+	animation: showHide 5s ease-in-out forwards;
+}
+#info-hub .info-emoticon{
+	display: block;
+	float: left;
+	text-align: center;
+	line-height: 80px;
+	width: 80px;
+	font-size: 2em;
+	font-weight: 500;
+	color: #fff;
+}
+#info-hub .info-text{
+	display: block;
+	float: left;
+	width: calc(100% - 80px);
+	padding: 25px 25px 25px 0px;
+	text-align: justify;
+	color: #fff;
+}
+
+@keyframes showHide {
+	0%, 100%{
+		transform: translate(0%, 150%);
+		opacity: 0;
+	}
+	10%, 90%{
+		transform: translate(0%, 0%);
+		opacity: 1;
+	}
+}

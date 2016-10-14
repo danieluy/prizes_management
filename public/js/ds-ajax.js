@@ -23,6 +23,13 @@ var dsAjax = (function (){
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     data.params ? req.send(formatParams(data.params)) : req.send();
   }
+  function put (data){
+    checkData(data);
+    init(data.successCb, data.errorCb);
+    req.open('PUT', data.url, true);
+    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    data.params ? req.send(formatParams(data.params)) : req.send();
+  }
   function formatParams (params){
     var str_params = '';
     for(var key in params){
@@ -41,6 +48,7 @@ var dsAjax = (function (){
   }
   return {
     post: post,
-    get: get
+    get: get,
+    put: put
   }
 })();

@@ -4,12 +4,6 @@ const router = express.Router();
 const bodyParser = require("body-parser");
 const security = require('./security');
 
-// middleware that is specific to this router
-// router.use(function timeLog(req, res, next) {
-//   console.log('Time: ', Date.now());
-//   next();
-// });
-
 // Body parser
 router.use(bodyParser.urlencoded({ extended: false }))
 
@@ -32,7 +26,6 @@ router.post('/login', (req, res) => {
     }
   })
   .catch((err) => {
-    console.error('ERROR_Login - router.js module - Returned error: ' + err);
     res.status(503).json({error: 'There was a problem with the login process, please try again later.', user: null});
   })
 });
