@@ -35,6 +35,7 @@ router.post('/logout', (req, res) => {
     req.session.reset();
     res.json({error: null, user: null});
   }
+  res.render('index');
 });
 
 

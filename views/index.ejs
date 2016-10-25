@@ -6,10 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Radiocero Premios</title>
   <!-- CDNs -->
+  <link rel="stylesheet" href="css/ds-spinners.css">
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info-hub.css">
+  <script src="js/ds-spinners.js"></script>
   <script src="js/index.js"></script>
   <script src="js/ds-ajax.js"></script>
   <script src="js/info-hub.js"></script>
@@ -18,7 +20,7 @@
   <header>
     <!-- Nav Bar -->
     <nav>
-      <div class="nav-header">
+      <div class="main-nav">
         <a href="http://www.radiocero.com.uy/" target="_blank">
           <img src="./img/icon_48.png" alt="Icono Radiocero"/>
           <span>Radiocero</span>
@@ -27,42 +29,39 @@
       <ul class="nav-options">
 
         <li class="menu-title">Usuarios</li>
-        <li><a href="#page_home" class="ancor"><i class="material-icons">&#xE88A;</i> Inicio</a></li>
-        <li><a href="#page_winners" class="ancor"><i class="material-icons">&#xE838;</i> Ganadores</a></li>
-        <li><a href="#page_pizes" class="ancor"><i class="material-icons">&#xE838;</i> Premios</a></li>
+        <li><a href="#section_home" class="ancor"><i class="material-icons">&#xE88A;</i> Inicio</a></li>
+        <li><a href="#section_winners" class="ancor"><i class="material-icons">&#xE838;</i> Ganadores</a></li>
+        <li><a href="#section_pizes" class="ancor"><i class="material-icons">&#xE838;</i> Premios</a></li>
 
         <li class="menu-title">Administradores</li>
-        <li><a href="#page_users" class="ancor"><i class="material-icons">&#xE7FE;</i> Agregar usuarios</a></li>
+        <li><a href="#section_users" class="ancor"><i class="material-icons">&#xE7FE;</i> Agregar usuarios</a></li>
 
         <li class="menu-title">Sesión</li>
         <li><a href="#" id="btn-log-out"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
+
       </ul>
     </nav>
   </header>
-  <section id="page_home" class="page">
+  <section id="section_home" class="page">
     <h2>Inicio</h2>
   </section>
-  <section id="page_winners" class="page">
+  <section id="section_winners" class="page">
     <h2>Ganadores</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
   </section>
-  <section id="page_pizes" class="page">
+  <section id="section_pizes" class="page">
     <div class="content-card">
-      <!-- <ul class="content-tabs">
-        <li class="content-tab">
-          <h2>Entregar Premio</h2>
-        </li>
-        <li class="content-tab">
-          <h2>Nuevo Premio</h2>
-        </li>
-        <li class="content-tab">
-          <h2>Editar Premio</h2>
-        </li>
-      </ul> -->
+
+      <nav class="card-nav">
+        <ul>
+          <li><button class="nav-button" data-content-id="card-new-prize">Nuevo Premio</button></li>
+        </ul>
+      </nav>
+
       <div class="content-forms">
-        <div class="content-form">
+        <div id="card-new-prize" class="content-form selected">
           <h2>Nuevo Premio</h2>
           <form id="form-new-prize"><!-- input new prize data -->
 
@@ -89,17 +88,67 @@
             <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
             <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
           </form>
-
         </div>
+
       </div>
     </div>
   </section>
-  <section id="page_users" class="page">
+  <section id="section_users" class="page">
     <div class="content-card">
-
+      <nav class="card-nav">
+        <ul>
+          <li>
+            <button class="nav-button" data-content-id="card-users-list">Lista de Usuarios</button>
+          </li>
+          <li>
+            <button class="nav-button" data-content-id="card-new-user">Nuevo Usuario</button>
+          </li>
+        </ul>
+      </nav>
       <div class="content-forms">
-        <div class="content-form">
+        <div id="card-users-list" class="content-form selected">
+          <h2>Lista de Usuarios</h2>
+          <ul id="ul-list-users" class="list">
+            <li class="list-item">
+              <span class="item-avatar">A</span>
+              <div class="item-data">
+                <span class="data-name">Admin</span>
+                <span class="data-right">
+                  <span class="data-role">Administrador</span>
+                  <small> creado el </small>
+                  <span class="data-set_date">15/02/2016</span>
+                </span>
+              </div>
+            </li>
+            <li class="list-item">
+              <span class="item-avatar">D</span>
+              <div class="item-data">
+                <span class="data-name">Daniel Sosa</span>
+                <span class="data-right">
+                  <span class="data-role">Administrador</span>
+                  <small> creado el </small>
+                  <span class="data-set_date">15/02/2016</span>
+                </span>
+              </div>
+            </li>
+            <li class="list-item">
+              <span class="item-avatar">F</span>
+              <div class="item-data">
+                <span class="data-name">franco benvenuto</span>
+                <span class="data-right">
+                  <span class="data-role">Usuario</span>
+                  <small> creado el </small>
+                  <span class="data-set_date">15/02/2016</span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div id="card-new-user" class="content-form">
+
           <h2>Nuevo Usuario</h2>
+
           <form><!-- input new user data -->
             <label for="txt-userName">Nombre *</label>
             <input type="text" id="txt-userName" placeholder="Nombre de usuario" required>
@@ -110,7 +159,7 @@
             <label for="txt-password2">Repetir contraseña *</label>
             <input type="password" id="txt-password2" placeholder="Repetir contraseña" required>
 
-            <label for="sel-role">Permisos de usuario *</label>
+            <label for="sel-role">Permisos *</label>
             <select id="sel-role" required>
               <option value="admin">Administrador</option>
               <option value="user" selected>Usuario</option>
@@ -127,6 +176,7 @@
       </div>
     </div>
   </section>
+
   <div id="login-modal" class="out">
     <img src="./img/icon_96.png" alt="Logo Radiocero"/>
     <form id="form-login" action="/login" method="post">
@@ -135,19 +185,15 @@
       <button type="submit">Ingresar</button>
     </form>
   </div>
+
+  <div id="ds-spinner" class="start-spinning">
+    <div class="spinner-wrapper">
+      <!-- <div class="spinner spinner-circle"></div> -->
+      <div class="spinner spinner-radiocero"></div>
+    </div>
+  </div>
+
   <footer></footer>
-  <script>
-  var ancors = document.getElementsByClassName('ancor');
-  for (var i = 0; i < ancors.length; i++) {
-    ancors[i].addEventListener('click', fadeIn);
-  }
-  function fadeIn(e){
-    var page_id = e.target.getAttribute('href').slice(1);
-    var page = document.getElementById(page_id);
-    page.classList.add('fadeIn');
-    setTimeout(function(){ page.classList.remove('fadeIn') },900);
-  }
-  </script>
 
   <div id="info-hub"></div>
 </body>

@@ -1,4 +1,3 @@
-
 (function(){
 
   'use strict';
@@ -9,11 +8,66 @@
     document.getElementById('btn-sub-prize').addEventListener('click', prizes.reqNewPrize);
     session.handleLoginModal();
     dataFields.init();
+    navigation.init();
   });
+
+
+
+  var navigation = {
+    init: function(){
+      this.href = window.location.href;
+      this.domCache();
+      this.initListeners();
+    },
+    update: function(){
+      this.domCache();
+      this.cardTabsListeners();
+    },
+    domCache: function(){
+      if(!this.ancors){
+        this.ancors = document.getElementsByClassName('ancor');
+      }
+      this.working_section = document.getElementById(this.href.slice(this.href.indexOf('/#') + 2));
+      this.card_tabs = this.working_section ? this.working_section.getElementsByClassName('nav-button') : null;
+      this.content_forms = this.working_section ? this.working_section.getElementsByClassName('content-form') : null;
+    },
+    initListeners: function(){
+      for (var i = 0; i < this.ancors.length; i++){
+        this.ancors[i].addEventListener('click', this.render.navigateTo.bind(this));
+      }
+      this.cardTabsListeners();
+    },
+    cardTabsListeners: function(){
+      if(this.card_tabs && this.card_tabs.length){
+        for (var i = 0; i < this.card_tabs.length; i++){
+          this.card_tabs[i].addEventListener('click', this.render.changeCard.bind(this));
+        }
+      }
+    },
+    render: {
+      navigateTo: function(e){
+        e.preventDefault();
+        this.href = window.location.origin + '/' + e.target.getAttribute('href');
+        window.location.href = this.href;
+        this.update();
+      },
+      changeCard: function(e){
+        for (var i = 0; i < this.content_forms.length; i++) {
+          if(this.content_forms[i].id === e.target.getAttribute('data-content-id')){
+            this.content_forms[i].classList.add('selected');
+          }
+          else{
+            this.content_forms[i].classList.remove('selected');
+          }
+        }
+      }
+    }
+  }
 
   var prizes = {
     reqNewPrize: function(e){
       e.preventDefault();
+      ds_spinner.start();
       var form = document.getElementById('form-new-prize');
       if(form.checkValidity()){
         var type = document.getElementById('txt-type');
@@ -23,6 +77,7 @@
         var due_date = document.getElementById('date-duedate');
         var note = document.getElementById('txt-note');
         dsAjax.put({
+          ontEndCb: ds_spinner.stop,
           url: 'http://' + window.location.host + '/api/prizes',
           params: {
             type: type.value,
@@ -48,9 +103,10 @@
             info_hub.error('No se ha guardado el premio');
             console.error('ERROR:', err_obj.error, '\nDetails: ', err_obj.details);
           }
-        })
+        });
       }
       else {
+        ds_spinner.stop();
         info_hub.alert('Por favor completa todos los campos destacados');
         console.error('Se deben completar todos los campos marcados con *');
       }
@@ -69,7 +125,10 @@
       this.dom.prizes_type_list = document.getElementById('prizes-type-list');
     },
     getPrizes: function(){
+      ds_spinner.start();
       dsAjax.get({
+        // delayMs: 3000,
+        onEndCb: ds_spinner.stop,
         url: 'http://' + window.location.host + '/api/prizes',
         successCb: function(prizes){
           dataFields.prizes = JSON.parse(prizes);
@@ -100,12 +159,15 @@
 
     }
   }
+
   var session = {
     reqLogin: function (e){
+      ds_spinner.start();
       e.preventDefault();
       var userName = document.getElementById('login-userName').value;
       var password = document.getElementById('login-password').value;
       dsAjax.post({
+        onEndCb: ds_spinner.stop,
         url: 'http://' + window.location.host + '/login',
         params: {
           userName: userName,

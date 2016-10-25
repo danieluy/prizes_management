@@ -35,4 +35,3 @@ node_modules
 # Logs from app
 eventlog.txt
 errorlog.txt
-changelog.txt
