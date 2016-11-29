@@ -80,7 +80,6 @@ const findOne = (collection, query) => {
       db.collection(collection)
       .findOne({ [key]: { $regex: regEx } })
       .then((result) => {
-        console.log(result);
         db.close();
         return resolve(result);
       })
@@ -96,6 +95,7 @@ const findOne = (collection, query) => {
 * Returns Json: document
 */
 const findById = (collection, id) => {
+  console.log(id);
   if (!collection || !id)
   throw "Collection and id parameters must be provided";
   return new Promise(function (resolve, reject) {
@@ -147,14 +147,14 @@ const exists = (collection, query) => {
 */
 const update = (collection, query, update) => {
   if (!collection || !query || !update)
-  throw "Collection, query and update parameters must be provided";
+    throw "Collection, query and update parameters must be provided";
   return new Promise(function (resolve, reject) {
     mongo.connect(url, function (err, db) {
       if (err)
-      return reject('ERR_DB - Unable to connect to the database - db.js module - Returned ERROR: ' + err);
+        return reject('ERR_DB - Unable to connect to the database - db.js module - Returned ERROR: ' + err);
       let query_key = Object.keys(query)[0];
       if(query_key === 'id' || query_key === '_id')
-      query = { _id: ObjectID((query[query_key])) }
+        query = { _id: ObjectID((query[query_key])) }
       db.collection(collection)
       .update(query, { $set: update })
       .then((WriteResult) => {

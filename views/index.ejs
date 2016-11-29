@@ -12,9 +12,12 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info-hub.css">
   <script src="js/ds-spinners.js"></script>
-  <script src="js/index.js"></script>
   <script src="js/ds-ajax.js"></script>
+  <script src="js/ds-dates.js"></script>
   <script src="js/info-hub.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/prizes.js"></script>
+  <script src="js/winners.js"></script>
 </head>
 <body>
   <header>
@@ -42,140 +45,20 @@
       </ul>
     </nav>
   </header>
-  <section id="section_home" class="page">
-    <h2>Inicio</h2>
-  </section>
-  <section id="section_winners" class="page">
-    <h2>Ganadores</h2>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-  </section>
-  <section id="section_pizes" class="page">
-    <div class="content-card">
-
-      <nav class="card-nav">
-        <ul>
-          <li><button class="nav-button" data-content-id="card-new-prize">Nuevo Premio</button></li>
-        </ul>
-      </nav>
-
-      <div class="content-forms">
-        <div id="card-new-prize" class="content-form selected">
-          <h2>Nuevo Premio</h2>
-          <form id="form-new-prize"><!-- input new prize data -->
-
-            <label for="txt-type">Tipo *</label>
-            <input list="prizes-type-list" id="txt-type" placeholder="Tipo de premio" autocomplete="off" required>
-            <datalist id="prizes-type-list"><!-- It's filled from JS --></datalist>
-
-            <label for="txt-description">Descripción *</label>
-            <input type="text" id="txt-description" placeholder="Descripción del premio" required>
 
 
-            <label for="txt-sponsor">Espónsor *</label>
-            <input type="text" id="txt-sponsor" placeholder="Nombre del espónsor" required>
 
-            <label for="txt-stock">Stock *</label>
-            <input type="number" id="txt-stock" placeholder="Stock inicial" min="0" required>
+  <% include partials/home.ejs %>
 
-            <label for="date-duedate">Vencimiento</label>
-            <input type="date" id="date-duedate">
+  <% include partials/winners.ejs %>
 
-            <label for="txt-note">Notas</label>
-            <textarea id="txt-note" placeholder="Comentarios sobre el premio"></textarea>
+  <% include partials/prizes.ejs %>
 
-            <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
-            <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
-          </form>
-        </div>
+  <% include partials/users.ejs %>
 
-      </div>
-    </div>
-  </section>
-  <section id="section_users" class="page">
-    <div class="content-card">
-      <nav class="card-nav">
-        <ul>
-          <li>
-            <button class="nav-button" data-content-id="card-users-list">Lista de Usuarios</button>
-          </li>
-          <li>
-            <button class="nav-button" data-content-id="card-new-user">Nuevo Usuario</button>
-          </li>
-        </ul>
-      </nav>
-      <div class="content-forms">
-        <div id="card-users-list" class="content-form selected">
-          <h2>Lista de Usuarios</h2>
-          <ul id="ul-list-users" class="list">
-            <li class="list-item">
-              <span class="item-avatar">A</span>
-              <div class="item-data">
-                <span class="data-name">Admin</span>
-                <span class="data-right">
-                  <span class="data-role">Administrador</span>
-                  <small> creado el </small>
-                  <span class="data-set_date">15/02/2016</span>
-                </span>
-              </div>
-            </li>
-            <li class="list-item">
-              <span class="item-avatar">D</span>
-              <div class="item-data">
-                <span class="data-name">Daniel Sosa</span>
-                <span class="data-right">
-                  <span class="data-role">Administrador</span>
-                  <small> creado el </small>
-                  <span class="data-set_date">15/02/2016</span>
-                </span>
-              </div>
-            </li>
-            <li class="list-item">
-              <span class="item-avatar">F</span>
-              <div class="item-data">
-                <span class="data-name">franco benvenuto</span>
-                <span class="data-right">
-                  <span class="data-role">Usuario</span>
-                  <small> creado el </small>
-                  <span class="data-set_date">15/02/2016</span>
-                </span>
-              </div>
-            </li>
-          </ul>
-        </div>
 
-        <div id="card-new-user" class="content-form">
 
-          <h2>Nuevo Usuario</h2>
 
-          <form><!-- input new user data -->
-            <label for="txt-userName">Nombre *</label>
-            <input type="text" id="txt-userName" placeholder="Nombre de usuario" required>
-
-            <label for="txt-password">Contraseña *</label>
-            <input type="password" id="txt-password" placeholder="Contraseña" required>
-
-            <label for="txt-password2">Repetir contraseña *</label>
-            <input type="password" id="txt-password2" placeholder="Repetir contraseña" required>
-
-            <label for="sel-role">Permisos *</label>
-            <select id="sel-role" required>
-              <option value="admin">Administrador</option>
-              <option value="user" selected>Usuario</option>
-            </select>
-
-            <label for="date-email">Email</label>
-            <input type="email" id="date-email" placeholder="Email">
-
-            <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
-            <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
-          </form>
-
-        </div>
-      </div>
-    </div>
-  </section>
 
   <div id="login-modal" class="out">
     <img src="./img/icon_96.png" alt="Logo Radiocero"/>
@@ -193,8 +76,9 @@
     </div>
   </div>
 
+  <div id="info-hub"></div>
+
   <footer></footer>
 
-  <div id="info-hub"></div>
 </body>
 </html>

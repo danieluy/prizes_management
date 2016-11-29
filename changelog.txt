@@ -1,9 +1,24 @@
 Changelog
-v0.4.3
+v0.4.4
+  + Added ejs partials
+  + Solved a bug on index.js that was sending non UTC date to the server
+  + Solved a bug on index.js that didn't refresh the content position when the window was resized
+  + Added the form to grant prizes
+  + Added Winners module
+  + Added info_hub actions
+  + Solved grantPrize() on fontend's winner.js
+  + Solved Dates and comments displaying even if they are null
+  + TODO everything about the prizes stock is broken!!!!
+  + TODO update prizes stock when granted
+  + TODO filter prizes on list
+  + TODO When adding a new prize the prize's list should be updated
+  + TODO Finish the Prizes list UI
+v0.4.3 (commited & pushed)
   + Added tab navigation
   + Added User's list style
   + Added new navigation system
   + Added DS-Spinners
+  + Added delay option to ds-ajax.js
 v0.4.2 (commited & pushed)
   + Added Form's UI design
   + Added suggested prize types from the existing prize types in the database

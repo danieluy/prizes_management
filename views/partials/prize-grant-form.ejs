@@ -1,0 +1,36 @@
+<form id="form-new-winner" class="modal-form">
+
+  <h2>Otorgar premio</h2>
+
+  <h3 id="prize-to-grant-description"><!-- It's filled from JS--></h3>
+  <h4 id="prize-to-grant-type"><!-- It's filled from JS--></h4>
+
+  <label for="txt-grant-ci">C.I. *</label>
+  <input id="txt-grant-ci" type="text" placeholder="12345672" autocomplete="off" pattern="^\d{7,8}$" required>
+  <!-- <input id="txt-grant-ci" type="text" placeholder="12345678" onkeyup="validateci()" autocomplete="off" required> -->
+
+  <label for="txt-grant-name">Nombre *</label>
+  <input class="input-inline" id="txt-grant-name" type="text" placeholder="Nombre" required>
+  <input class="input-inline" id="txt-grant-lastname" type="text" placeholder="Apellido" required>
+
+  <label for="lst-grant-gender">Sexo</label>
+  <select id="lst-grant-gender" title="Seleccione sexo">
+    <option value="" disabled selected>Sexo</option>
+    <option value="F">Femenino</option>
+    <option value="M">Masculino</option>
+    <option value="O">Otro</option>
+  </select>
+
+  <label for="txt-grant-facebook">Perfil de Facebook</label>
+  <input id="txt-grant-facebook" type="text" placeholder="https://es-la.facebook.com/nombre.usuario">
+
+  <label for="txt-grant-phone">Teléfono</label>
+  <input id="txt-grant-phone" type="tel" placeholder="099000111">
+
+  <label for="txt-grant-mail">Email</label>
+  <input id="txt-grant-mail" type="mail" placeholder="usuario@dominio.com">
+
+  <button type="submit" class="btn-ok" id="btn-grant-prize-ok" data-prize-id="">Otorgar</button>
+  <button type="reset" class="btn-cancel" id="btn-cancel-grant-prize">Cancelar</button>
+
+</form>

@@ -1,173 +1,170 @@
-(function(){
-  'use strict'
+"use strict";
 
-  const fs = require('fs');
-  const mongodb = require('mongodb');
-  const mongo = mongodb.MongoClient;
-  const config = require('../config.json');
-  const db_ip = config.connection.database.ip;
-  const db_port = config.connection.database.port;
-  const db_name = config.connection.database.name;
-  const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
-  const ObjectID = require('mongodb').ObjectID;
+const db = require('./db.js');
 
-  const Winner = exports.Winner = function (_id, _ci, _name, _lastname, _facebook, _gender, _phone, _mail, _prizes){
-    // Converts the ID value or values recieved to Mongo's ObjecId
-    if(_prizes){
-      _prizes.forEach((_prize) => {
-        _prize.id = ObjectID(_prize.id);
-      });
-    }
-    // Private attributes
-    let id = _id || null;
-    let ci = _ci;
-    let name = _name || null;
-    let lastname = _lastname || null;
-    let facebook = _facebook || null;
-    let gender = _gender || null;
-    let phone = _phone || null;
-    let mail = _mail || null;
-    const prizes = _prizes || [];
-    // Private Mathods
-    const save = () => {
-      return new Promise( (resolve, reject) => {
-        mongo.connect(url, (err, db) => {
-          if(err){
-            db.close();
-            return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
-          }
-          else{
-            const winners = db.collection('winners');
-            const winner_to_save = {
-              ci: ci,
-              name: name,
-              lastname: lastname,
-              facebook: facebook,
-              gender: gender,
-              phone: phone,
-              mail: mail,
-              prizes: prizes
-            }
-            winners.insert(winner_to_save, (err, WriteResult) => {
-              db.close();
-              if(err) return reject('ERROR_DB - There was a problem inserting data - db_winners module - Returned ERROR: ' + err);
-              else{
-                id = ObjectID(WriteResult.insertedIds[0]);
-                return resolve(WriteResult);
-              }
-            });
-          }
-        });
-      });
-    }
-    const addPrize = (prize_id) => {
-      prizes.push({ 'id': ObjectID(prize_id), 'handed': false, 'granted': Date.now() });
-      save();
-    }
+const Winner = function (winner_info){
+  if(!winner_info.ci || !winner_info.name || !winner_info.lastname)
+    throw 'ERROR: To create a new Winner, "ci", "name" and "lastname" parameters must be provided';
+  if(!checkCi(winner_info.ci))
+    throw 'ERROR: The provided C.I. number is not valid';
+  if(winner_info.gender && winner_info.gender.toUpperCase() !== 'F' && winner_info.gender.toUpperCase() !== 'M' && winner_info.gender.toUpperCase() !== 'O')
+    throw 'ERROR: The gender value can only be "F", "M" or "O"';
+  if(winner_info.mail && !winner_info.mail.match(/\S+\@\S+\.\S+/))
+    throw 'ERROR: The mail value must be a valid email address';
 
-    return {
-      // Public Methods
-      addPrize: addPrize,
-      save: save,
-      // Public Properties
-      getPrizes: () => prizes
-    }
-  }
+  // Properties
+  let id = winner_info.id;
+  let ci = winner_info.ci;
+  let name = winner_info.name;
+  let lastname = winner_info.lastname;
+  let facebook = winner_info.facebook;
+  let gender = winner_info.gender ? winner_info.gender.toUpperCase() : null;
+  let phone = winner_info.phone;
+  let mail = winner_info.mail;
+  let prizes = winner_info.prizes;
 
-  exports.ci = (_ci) => {
+  // Methods
+  const save = () => {
+    if(id)
+      throw "ERROR: This winner has already been saved, try using the update method";
     return new Promise((resolve, reject) => {
-      mongo.connect(url, (err, db) => {
-        if(err) return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
-        const winners = db.collection('winners');
-        winners.findOne({ci: _ci}, (err, r) => {
-          db.close();
-          if(err){
-            return reject('ERR_DB - Unable to fetch winners data - db_winners module - Returned ERROR: ' + err);
-          }
-          else{
-            if(!r) return resolve(null);
-            return resolve(new Winner(r._id, r.ci, r.name, r.lastname, r.facebook, r.gender, r.phone, r.mail, r.prizes));
-          }
-        });
-      });
-    });
-  };
-
-  exports.query = function(_query){
-    return new Promise(function(resolve, reject){
-      mongo.connect(url, function(err, db){
-        var result;
-        if(err){
-          result = reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
-        }
-        else{
-          var winners = db.collection('winners');
-          var _regExpr = new RegExp(_query, "i");
-          winners.find({$or:
-            [
-              {'ci': _regExpr},
-              {'name': _regExpr},
-              {'lastname': _regExpr},
-              {'facebook': _regExpr},
-              {'phone': _regExpr},
-              {'mail': _regExpr}
-            ]
-          }).toArray(function(err, data){
-            if(err){
-              result = reject('ERR_DB - Unable to fetch winners data - db_winners module - Returned ERROR: ' + err);
-            }
-            else if(data.length > 0){
-              result = resolve(data);
-            }
-            else{
-              result = resolve(null);
-            }
-            db.close();
-          });
-        }
-        return result;
-      });
-    });
-  };
-
-  exports.updatePrizes = function(winner_ci, updated_prizes){
-    return new Promise(function(resolve, reject){
-      mongo.connect(url, function(err, db){
-        var result = null;
-        if(err) return reject('ERR_DB - Unable to connect to the database - db_winners module - Returned ERROR: ' + err);
-        var winners = db.collection('winners');
-        winners.update({ci: winner_ci}, {$set: {prizes: updated_prizes}}, function(err, write_result){
-          if(err){
-            result = reject('ERR_DB - Unable to fetch winners data - db_winners module - Returned ERROR: ' + err);
-          }
-          else{
-            result = resolve(write_result);
-          }
-          db.close();
-        });
-        return result;
+      db.insert('winners', {
+        'ci': ci,
+        'name': name,
+        'lastname': lastname,
+        'facebook': facebook,
+        'gender': gender,
+        'phone': phone,
+        'mail': mail,
+        'prizes': [],
+        'set_date': Date.now(),
+        'update_date': null
+      })
+      .then((WriteResult) => {
+        id = WriteResult.ops[0]._id;
+        return resolve(WriteResult);
+      })
+      .catch((err) => {
+        return reject(err);
       });
     });
   }
 
-  exports.findAll = function(){
-    return new Promise(function(resolve, reject){
-      mongo.connect(url, function(err, db){
-        var result = null;
-        if(err) return reject('ERR_DB - Unable to connect to the database\n' + err);
-        var winners = db.collection('winners');
-        winners.find({}).toArray(function(err, found_winners){
-          if(err){
-            result = reject('ERR_DB - Unable to fetch to the winners data\n' + err);
-          }
-          else if(data.length){
-            result = resolve(found_winners);
-          }
-          db.close();
-        });
-        return result;
+  const update = () => {
+    if(!id)
+      throw "ERROR: A winner can only be edited after it has been saved";
+    return new Promise((resolve, reject) => {
+      db.update('winners', { id: id }, {
+        'name': name,
+        'lastname': lastname,
+        'facebook': facebook,
+        'gender': gender ? gender.toUpperCase() : null,
+        'phone': phone,
+        'mail': mail,
+        'prizes': prizes,
+        'update_date': Date.now()
+      })
+      .then((WriteResult) => {
+        return resolve(WriteResult);
+      })
+      .catch((err) => {
+        return reject(err);
       });
     });
-  };
+  }
 
-}());
+
+  const addPrize = (prize_id) => {
+    if(!prize_id)
+      throw 'ERROR: To add a prize the "prize_id" parameter must be provided';
+    prizes.push({ 'id': prize_id, 'handed': false, 'granted': Date.now() });
+    return update();
+  }
+
+  const deletePrize = (prize_id) => {
+    if(!prize_id)
+      throw 'ERROR: To delete a prize the "prize_id" parameter must be provided';
+    prizes = prizes.filter( prize => prize.id !== prize_id );
+    return update();
+  }
+
+  return {
+    // Public Methods
+    save: save,
+    update: update,
+    getCi: () => ci,
+    setCi: (_ci) => {ci = _ci},
+    getName: () => name,
+    setName: (_name) => {name = _name},
+    getLastname: () => lastname,
+    setLastname: (_lastname) => {lastname = _lastname},
+    getFacebook: () => facebook,
+    setFacebook: (_facebook) => {facebook = _facebook},
+    getGender: () => gender,
+    setGender: (_gender) => {gender = _gender},
+    getPhone: () => phone,
+    setPhone: (_phone) => {phone = _phone},
+    getMail: () => mail,
+    setMail: (_mail) => {mail = _mail},
+    getPrizes: () => prizes,
+    addPrize: addPrize,
+    deletePrize: deletePrize
+  }
+}
+
+const findByCi = (ci) => {
+  return new Promise(function(resolve, reject){
+    db.findOne('winners', {ci: ci})
+    .then((result) => {
+      if(result){
+        return resolve(new Winner({
+          'id': result._id,
+          'ci': result.ci,
+          'name': result.name,
+          'lastname': result.lastname,
+          'facebook': result.facebook,
+          'gender': result.gender,
+          'phone': result.phone,
+          'mail': result.mail,
+          'prizes': result.prizes,
+          'set_date': result.set_date,
+          'update_date': result.update_date
+        }));
+      }
+      return resolve(null);
+    })
+    .catch((err) => {
+      return reject('ERR_DB - Unable to fetch prizes data - Users module - Returned ERROR: ' + err);
+    });
+  });
+}
+
+
+module.exports = {
+  Winner: Winner,
+  findByCi: findByCi
+}
+
+
+const checkCi = (ci) => {
+  if(ci.match(/^\d+$/) && ci.length >= 7 && ci.length <= 8){
+    let fixed_ci = ci;
+    if(ci.length === 7)
+      fixed_ci = '0' + ci;
+    let coeffs = [2,9,8,7,6,3,4];
+    let sum = 0;
+    for(let i = 0; i < coeffs.length; i++){
+      let digit = parseInt(fixed_ci.slice(i, i+1));
+      let coeff = coeffs[i];
+      let multiply = ((digit*coeff).toString());
+      let toAdd = multiply.slice(multiply.length-1);
+      sum += parseInt(toAdd);
+    }
+    let verifDig = 10 - (sum % 10);
+    if(verifDig === 10)
+      verifDig = 0;
+    if(verifDig.toString() == fixed_ci.slice(fixed_ci.length-1))
+      return true;
+  }
+  return false;
+};

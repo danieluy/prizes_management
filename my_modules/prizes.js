@@ -4,12 +4,15 @@ const db = require('./db.js');
 
 const Prize = function(prize_info){
 
+  // console.log('prize_info');
+  // console.log(JSON.stringify(prize_info, null, 3));
+
   if(!prize_info.type || !prize_info.sponsor || !prize_info.description)
     throw 'ERROR: To create a new prize, "type", "sponsor" and "description" parameters must be provided';
   if(isNaN(parseInt(prize_info.stock)) || parseInt(prize_info.stock) < 0)
     throw 'ERROR: The stock value must be an integer >= 0';
   if(prize_info.due_date && new Date(prize_info.due_date).getTime() === NaN)
-    throw 'ERROR: Invalid date format for due date. Required format "yyyy-MM-dd"';
+    throw 'ERROR: Invalid date format for due date. Required format "yyyy/MM/dd"';
 
   // Properties
   let id = prize_info.id;
@@ -49,21 +52,17 @@ const Prize = function(prize_info){
 
   const update = () => {
     if(!id)
-    throw "ERROR: A prize can only be edited after it has been saved";
+      throw "ERROR: A prize can only be edited after it has been saved";
     return new Promise((resolve, reject) => {
-      db.update(
-        'prizes',
-        { id: id },
-        {
-          'type': type,
-          'sponsor': sponsor,
-          'description': description,
-          'stock': stock,
-          'update_date': Date.now(),
-          'due_date': due_date,
-          'note': note
-        }
-      )
+      db.update('prizes', { id: id }, {
+        'type': type,
+        'sponsor': sponsor,
+        'description': description,
+        'stock': stock,
+        'update_date': Date.now(),
+        'due_date': due_date,
+        'note': note
+      })
       .then((WriteResult) => {
         return resolve(WriteResult);
       })
@@ -76,19 +75,23 @@ const Prize = function(prize_info){
   const stockUpdate = (value) => {
     let intVal = parseInt(value);
     if(!value || isNaN(intVal))
-    throw "ERROR: The stock's modifier value must be a integer - Prizes.js module";
+      throw "ERROR: The stock's modifier value must be a integer - Prizes.js module stockUpdate()";
     if(stock + intVal < 0)
-    throw "ERROR: The stock's modifier value was greater than the current stock - Prizes.js module";
-    return new Promise((resolve, reject) => {
-      stock += intVal;
-      update()
-      .then((WriteResult) => {
-        return resolve(WriteResult)
-      })
-      .catch((err) => {
-        return reject(err);
-      });
-    });
+      throw "ERROR: The stock's modifier value was greater than the current stock - Prizes.js module stockUpdate()";
+    stock += intVal;
+    return update();
+  }
+
+  const stockIncrease = (val) => {
+    if(!val || isNaN(parseInt(val)) || parseInt(val) <= 0)
+      throw "ERROR: The stock's modifier value must be a integer > 0 - Prizes.js module stockIncrease()";
+    return stockUpdate(val)
+  }
+
+  const stockDecrease = (val) => {
+    if(!val || isNaN(parseInt(val)) || parseInt(val) <= 0)
+      throw "ERROR: The stock's modifier value must be a integer > 0 - Prizes.js module stockDecrease()";
+    return stockUpdate(val * -1)
   }
 
   const getPublicData = () => {
@@ -110,23 +113,16 @@ const Prize = function(prize_info){
     save: save,
     update: update,
     getPublicData: getPublicData,
-    stockIncrease: (val) => {
-      if(!val || isNaN(parseInt(val)) || parseInt(val) <= 0)
-      throw "ERROR: The stock's modifier value must be a integer greater than 0 - Prizes.js module";
-      return stockUpdate(val)
-    },
-    stockDecrease: (val) => {
-      if(!val || isNaN(parseInt(val)) || parseInt(val) <= 0)
-      throw "ERROR: The stock's modifier value must be a integer greater than 0 - Prizes.js module";
-      return stockUpdate(val * -1)
-    },
+    stockIncrease: stockIncrease,
+    stockDecrease: stockDecrease,
+    getId: () => id,
     getStock: () => stock
   }
 }
 
 const findById = (id) => {
   if(!id)
-  throw "The parameter id must be provided";
+    throw "The parameter id must be provided";
   return new Promise((resolve, reject) => {
     db.findById('prizes', id)
     .then((result) => {
@@ -153,20 +149,21 @@ const findAll = () => {
   return new Promise(function(resolve, reject){
     db.find('prizes')
     .then((results) => {
-      if(results.length)
-      return resolve(results.map((result) => {
-        return new Prize({
-          id: result._id,
-          type: result.type,
-          sponsor: result.sponsor,
-          description: result.description,
-          stock: parseInt(result.stock),
-          set_date: result.set_date,
-          update_date: result.update_date,
-          due_date: result.due_date,
-          note: result.note
-        });
-      }));
+      if(results.length){
+        return resolve(results.map((result) => {
+          return new Prize({
+            id: result._id,
+            type: result.type,
+            sponsor: result.sponsor,
+            description: result.description,
+            stock: parseInt(result.stock),
+            set_date: result.set_date,
+            update_date: result.update_date,
+            due_date: result.due_date,
+            note: result.note
+          });
+        }));
+      }
       return resolve([]);
     })
     .catch((err) => {

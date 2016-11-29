@@ -30,7 +30,6 @@ var dsAjax = (function (){
     init(data.successCb, data.errorCb, data.onEndCb, data.delayMs);
     req.open('GET', (data.params ? (data.url + '?' + formatParams(data.params)) : data.url), true);
     req.send();
-    // if(data.delayMs) simulateDelay(parseInt(data.delayMs));
   }
 
   function post (data){
@@ -39,7 +38,6 @@ var dsAjax = (function (){
     req.open('POST', data.url, true);
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     data.params ? req.send(formatParams(data.params)) : req.send();
-    // if(data.delayMs) simulateDelay(parseInt(data.delayMs));
   }
 
   function put (data){
@@ -48,13 +46,13 @@ var dsAjax = (function (){
     req.open('PUT', data.url, true);
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     data.params ? req.send(formatParams(data.params)) : req.send();
-    // if(data.delayMs) simulateDelay(parseInt(data.delayMs));
   }
 
   function formatParams (params){
     var str_params = '';
     for(var key in params){
-      str_params += key + '=' + params[key] + '&';
+      if(params[key])
+        str_params += key + '=' + params[key] + '&';
     }
     return str_params.slice(0,-1);
   }

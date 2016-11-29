@@ -8,6 +8,11 @@ html{
   --nav-width: 200px;
 }
 /*vsplit*/
+
+
+
+
+
 /*--  Reset  -----------------------------------------------------------------*/
 *, html{
   margin: 0px;
@@ -29,6 +34,11 @@ textarea:-webkit-autofill,
 select:-webkit-autofill {
     background-color: rgba(0, 0, 0, 0) !important;
 }
+
+
+
+
+
 /*--  Header  -----------------------------------------------------------------*/
 header{
   position: fixed;
@@ -83,6 +93,11 @@ ul.nav-options li.menu-title{
   color: var(--grey-color );
   text-transform: uppercase;
 }
+
+
+
+
+
 /*--  Login modal  -----------------------------------------------------------*/
 #login-modal{
   position: absolute;
@@ -122,6 +137,11 @@ ul.nav-options li.menu-title{
   pointer-events: none;
   background-color: rgba(255, 255, 255, 0);
 }
+
+
+
+
+
 /*--  Pages  -----------------------------------------------------------------*/
 section.page{
   position: relative;
@@ -156,6 +176,12 @@ nav.card-nav li button:hover{
   color: var(--primary-color);
   box-shadow: none;
 }
+
+
+
+
+
+/*--  Content Forms  ---------------------------------------------------------*/
 div.content-forms{
   height: calc(100vh - 90px);
   overflow-y: auto;
@@ -164,6 +190,7 @@ div.content-forms::-webkit-scrollbar {
   display: none;
 }
 div.content-form{
+  position: relative;
   border-radius: 3px;
   background-color: #FFFFFF;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
@@ -177,6 +204,15 @@ div.content-form.selected{
 div.content-form li.list-item{
   list-style-type: none;
   padding: 20px 0px;
+  border-top: 1px solid #eee;
+}
+div.content-form li.list-item:hover div.list-actions{
+  height: 50px;
+}
+div.content-form div.list-actions{
+  width: 100%;
+  height: 0px;
+  overflow: hidden;
 }
 div.content-form span.item-avatar{
   display: inline-block;
@@ -192,8 +228,56 @@ div.content-form span.item-avatar{
   text-transform: uppercase;
 }
 div.content-form div.item-data{
-  display: inline-block;
   width: calc(100% - 55px);
+  display: inline-block;
+}
+div.content-form span.data-description{
+  width: calc(100% - 70px);
+  display: block;
+  color: #555;
+  text-transform: capitalize;
+  font-size: 1.3em;
+  font-weight: 700;
+}
+div.content-form span.data-type{
+  display: block;
+  width: calc(100% - 70px);
+  text-transform: capitalize;
+  font-size: 1em;
+  padding: 10px 0px;
+}
+div.content-form i.data-sponsor{
+  color: #555;
+}
+div.content-form div.data-dates{
+  display: block;
+  width: calc(100% - 70px);
+  text-transform: uppercase;
+  color: #555;
+  padding: 10px 0px;
+}
+div.content-form div.data-dates span{
+  font-size: .8em;
+}
+div.content-form div.data-dates span.data-date{
+  font-size: 1.1em;
+  padding: 0px 10px;
+}
+div.content-form p.data-notes{
+  width: calc(100% - 70px);
+  font-size: 0.8em;
+  font-weight: 500;
+  color: #888;
+  padding: 10px 0px;
+}
+div.content-form span.data-stock{
+  display: inline-block;
+  float: right;
+  width: 70px;
+  font-size: 3em;
+  color: #888;
+  font-weight: 100;
+  text-align: center;
 }
 div.content-form span.data-name{
   display: inline-block;
@@ -242,6 +326,10 @@ div.content-form textarea{
   height: 40px;
   transition: background-color 300ms ease-in-out;
 }
+div.content-form input.input-inline{
+  display: inline-block;
+  width: 49%;
+}
 div.content-form textarea{
   line-height: 20px;
   padding: 10px 10px 0px 10px;
@@ -274,6 +362,30 @@ div.content-form textarea:valid {
 div.content-form button[type="submit"]{
   margin-top: 30px;
 }
+
+
+
+
+
+/*--  Modal Forms  -----------------------------------------------------------*/
+form.modal-form{
+  position: fixed;
+  width: 800px;
+  top: 100vh;
+  border-radius: 3px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+  transition: top 300ms ease-in-out;
+}
+form.modal-form.visible{
+  top: 10px;
+}
+
+
+
+
+
 /*--  Buttons  ---------------------------------------------------------------*/
 button{
   border-style: none;
@@ -299,6 +411,11 @@ button.btn-cancel{
   background-color: #fff;
   color: var(--primary-color);
 }
+
+
+
+
+
 /*--  Animations  ------------------------------------------------------------*/
 .fadeIn{
   animation: fadeIn 800ms;

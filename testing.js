@@ -49,7 +49,7 @@ function findUserByName(candidate) {
 }
 // findUserByName('adMIn');
 
-// Prizes  //////////////////////////////////////////////////////////////////
+// Prizes  /////////////////////////////////////////////////////////////////////
 
 const Prizes = require('./my_modules/prizes.js');
 const Prize = Prizes.Prize;
@@ -59,25 +59,23 @@ function newPrize() {
 	const newPrize = new Prize({
 		type: 'Estadía',
 		sponsor: 'Hotel Colonia',
-		description: 'Dos nochesw con desayuno',
+		description: 'Dos noches con desayuno',
 		stock: 2,
-		set_date: null,
-		due_date: '2016-12-01', // yyyy-MM-dd
-		note: null
+		due_date: '2016/12/01', // < yyyy/MM/dd >
+		note: "Hotel 3 estrellas en el corazón de Colonia del Sacramento"
 	});
-	return newPrize;
+	newPrize.save()
+	.then((result) => {
+		g_prize_id = result.ops[0]._id;
+		console.log('g_prize_id:', g_prize_id);
+	})
+	.catch((err) => { console.error(err) });
 }
-// const np = newPrize();
-// np.save()
-// .then((result) => {
-// 	g_prize_id = result.ops[0]._id;
-// 	console.log('g_prize_id:', g_prize_id);
-// })
-// .catch((err) => { console.error(err) });
+newPrize();
 
 
 function increaseStock(value) {
-	Prizes.findById('57f2664bcd9bb9fc0a323711')
+	Prizes.findById('583d78c534a50e180aa2830e')
 	.then((result) => {
 		console.log('Original stock =', result.getStock());
 		console.log('Increase value =', value);
@@ -96,7 +94,7 @@ function increaseStock(value) {
 
 
 function decreaseStock(value) {
-	Prizes.findById('57f2664bcd9bb9fc0a323711')
+	Prizes.findById('583d78c534a50e180aa2830e')
 	.then((result) => {
 		console.log('Original stock =', result.getStock());
 		console.log('Decrease value =', value);
@@ -111,4 +109,73 @@ function decreaseStock(value) {
 	})
 	.catch((err) => { console.error(err) });
 }
-// decreaseStock('85')
+// decreaseStock('50')
+
+//  Winners  ///////////////////////////////////////////////////////////////////
+
+const Winners = require('./my_modules/winners.js');
+const Winner = Winners.Winner;
+
+function newWinner(){
+	var w = new Winner({
+		ci:'1234561',
+		name:'Tyler',
+		lastname:'Durden',
+		facebook: 'https://es-la.facebook.com/tyler.durden',
+		gender: 'M',
+		phone: '099000111',
+		mail: 'tyler@tfc.com'
+	});
+	w.save()
+	.then((WriteResult) => {
+		console.log(WriteResult);
+	})
+	.catch((err) => {
+		console.log(err)
+	})
+}
+// newWinner();
+
+function findByCi(ci){
+	Winners.findByCi(ci)
+	.then(w => console.log(w.getName(), w.getLastname(), w.getFacebook()))
+	.catch(err => console.log(err));
+}
+// findByCi('1234561');
+
+function addDeletePrizes(){
+
+	Winners.findByCi('1234561')
+	.then((w) => {
+		w.addPrize('asdfbdgdts3456rth3w4f').then(res => console.log(res));
+		// w.addPrize('lhdtbyhdtyjfy').then(res => console.log(res));
+		// w.deletePrize('asdfbdgdts3456rth3w4f').then(res => console.log(res));
+	})
+	.catch(err => console.log(err));
+}
+// addDeletePrizes();
+
+function newWinnerAddPrize(){
+	var w = new Winner({
+		ci:'1234561',
+		name:'Tyler',
+		lastname:'Durden',
+		facebook: 'https://es-la.facebook.com/tyler.durden',
+		gender: 'M',
+		phone: '099000111',
+		mail: 'tyler@tfc.com'
+	});
+	w.save()
+	.then((WriteResult) => {
+		Winners.findByCi('1234561')
+		.then((w) => {
+			w.addPrize('asdfbdgdts3456rth3w4f').then(res => console.log(res));
+			// w.addPrize('lhdtbyhdtyjfy').then(res => console.log(res));
+			// w.deletePrize('asdfbdgdts3456rth3w4f').then(res => console.log(res));
+		})
+	})
+	.catch((err) => {
+		console.log(err)
+	})
+}
+// newWinnerAddPrize();
