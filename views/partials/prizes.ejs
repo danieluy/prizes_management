@@ -1,0 +1,77 @@
+<section id="section_pizes" class="page">
+  <div class="content-card">
+
+    <nav class="card-nav">
+      <ul>
+        <li><button class="nav-button" data-content-id="card-prizes-list">Lista de Premios</button></li>
+      </ul>
+      <ul>
+        <li><button class="nav-button" data-content-id="card-new-prize">Nuevo Premio</button></li>
+      </ul>
+    </nav>
+
+    <div class="content-forms">
+
+      <div id="card-prizes-list" class="content-form selected">
+        <h2>Lista de Premios</h2>
+        <ul id="ul-list-prizes" class="list">
+          <!-- It's filled from JS -->
+          <!-- <li class="list-item" data-prize-id="580a1e893ef08f200bb4487c">
+            <div>
+              <span class="data-stock">5</span>
+              <span class="data-description">The Fight Club - 1999</span>
+              <span class="data-type">Entrada de Cine <i> - Movie Center</i></span>
+              <div class="data-dates">
+                <span>Premio creado el </span>
+                <span class="data-date">27/10/2016</span>
+                <span>, vence el </span>
+                <span class="data-date">01/12/2016</span>
+              </div>
+              <p class="data-notes">
+                Fight Club es una película de 1999 basada en la novela homónima de Chuck Palahniuk. La cinta fue dirigida por David Fincher y protagonizada por Edward Norton, Brad Pitt y Helena Bonham Carter.
+              </p>
+              <div class="list-actions">
+                <button type="button" class="btn-ok">Otorgar</button>
+                <button type="button" class="btn-cancel">Editar</button>
+              </div>
+            </div>
+          </li> -->
+        </ul>
+        <% include ./prize-grant-form.ejs %>
+      </div>
+
+      <div id="card-new-prize" class="content-form">
+        <h2>Nuevo Premio</h2>
+        <form id="form-new-prize">
+          <!-- input new prize data -->
+
+          <label for="txt-type">Tipo *</label>
+          <input list="prizes-type-list" id="txt-type" placeholder="Tipo de premio" autocomplete="off" required>
+          <datalist id="prizes-type-list">
+            <!-- It's filled from JS -->
+          </datalist>
+
+          <label for="txt-description">Descripción *</label>
+          <input type="text" id="txt-description" placeholder="Descripción del premio" required>
+
+
+          <label for="txt-sponsor">Espónsor *</label>
+          <input type="text" id="txt-sponsor" placeholder="Nombre del espónsor" required>
+
+          <label for="txt-stock">Stock *</label>
+          <input type="number" id="txt-stock" placeholder="Stock inicial" min="0" required>
+
+          <label for="date-duedate">Vencimiento</label>
+          <input type="date" id="date-duedate">
+
+          <label for="txt-note">Notas</label>
+          <textarea id="txt-note" placeholder="Comentarios sobre el premio"></textarea>
+
+          <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
+          <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>

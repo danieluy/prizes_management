@@ -1,0 +1,23 @@
+{
+  "misc":{
+    "appName": "Gestión de Premios",
+    "appDescription": "Herramienta de gestión y control de premios",
+    "appLogo": null
+  },
+  "session":{
+    "secret": "SYF!$·VW$B%3vb4b46rbv6HW$%&GB·bge4wv",
+    "durationHours": 4,
+    "activeDurationHours": 0.25
+  },
+  "network":{
+    "ip": "localhost",
+    "port": "1043"
+  },
+  "database":
+  {
+    "ip": "localhost",
+    "port": "27017",
+    "name": "rcrmc2016",
+    "password": null
+  }
+}

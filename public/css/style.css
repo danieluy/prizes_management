@@ -1,0 +1,430 @@
+/*--  Global Variables  ------------------------------------------------------*/
+html{
+  --white-color: #EEEEEE;
+  --grey-color: #888888;
+  --black-color: #333333;
+  --primary-color: #F58500;
+  --accent-color: #0240AA;
+  --nav-width: 200px;
+}
+/*vsplit*/
+
+
+
+
+
+/*--  Reset  -----------------------------------------------------------------*/
+*, html{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  color: var(--black-color);
+}
+body{
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  background-color: var(--white-color);
+  color: var(--black-color);
+  overflow: hidden;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+
+
+
+
+/*--  Header  -----------------------------------------------------------------*/
+header{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: var(--nav-width);
+  height: 100vh;
+}
+header nav{
+  width: 100%;
+  overflow: auto;
+}
+div.main-nav{
+  float: left;
+  width: var(--nav-width);
+  height: 90px;
+}
+div.main-nav img{
+  float: left;
+  margin: 30px 15px;
+  width: 30px;
+  height: 30px;
+}
+div.main-nav span{
+  display: inline-block;
+  line-height: 90px;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+ul.nav-options{
+  list-style-type: none;
+  width: 100%;
+  padding-left: 15px;
+}
+ul.nav-options li a{
+  display: block;
+  width: calc(var(--nav-width) - 15px);
+  height: 60px;
+  line-height: 60px;
+  color: var(--black-color);
+  cursor: pointer;
+  transition: all 300ms linear;
+}
+ul.nav-options li a:hover{
+  background-color: #CCCCCC;
+}
+ul.nav-options li.menu-title{
+  font-size: .7em;
+  font-weight: 500;
+  line-height: 40px;
+  color: var(--grey-color );
+  text-transform: uppercase;
+}
+
+
+
+
+
+/*--  Login modal  -----------------------------------------------------------*/
+#login-modal{
+  position: absolute;
+  width: 300px;
+  top: 100px;
+  margin-left: calc(50% - 150px);
+  z-index: 10;
+  padding: 30px;
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+#login-modal:after{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  content: '';
+  width: 100%;
+  height: 100vh;
+  background-color: #FFFFFF;
+  z-index: -1;
+  pointer-events: auto;
+}
+#login-modal img{
+  margin-left: calc(50% - 48px);
+  margin-bottom: 30px;
+}
+#login-modal input{
+  line-height: 25px;
+  width: 100%;
+  border-style: none;
+  padding: 5px;
+}
+#login-modal.out{
+  opacity: 0;
+}
+#login-modal.out:after{
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+
+
+
+
+/*--  Pages  -----------------------------------------------------------------*/
+section.page{
+  position: relative;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+  height: 100vh;
+}
+div.content-card{
+  width: 50%;
+  min-width: 700px;
+  margin: 0 auto;
+  height: 100vh;
+  overflow-y: hidden;
+}
+nav.card-nav{
+  width: 100%;
+  height: 90px;
+}
+nav.card-nav li{
+  float: left;
+  list-style-type: none;
+  cursor: pointer;
+}
+nav.card-nav li button{
+  background-color: transparent;
+  height: 90px;
+  font-size: .85em;
+  font-weight: 500;
+  color: #888;
+}
+nav.card-nav li button:hover{
+  color: var(--primary-color);
+  box-shadow: none;
+}
+
+
+
+
+
+/*--  Content Forms  ---------------------------------------------------------*/
+div.content-forms{
+  height: calc(100vh - 90px);
+  overflow-y: auto;
+}
+div.content-forms::-webkit-scrollbar {
+  display: none;
+}
+div.content-form{
+  position: relative;
+  border-radius: 3px;
+  background-color: #FFFFFF;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+  margin: 0px 10px 20px 10px;
+  padding: 20px;
+  display: none;
+}
+div.content-form.selected{
+  display: inherit;
+}
+div.content-form li.list-item{
+  list-style-type: none;
+  padding: 20px 0px;
+  border-top: 1px solid #eee;
+}
+div.content-form li.list-item:hover div.list-actions{
+  height: 50px;
+}
+div.content-form div.list-actions{
+  width: 100%;
+  height: 0px;
+  overflow: hidden;
+}
+div.content-form span.item-avatar{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 50%;
+  border: 1px solid var(--primary-color);
+  text-align: center;
+  background-color: var(--white-color);
+  color: var(--primary-color);
+  font-size: 1.5em;
+  text-transform: uppercase;
+}
+div.content-form div.item-data{
+  width: calc(100% - 55px);
+  display: inline-block;
+}
+div.content-form span.data-description{
+  width: calc(100% - 70px);
+  display: block;
+  color: #555;
+  text-transform: capitalize;
+  font-size: 1.3em;
+  font-weight: 700;
+}
+div.content-form span.data-type{
+  display: block;
+  width: calc(100% - 70px);
+  text-transform: capitalize;
+  font-size: 1em;
+  padding: 10px 0px;
+}
+div.content-form i.data-sponsor{
+  color: #555;
+}
+div.content-form div.data-dates{
+  display: block;
+  width: calc(100% - 70px);
+  text-transform: uppercase;
+  color: #555;
+  padding: 10px 0px;
+}
+div.content-form div.data-dates span{
+  font-size: .8em;
+}
+div.content-form div.data-dates span.data-date{
+  font-size: 1.1em;
+  padding: 0px 10px;
+}
+div.content-form p.data-notes{
+  width: calc(100% - 70px);
+  font-size: 0.8em;
+  font-weight: 500;
+  color: #888;
+  padding: 10px 0px;
+}
+div.content-form span.data-stock{
+  display: inline-block;
+  float: right;
+  width: 70px;
+  font-size: 3em;
+  color: #888;
+  font-weight: 100;
+  text-align: center;
+}
+div.content-form span.data-name{
+  display: inline-block;
+  text-transform: capitalize;
+  padding-left: 15px;
+  font-size: 1.3em;
+}
+div.content-form span.data-right{
+  float: right;
+}
+div.content-form small{
+  font-size: .8em;
+  padding: 0px 5px;
+}
+div.content-form span.data-role,
+div.content-form span.data-set_date{
+  text-transform: uppercase;
+  color: #555;
+}
+div.content-form h2{
+  line-height: 80px;
+  font-size: 2.5em;
+  color: var(--primary-color);
+  font-weight: 100;
+}
+div.content-form label{
+  display: block;
+  line-height: 30px;
+  text-transform: uppercase;
+  font-size: .7em;
+  font-weight: 700;
+  color: #888;
+  margin-top: 15px;
+}
+div.content-form input,
+div.content-form select,
+div.content-form textarea{
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-style: none;
+  border-radius: 3px;
+  line-height: 40px;
+  padding: 0px 10px;
+  height: 40px;
+  transition: background-color 300ms ease-in-out;
+}
+div.content-form input.input-inline{
+  display: inline-block;
+  width: 49%;
+}
+div.content-form textarea{
+  line-height: 20px;
+  padding: 10px 10px 0px 10px;
+}
+div.content-form select,
+div.content-form input[type="date"]{
+  color: #A9A9A9;
+}
+div.content-form input:hover,
+div.content-form select:hover,
+div.content-form textarea:hover{
+  background-color: #eee;
+}
+div.content-form input:invalid,
+div.content-form select:invalid,
+div.content-form textarea:invalid {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+div.content-form input:invalid::-webkit-input-placeholder,
+div.content-form select:invalid::-webkit-input-placeholder,
+div.content-form textarea:invalid::-webkit-input-placeholder {
+  color: var(--white-color);
+}
+div.content-form input:valid,
+div.content-form select:valid,
+div.content-form textarea:valid {
+  /*border-left: 5px solid rgba(0, 200, 0, 0.1);*/
+}
+div.content-form button[type="submit"]{
+  margin-top: 30px;
+}
+
+
+
+
+
+/*--  Modal Forms  -----------------------------------------------------------*/
+form.modal-form{
+  position: fixed;
+  width: 800px;
+  top: 100vh;
+  border-radius: 3px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+  transition: top 300ms ease-in-out;
+}
+form.modal-form.visible{
+  top: 10px;
+}
+
+
+
+
+
+/*--  Buttons  ---------------------------------------------------------------*/
+button{
+  border-style: none;
+  border-radius: 3px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 20px;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: box-shadow 150ms ease-in-out;
+}
+button:hover{
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+button:active{
+  box-shadow: none;
+}
+button.btn-ok{
+  background-color: var(--primary-color);
+  color: #fff;
+}
+button.btn-cancel{
+  background-color: #fff;
+  color: var(--primary-color);
+}
+
+
+
+
+
+/*--  Animations  ------------------------------------------------------------*/
+.fadeIn{
+  animation: fadeIn 800ms;
+}
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}

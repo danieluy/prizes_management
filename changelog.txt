@@ -1,0 +1,43 @@
+Changelog
+v0.4.5
+  + Working on winners list - ready to do cancelHandOverPrize() on backend
+  + TODO cancelHandOverPrize() on backend
+  + TODO users management an server side checks
+  + TODO format CI to display on winner's list
+  + TODO filter prizes on list
+  + TODO Finish the Prizes list UI
+  + TODO At prize creation the sponsors should be suggested in the same way types are suggested
+  + SOLVED everything about the prize's stock is broken, assigning prizes is working now, stock management included ;)
+  + Added prize handing over functionality on backend
+  + When adding a new prize, the prize's list in now updated
+v0.4.4 (commited & pushed)
+  + Added ejs partials
+  + Solved a bug on index.js that was sending non UTC date to the server
+  + Solved a bug on index.js that didn't refresh the content position when the window was resized
+  + Added the form to grant prizes
+  + Added Winners module
+  + Added info_hub actions
+  + Solved grantPrize() on fontend's winner.js
+  + Solved Dates and comments displaying even if they are null
+  - BUG everything about the prizes stock is broken!!!!
+v0.4.3 (commited & pushed)
+  + Added tab navigation
+  + Added User's list style
+  + Added new navigation system
+  + Added DS-Spinners
+  + Added delay option to ds-ajax.js
+v0.4.2 (commited & pushed)
+  + Added Form's UI design
+  + Added suggested prize types from the existing prize types in the database
+  + The method findAll at prizes.js and users.js now returns an empty Array instead of null when there is no results
+  + Added PUT method to ds_ajax.js
+  + Added date format control in the prizes.js module
+  + Added :valid and :invalid pseudo classes style to input, textarea and select tags within div.content-form
+  + Added info-hub to display messages
+  + New prize's UI to back-end connection finished
+  + Refined forms UI
+  + Added resert functionallity to forms
+v0.4.1 (commited & pushed)
+  + Added concurrently dev-dependency to run MongoDB along with app.js
+  + Started to normalize sintaxis
+  + Current status of modules users.js and prizes.js was correctly tested
