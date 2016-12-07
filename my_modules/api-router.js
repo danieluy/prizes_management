@@ -56,6 +56,39 @@ api_router.put('/prizes', (req, res) => {
 
 //  Winners  ///////////////////////////////////////////////////////////////////
 
+api_router.get('/winners', (req, res) => {
+  Winners.findAll()
+  .then((results) => {
+    if(results)
+      res.status(200).json(results.map((result) => result.getPublicData()));
+    else
+      res.status(200).json([]);
+  })
+  .catch((err) => {
+    res.status(500).json({error: "There was a problem fetching the winner's data", details: err.toString()});
+  })
+});
+
+api_router.get('/winners/unhandedprizes', (req, res) => {
+  Winners.findAll()
+  .then((results) => {
+    if(results){
+      let formatted_results = results.map((result) => result.getPublicData());
+      let filtered_results = formatted_results.filter((result) => {
+        for (var i = 0; i < result.prizes.length; i++)
+          if(!result.prizes[i].handed) return true;
+        return false;
+      });
+      res.status(200).json(filtered_results);
+    }
+    else
+      res.status(200).json([]);
+  })
+  .catch((err) => {
+    res.status(500).json({error: "There was a problem fetching the winner's data", details: err.toString()});
+  })
+});
+
 api_router.post('/winners/findci', (req, res) => {
   let ci = req.body.ci;
   Winners.findByCi(ci)
@@ -83,43 +116,74 @@ api_router.post('/winners/findci', (req, res) => {
   })
 });
 
-api_router.put('/winners', (req, res) => {
-  // console.log("api_router.put('/winners',...");
-  // console.log('req.body.prize_id', req.body.prize_id);
-  // console.log('req.body.ci', req.body.ci);
-  // console.log('req.body.name', req.body.name);
-  // console.log('req.body.lastname', req.body.lastname);
-  Winners.findByCi(req.body.ci)
-  .then((winner) => {
-    // console.log('winner', winner);
-    if(winner){
-      Prizes.findById(req.body.prize_id)
-      .then((prize) => {
-        if(prize){
-          console.log('prize', prize);
-          if(prize.getStock() > 0){
-            prize.stockDecrease(1)
-            .then((Writeresult) => {
+api_router.post('/winners/handprize', (req, res) => {
+  let winner_ci = req.body.winner_ci;
+  let prize_id = req.body.prize_id;
+  if(winner_ci && prize_id){
+    Prizes.findById(prize_id)
+    .then((prize) => {
+      if(prize){
+        Winners.findByCi(winner_ci)
+        .then((winner) => {
+          if(winner){
+            winner.handOverPrize(prize_id)
+            .then((WriteResult) => {
               if(WriteResult.nModified > 0){
-                winner.addPrize(req.body.prize_id)
-                .then((WriteResult) => {
-                  if(WriteResult.nModified > 0)
-                  res.status(200).json({message: 'The prize has been correctly assigned'});
-                  else
-                  res.status(500).json({error: "There was a problem assigning the prize", details: "ERROR on Winner's method: " + winner + ".addPrize(" + req.body.prize_id + ")"});
-                })
+                res.status(200).json({message: "The prize was correctly handed over"});
               }
               else {
-                res.status(500).json({error: "There was a problem prize's stock", details: "ERROR on Prizes's method: prize.stockDecrease(1)"});
+                res.status(500).json({error: "There was a problem handing over the prize", details: "ERROR [ api-router.js ][ post(/winners/handprize) ][ winner.handOverPrize("+prize_id+") ]"});
               }
             })
           }
           else{
-            res.status(500).json({error: "There is not enough stock", details: "ERROR trying to assign a prize to an existing winner"});
+            res.status(500).json({error: "The winner could not be found", details: "ERROR [ api-router.js ][ post(/winners/handprize) ][ Winners.findByCi("+winner_ci+") ]"});
+          }
+        })
+      }
+      else{
+        res.status(500).json({error: "The prize could not be found", details: "ERROR [ api-router.js ][ post(/winners/handprize) ][ Prizes.findById("+prize_id+") ]"});
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({error: "There was a problem handing over the prize", details: err.toString()});
+    })
+  }
+  else {
+    res.status(400).json({error: "Bad request, a winner's ci and prize id must be provided", details: "ERROR [ api-router.js ][ post(/winners/handprize) ]"});
+  }
+});
+
+api_router.put('/winners', (req, res) => {
+  Winners.findByCi(req.body.ci)
+  .then((winner) => {
+    if(winner){
+      Prizes.findById(req.body.prize_id)
+      .then((prize) => {
+        if(prize){
+          if(prize.getStock() > 0){
+            prize.stockDecrease(1)
+            .then((WriteResult) => {
+              if(WriteResult.nModified > 0){
+                winner.addPrize(req.body.prize_id)
+                .then((WriteResult) => {
+                  if(WriteResult.nModified > 0)
+                   res.status(200).json({message: 'The prize has been correctly assigned'});
+                  else
+                   res.status(500).json({error: "There was a problem assigning the prize", details: "ERROR [ api-router.js ][ put(/winners) ][ existing winner ][ winner.addPrize("+req.body.prize_id+") ]"});
+                })
+              }
+              else {
+                res.status(500).json({error: "There was a problem decreasing the prize's stock", details: "ERROR [ api-router.js ][ put(/winners) ][ existing winner ][ stockDecrease(1) ]"});
+              }
+            })
+          }
+          else{
+            res.status(500).json({error: "There is not enough stock", details: "ERROR [ api-router.js ][ put(/winners) ][ existing winner ][ prize.getStock() <= 0 ]"});
           }
         }
         else{
-          res.status(500).json({error: "There prize couldn't be found", details: "ERROR trying to assign a prize to an existing winner"});
+          res.status(500).json({error: "There prize couldn't be found", details: "ERROR [ api-router.js ][ put(/winners) ][ existing winner ][ Prizes.findById("+req.body.prize_id+") ]"});
         }
       })
     }
@@ -139,11 +203,9 @@ api_router.put('/winners', (req, res) => {
           Prizes.findById(req.body.prize_id)
           .then((prize) => {
             if(prize){
-              // I was debuging at this point
-              console.log('prize.getStock() =', prize.getStock());
               if(prize.getStock() > 0){
                 prize.stockDecrease(1)
-                .then((Writeresult) => {
+                .then((WriteResult) => {
                   if(WriteResult.nModified > 0){
                     Winners.findByCi(req.body.ci)
                     .then((winner) => {
@@ -152,26 +214,26 @@ api_router.put('/winners', (req, res) => {
                         if(WriteResult.nModified > 0)
                         res.status(200).json({message: 'The prize has been correctly assigned'});
                         else
-                        res.status(500).json({error: "There was a problem assigning the prize", details: "ERROR on Winner's method: " + winner + ".addPrize(" + req.body.prize_id + ")"});
+                        res.status(500).json({error: "There was a problem assigning the prize", details: "ERROR [ api-router.js ][ put(/winners) ][ !existing winner ][ winner.addPrize("+req.body.prize_id+") ]"});
                       })
                     })
                   }
                   else {
-                    res.status(500).json({error: "There was a problem prize's stock", details: "ERROR on Prizes's method: prize.stockDecrease(1)"});
+                    res.status(500).json({error: "There was a problem decreasing the prize's stock", details: "ERROR [ api-router.js ][ put(/winners) ][ !existing winner ][ stockDecrease(1) ]"});
                   }
                 })
               }
               else{
-                res.status(500).json({error: "There is not enough stock", details: "ERROR trying to assign a prize to a new winner"});
+                res.status(500).json({error: "There is not enough stock", details: "ERROR [ api-router.js ][ put(/winners) ][ !existing winner ][ prize.getStock() <= 0 ]"});
               }
             }
             else{
-              res.status(500).json({error: "There prize couldn't be found", details: "ERROR trying to assign a prize to a new winner"});
+              res.status(500).json({error: "There prize couldn't be found", details: "ERROR [ api-router.js ][ put(/winners) ][ !existing winner ][ Prizes.findById("+req.body.prize_id+") ]"});
             }
           })
         }
         else{
-          res.status(500).json({error: "There was a problem saving a new winner", details: "ERROR on Winner's method: " + winner + ".save()"});
+          res.status(500).json({error: "There was a problem saving a new winner", details: "ERROR [ api-router.js ][ put(/winners) ][ !existing winner ][ winner.save() ]"});
         }
       })
     }

@@ -10,9 +10,11 @@ var $winners = {
   init: function(){
     this.domCache();
     this.domListeners();
+    this.reqGetWinnersDataWithUnhandedPrizes();
   },
 
   domCache: function(){
+    this.winners_list = document.getElementById('ul-list-winners');
     this.form_new_winner = document.getElementById('form-new-winner');
     this.prize_to_grant_description = document.getElementById('prize-to-grant-description');
     this.prize_to_grant_type = document.getElementById('prize-to-grant-type');
@@ -35,15 +37,82 @@ var $winners = {
 
   dinamicDomCache: function(){
     this.grant_buttons = document.getElementsByClassName('btn-grant-prize');
+    this.hand_over_buttons = document.getElementsByClassName('btn-hand-over-prize');
+    this.cancel_hand_over_buttons = document.getElementsByClassName('btn-cancel-hand-over-prize');
     this.dinamicDomListeners();
   },
 
   dinamicDomListeners: function(){
     for (var i = 0; i < this.grant_buttons.length; i++)
-      this.grant_buttons[i].addEventListener('click', this.diplayGrantForm.bind(this));
+      this.grant_buttons[i].addEventListener('click', this.displayGrantForm.bind(this));
+    for (var j = 0; j < this.hand_over_buttons.length; j++)
+      this.hand_over_buttons[j].addEventListener('click', this.handOverPrize.bind(this));
+    for (var k = 0; k < this.cancel_hand_over_buttons.length; k++)
+      this.cancel_hand_over_buttons[k].addEventListener('click', this.cancelHandOverPrize.bind(this));
   },
 
-  diplayGrantForm: function(e){
+  reqGetWinnersDataWithUnhandedPrizes: function(){
+    dsAjax.get.call(this, {
+      url: 'http://' + window.location.host + '/api/winners/unhandedprizes',
+      onEndCb: ds_spinner.stop,
+      successCb: (function(results){
+        this.winners_with_unhanded_prizes = JSON.parse(results);
+        this.render.list.call(this);
+      }).bind($winners),
+      errorCb: function(err){
+        let err_obj = JSON.parse(err);
+        info_hub.error('No se han podido conseguir la información de ganadores');
+        console.error('ERROR:', err_obj.error, '\nDetails: ', err_obj.details);
+      },
+    })
+  },
+
+  handOverPrize: function(e){
+    var prize_id = e.target.getAttribute('data-prize-id');
+    var winner_ci = e.target.getAttribute('data-winner-ci');
+    dsAjax.post.call(this, {
+      onEndCb: ds_spinner.stop,
+      url: 'http://' + window.location.host + '/api/winners/handprize',
+      params: {
+        winner_ci: winner_ci,
+        prize_id: prize_id
+      },
+      successCb: (function(result){
+        result = JSON.parse(result);
+        info_hub.ok('El premio se entregó correctamente');
+        this.reqGetWinnersDataWithUnhandedPrizes.call(this);
+      }).bind(this),
+      errorCb: function(err){
+        let err_obj = JSON.parse(err);
+        info_hub.error('No se pudo entregar el premio');
+        console.error('ERROR:', err_obj.error, '\nDetails: ', err_obj.details);
+      }
+    });
+  },
+
+  cancelHandOverPrize: function(e){
+    var prize_id = e.target.getAttribute('data-prize-id');
+    var winner_ci = e.target.getAttribute('data-winner-ci');
+    dsAjax.post({
+      onEndCb: ds_spinner.stop,
+      url: 'http://' + window.location.host + '/api/winners/cancelhandprize',
+      params: {
+        winner_ci: winner_ci,
+        prize_id: prize_id
+      },
+      successCb: function(result){
+        result = JSON.parse(result);
+        info_hub.ok('La asignación del premio se canceló correctamente')
+      },
+      errorCb: function(err){
+        let err_obj = JSON.parse(err);
+        info_hub.error('No se pudo cancelar la asignación del premio');
+        console.error('ERROR:', err_obj.error, '\nDetails: ', err_obj.details);
+      }
+    });
+  },
+
+  displayGrantForm: function(e){
     this.render.render_form_new_winner.call(this, {
       show: true,
       id: e.target.getAttribute('data-prize-id'),
@@ -64,7 +133,7 @@ var $winners = {
       var phone = this.phone.value;
       var mail = this.mail.value;
       var prize_id = e.target.getAttribute('data-prize-id');
-      dsAjax.put({
+      dsAjax.put.call(this, {
         onEndCb: ds_spinner.stop,
         url: 'http://' + window.location.host + '/api/winners',
         params: {
@@ -77,10 +146,13 @@ var $winners = {
           mail: mail,
           prize_id: prize_id
         },
-        successCb: function(result){
+        successCb: (function(result){
           result = JSON.parse(result);
           info_hub.ok('El premio se asignó correctamente')
-        },
+          this.render.render_form_new_winner.call(this, {show: false});
+          this.reqGetWinnersDataWithUnhandedPrizes.call(this);
+          $prizes.reqGetPrizesList.call($prizes);
+        }).bind(this),
         errorCb: function(err){
           let err_obj = JSON.parse(err);
           info_hub.error('No se pudo asignar el premio');
@@ -195,7 +267,111 @@ var $winners = {
     })
   },
 
+  findPrizeData: function(prize_id, prizes){
+    for (var i = 0; i < prizes.length; i++) {
+      if(prizes[i].id === prize_id)
+      return {
+        description: prizes[i].description,
+        type: prizes[i].type,
+        sponsor: prizes[i].sponsor
+      }
+    }
+    throw 'ERROR - There was a problem trying to fetch the prizes data';
+  },
+
   render: {
+
+    list: function(){
+      this.winners_list.innerHTML = '';
+      if(this.winners_with_unhanded_prizes.length){
+        $prizes.getPrizeData((function(prizes){
+          for (var i = 0; i < this.winners_with_unhanded_prizes.length; i++) {
+            var winner =  this.winners_with_unhanded_prizes[i];
+            for (var j = 0; j < winner.prizes.length; j++) {
+              if(!winner.prizes[j].handed){
+
+                var prize_data = this.findPrizeData(winner.prizes[j].id, prizes);
+
+                for (var key in prize_data) {
+                  winner.prizes[j][key] = prize_data[key];
+                }
+
+                var li = document.createElement('li');
+                li.classList.add('list-item');
+
+                var div = document.createElement('div');
+
+                var name_lastname = document.createElement('span');
+                name_lastname.classList.add('data-description');
+                name_lastname.innerHTML = winner.name + ' ' + winner.lastname;
+
+                var ci = document.createElement('span');
+                ci.classList.add('data-description');
+                var it = document.createElement('i');
+                it.innerHTML = winner.ci;
+                ci.appendChild(it);
+
+                var prize_label = document.createElement('span');
+                prize_label.classList.add('data-type');
+                prize_label.innerHTML = "Premio:";
+
+                var prize_description = document.createElement('span');
+                prize_description.classList.add('data-description');
+                prize_description.innerHTML = winner.prizes[j].description;
+
+                var prize_type_sponsor = document.createElement('span');
+                prize_type_sponsor.classList.add('data-type');
+                prize_type_sponsor.innerHTML = winner.prizes[j].type;
+                var it2 = document.createElement('i');
+                it2.innerHTML = ' - ' + winner.prizes[j].sponsor;
+                prize_type_sponsor.appendChild(it2);
+
+                var dates = document.createElement('div');
+                dates.classList.add('data-dates');
+                var granted_data_label = document.createElement('span');
+                granted_data_label.innerHTML = 'Ganó el ';
+                dates.appendChild(granted_data_label);
+                var granted_date = document.createElement('span');
+                granted_date.classList.add('data-date');
+                granted_date.innerHTML = this.formatDateToRender(winner.prizes[j].granted);
+                dates.appendChild(granted_date);
+
+                var buttons = document.createElement('div');
+                buttons.classList.add('list-actions');
+                var btn_ok = document.createElement('button');
+                btn_ok.classList.add('btn-ok');
+                btn_ok.classList.add('btn-hand-over-prize');
+                btn_ok.setAttribute('data-prize-id', winner.prizes[j].id);
+                btn_ok.setAttribute('data-winner-ci', winner.ci);
+                btn_ok.innerHTML = 'Entregar';
+                var btn_cancel = document.createElement('button');
+                btn_cancel.classList.add('btn-cancel');
+                btn_cancel.classList.add('btn-cancel-hand-over-prize');
+                btn_cancel.setAttribute('data-prize-id', winner.prizes[j].id);
+                btn_cancel.setAttribute('data-winner-ci', winner.ci);
+                btn_cancel.innerHTML = 'Cancelar';
+                buttons.appendChild(btn_ok);
+                buttons.appendChild(btn_cancel);
+
+                div.appendChild(name_lastname);
+                div.appendChild(ci);
+                div.appendChild(prize_label);
+                div.appendChild(prize_description);
+                div.appendChild(prize_type_sponsor);
+                div.appendChild(dates);
+                div.appendChild(buttons);
+
+                li.appendChild(div);
+
+                this.winners_list.appendChild(li);
+              }
+            }
+
+            $winners.dinamicDomCache();
+          }
+        }).bind(this))
+      }
+    },
 
     render_form_new_winner: function(options){
       if(options.show){
@@ -212,6 +388,15 @@ var $winners = {
       }
     }
 
-  }
+  },
+
+  formatDateToRender: function(date){
+    if(date){
+      var date = new Date(date);
+      return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getUTCFullYear();
+    }
+    else
+    return null;
+  },
 
 }

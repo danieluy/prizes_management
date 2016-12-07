@@ -4,9 +4,6 @@ const db = require('./db.js');
 
 const Prize = function(prize_info){
 
-  // console.log('prize_info');
-  // console.log(JSON.stringify(prize_info, null, 3));
-
   if(!prize_info.type || !prize_info.sponsor || !prize_info.description)
     throw 'ERROR: To create a new prize, "type", "sponsor" and "description" parameters must be provided';
   if(isNaN(parseInt(prize_info.stock)) || parseInt(prize_info.stock) < 0)

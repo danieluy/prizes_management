@@ -60,7 +60,7 @@ function newPrize() {
 		type: 'Estadía',
 		sponsor: 'Hotel Colonia',
 		description: 'Dos noches con desayuno',
-		stock: 2,
+		stock: 20,
 		due_date: '2016/12/01', // < yyyy/MM/dd >
 		note: "Hotel 3 estrellas en el corazón de Colonia del Sacramento"
 	});

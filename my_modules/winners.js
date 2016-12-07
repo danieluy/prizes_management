@@ -22,6 +22,8 @@ const Winner = function (winner_info){
   let phone = winner_info.phone;
   let mail = winner_info.mail;
   let prizes = winner_info.prizes;
+  let set_date = winner_info.set_date;
+  let update_date = winner_info.update_date;
 
   // Methods
   const save = () => {
@@ -77,7 +79,7 @@ const Winner = function (winner_info){
   const addPrize = (prize_id) => {
     if(!prize_id)
       throw 'ERROR: To add a prize the "prize_id" parameter must be provided';
-    prizes.push({ 'id': prize_id, 'handed': false, 'granted': Date.now() });
+    prizes.push({ 'id': prize_id, 'handed': null, 'granted': Date.now() });
     return update();
   }
 
@@ -86,6 +88,29 @@ const Winner = function (winner_info){
       throw 'ERROR: To delete a prize the "prize_id" parameter must be provided';
     prizes = prizes.filter( prize => prize.id !== prize_id );
     return update();
+  }
+
+  const handOverPrize = (prize_id) => {
+    for (var i = 0; i < prizes.length; i++)
+      if(prizes[i].id === prize_id)
+        prizes[i].handed = Date.now();
+    return update();
+  }
+
+  const getPublicData = () => {
+    return {
+      id: id,
+      ci: ci,
+      name: name,
+      lastname: lastname,
+      facebook: facebook,
+      gender: gender,
+      phone: phone,
+      mail: mail,
+      prizes: prizes,
+      set_date: set_date,
+      update_date: update_date
+    }
   }
 
   return {
@@ -107,8 +132,10 @@ const Winner = function (winner_info){
     getMail: () => mail,
     setMail: (_mail) => {mail = _mail},
     getPrizes: () => prizes,
+    getPublicData: getPublicData,
     addPrize: addPrize,
-    deletePrize: deletePrize
+    deletePrize: deletePrize,
+    handOverPrize: handOverPrize
   }
 }
 
@@ -139,10 +166,39 @@ const findByCi = (ci) => {
   });
 }
 
+const findAll = () => {
+  return new Promise(function(resolve, reject){
+    db.find('winners')
+    .then((results) => {
+      if(results.length){
+        return resolve(results.map((result) => {
+          return new Winner({
+            'id': result._id,
+            'ci': result.ci,
+            'name': result.name,
+            'lastname': result.lastname,
+            'facebook': result.facebook,
+            'gender': result.gender,
+            'phone': result.phone,
+            'mail': result.mail,
+            'prizes': result.prizes,
+            'set_date': result.set_date,
+            'update_date': result.update_date
+          });
+        }));
+      }
+      return resolve([]);
+    })
+    .catch((err) => {
+      return reject("ERR_DB - Unable to fetch winner's data - Winners module - Returned ERROR: " + err);
+    });
+  });
+}
 
 module.exports = {
   Winner: Winner,
-  findByCi: findByCi
+  findByCi: findByCi,
+  findAll: findAll
 }
 
 

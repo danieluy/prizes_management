@@ -95,7 +95,6 @@ const findOne = (collection, query) => {
 * Returns Json: document
 */
 const findById = (collection, id) => {
-  console.log(id);
   if (!collection || !id)
   throw "Collection and id parameters must be provided";
   return new Promise(function (resolve, reject) {

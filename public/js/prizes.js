@@ -2,33 +2,52 @@
 'use strict';
 
 document.addEventListener("DOMContentLoaded", function(){
-  document.getElementById('btn-sub-prize').addEventListener('click', $prizes.reqNewPrize);
+  document.getElementById('btn-sub-prize').addEventListener('click', $prizes.reqNewPrize.bind($prizes));
   $prizes.init();
 });
 //  PRIZES  ////////////////////////////////////////////////////////////////////
 var $prizes = {
+
   init: function(){
     this.domCache();
     this.reqGetPrizesList();
   },
+
   domCache: function(){
-    this.prizes_list = document.getElementById('ul-list-users');
+    this.prizes_list = document.getElementById('ul-list-prizes');
   },
+
   reqGetPrizesList: function(){
-    dsAjax.get({
+    dsAjax.get.call(this, {
       url: 'http://' + window.location.host + '/api/prizes',
       onEndCb: ds_spinner.stop,
       successCb: (function(results){
         this.prizes = JSON.parse(results);
         this.render.list.call(this);
-      }).bind($prizes),
+      }).bind(this),
       errorCb: function(err){
         let err_obj = JSON.parse(err);
-        info_hub.error('No se ha guardado el premio');
+        info_hub.error('No se han podido conseguir la información de premios');
         console.error('ERROR:', err_obj.error, '\nDetails: ', err_obj.details);
       },
     })
   },
+
+  getPrizeData: function(callback){
+    if(this.prizes){
+      callback(this.prizes);
+    }
+    else{
+      var obj = this;
+      var interval = setInterval(function () {
+        if(obj.prizes){
+          clearInterval(interval);
+          callback(obj.prizes)
+        }
+      }, 10);
+    }
+  },
+
   reqNewPrize: function(e){
     e.preventDefault();
     ds_spinner.start();
@@ -42,7 +61,7 @@ var $prizes = {
       due_date = due_date === '' ? null : inputTypeDateForwardSlash(due_date);
       var note = document.getElementById('txt-note').value;
       note = note === '' ? null : note;
-      dsAjax.put({
+      dsAjax.put.call(this, {
         onEndCb: ds_spinner.stop,
         // delayMs: 5000,
         url: 'http://' + window.location.host + '/api/prizes',
@@ -54,17 +73,18 @@ var $prizes = {
           due_date: due_date,
           note: note
         },
-        successCb: function(result){
+        successCb: (function(result){
           result = JSON.parse(result);
           if(result.error){
             info_hub.error('No se ha guardado el premio');
-            console.error('ERROR:',result.error, '\nDetails: ', result.details);
+            console.error('ERROR:', result.error, '\nDetails: ', result.details);
           }
           else{
             info_hub.ok('El premio se guardó correctamente!');
             $dataFields.getPrizes();
+            this.reqGetPrizesList.call(this);
           }
-        },
+        }).bind(this),
         errorCb: function(err){
           let err_obj = JSON.parse(err);
           info_hub.error('No se ha guardado el premio');
@@ -78,6 +98,7 @@ var $prizes = {
       console.error('Se deben completar todos los campos marcados con *');
     }
   },
+
   formatDateToRender: function(date){
     if(date){
       var date = new Date(date);
@@ -86,8 +107,10 @@ var $prizes = {
     else
     return null;
   },
+
   render: {
     list: function(){
+      this.prizes_list.innerHTML = '';
       for(var i = 0; i < this.prizes.length; i++){
         var prize =  this.prizes[i];
 
@@ -133,7 +156,6 @@ var $prizes = {
         }
 
         if(prize.note){
-          console.log('prize.note', typeof prize.note);
           var data_notes = document.createElement('p');
           data_notes.classList.add('data-notes');
           data_notes.innerHTML = prize.note;
