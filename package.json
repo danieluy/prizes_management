@@ -1,10 +1,9 @@
 {
   "name": "prizes_managment_v2",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Aplicación para gestión de premios",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": " concurrent \"mongod\" \"node app.js\" "
   },
   "repository": {

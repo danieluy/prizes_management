@@ -1,15 +1,20 @@
 Changelog
-v0.4.5
-  + Working on winners list - ready to do cancelHandOverPrize() on backend
+v0.5.0
+  + TODO Users server side checks
+  + TODO Change administrator password, or allow it to be changed from UI
   + TODO cancelHandOverPrize() on backend
-  + TODO users management an server side checks
-  + TODO format CI to display on winner's list
-  + TODO filter prizes on list
+  + TODO Clear the new prize's form after prize creation
+  + TODO Clear the grant prizes form after the prize's granted
+  + TODO Format CI to display on winner's list
+  + TODO Filter prizes on list
   + TODO Finish the Prizes list UI
+  + TODO Prize edition
   + TODO At prize creation the sponsors should be suggested in the same way types are suggested
   + SOLVED everything about the prize's stock is broken, assigning prizes is working now, stock management included ;)
   + Added prize handing over functionality on backend
   + When adding a new prize, the prize's list in now updated
+  + Added administrator account creation on first boot
+  + Added users management, without server side checks
 v0.4.4 (commited & pushed)
   + Added ejs partials
   + Solved a bug on index.js that was sending non UTC date to the server

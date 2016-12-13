@@ -91,9 +91,15 @@ const Winner = function (winner_info){
   }
 
   const handOverPrize = (prize_id) => {
-    for (var i = 0; i < prizes.length; i++)
-      if(prizes[i].id === prize_id)
+    let found = false;
+    let i = 0;
+    while (i < prizes.length && !found) {
+      if(prizes[i].id === prize_id && !prizes[i].handed){
         prizes[i].handed = Date.now();
+        found = true;
+      }
+      i++;
+    }
     return update();
   }
 

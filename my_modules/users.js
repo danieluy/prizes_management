@@ -1,13 +1,5 @@
 "use strict";
-// const fs = require('fs');
-// const mongodb = require('mongodb');
-// const mongo = mongodb.MongoClient;
-// const config = require('../config.json');
-// const db_ip = config.database.ip;
-// const db_port = config.database.port;
-// const db_name = config.database.name;
-// const url = 'mongodb://' + db_ip + ':' + db_port + '/' + db_name;
-// const ObjectID = require('mongodb').ObjectID;
+
 const db = require('./db.js');
 const hashPass = require('./security.js').hashPass;
 
@@ -57,6 +49,16 @@ const User = function(user_info){
     });
   }
 
+  const getPublicData = () => {
+    return {
+      id: id,
+      userName: userName,
+      role: role,
+      email: email,
+      set_date: set_date
+    }
+  }
+
   return {
     getId: () => id,
     getUserName: () => userName,
@@ -67,6 +69,7 @@ const User = function(user_info){
     getSet_date: () => set_date,
     getPassword: () => password,
     setPassword: (_password) => {password = hashPass(_password)},
+    getPublicData: getPublicData,
     save: save
   }
 }

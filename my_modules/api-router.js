@@ -4,6 +4,8 @@ const api_router = express.Router();
 const bodyParser = require("body-parser");
 const Prizes = require('./prizes.js');
 const Prize = Prizes.Prize;
+const Users = require('./users.js');
+const User = Users.User;
 const Winners = require('./winners.js');
 const Winner = Winners.Winner;
 
@@ -51,6 +53,41 @@ api_router.put('/prizes', (req, res) => {
   })
   .catch((err) => {
     res.status(500).json({error: "There was a problem creating the prize", details: err.toString()});
+  })
+});
+
+//  Users  /////////////////////////////////////////////////////////////////////
+
+api_router.get('/users', (req, res) => {
+  Users.findAll()
+  .then((results) => {
+    if(results)
+      res.status(200).json(results.map((result) => result.getPublicData()));
+    else
+      res.status(200).json([]);
+  })
+  .catch((err) => {
+    res.status(500).json({error: "There was a problem fetching the winner's data", details: err.toString()});
+  })
+});
+
+api_router.put('/users', (req, res) => {
+  var u = new User({
+    userName: req.body.name,
+    password: req.body.password,
+    role: req.body.role,
+    email: req.body.email
+  })
+  .save()
+  .then((WriteResult) => {
+    if(WriteResult.insertedCount > 0){
+      res.status(200).json({message: 'The user has been correctly saved'});
+    }
+    else
+      res.status(500).json({error: "There was a problem creating the user", details: err.toString()});
+  })
+  .catch((err) => {
+    res.status(500).json({error: "There was a problem creating the user", details: err.toString()});
   })
 });
 
@@ -243,24 +280,5 @@ api_router.put('/winners', (req, res) => {
     res.status(500).json({error: "There was a problem asigning the prize", details: err.toString()});
   })
 });
-
-// api_router.post('/winners/addprize', (req, res) => {
-//   Winners.findByCi(req.body.ci)
-//   .then((winner) => {
-//     if(winner){
-//       winner.addPrize(req.body.prize_id)
-//       .then((WriteResult) => {
-//         if(WriteResult.nModified > 0)
-//         res.status(200).json({message: 'The prize has been correctly added'});
-//         else
-//         res.status(500).json({error: "There was a problem adding the prize", details: err.toString()});
-//       })
-//     }
-//     else res.status(500).json({error: "The winner couldn't be found", details: 'Winners.findByCi() returned null for the value ' + req.body.ci});
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: "There was a problem adding the prize", details: err.toString()});
-//   })
-// });
 
 module.exports = api_router;

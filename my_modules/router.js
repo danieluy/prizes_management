@@ -33,7 +33,6 @@ router.post('/login', (req, res) => {
 router.post('/logout', (req, res) => {
   if(req.session){
     req.session.reset();
-    res.json({error: null, user: null});
   }
   res.render('index');
 });
