@@ -61,8 +61,8 @@ api_router.put('/prizes', (req, res) => {
 api_router.get('/users', (req, res) => {
   Users.findAll()
   .then((results) => {
-    if(results)
-      res.status(200).json(results.map((result) => result.getPublicData()));
+    if(results){
+      res.status(200).json(results.map((result) => result.getPublicData()));}
     else
       res.status(200).json([]);
   })

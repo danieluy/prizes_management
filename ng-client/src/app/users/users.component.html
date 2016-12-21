@@ -1,0 +1,69 @@
+<section id="section_users" class="page">
+  <div class="content-card">
+    <nav class="card-nav">
+      <ul>
+        <li>
+          <button (click)="navigateTo('usersList')" class="nav-button" data-content-id="card-users-list">Lista de Usuarios</button>
+        </li>
+        <li>
+          <button (click)="navigateTo('newUser')" class="nav-button" data-content-id="card-new-user">Nuevo Usuario</button>
+        </li>
+      </ul>
+    </nav>
+    <div class="content-forms">
+
+      <div id="card-users-list" class="content-form" [style.display]="visible_tab == 'usersList' ? 'inherit' : 'none'">
+        <h2>Lista de Usuarios</h2>
+
+        <!--Users List-->
+        <ul id="ul-list-users" class="list" *ngFor="let user of users_list">
+          <li class="list-item">
+            <span class="item-avatar">{{user.Name.slice(0,1)}}</span>
+            <div class="item-data">
+              <span class="data-name">{{user.Name}}</span>
+              <span class="data-right">
+                  <span class="data-role">{{user.Role}}</span>
+              <small> creado el </small>
+              <span class="data-set_date">{{user.StrDate}}</span>
+              </span>
+            </div>
+          </li>
+        </ul>
+        
+      </div>
+
+
+      <div id="card-new-user" class="content-form" [style.display]="visible_tab == 'newUser' ? 'inherit' : 'none'">
+
+        <h2>Nuevo Usuario</h2>
+
+        <user-form></user-form>
+
+        <!--<form id="form-new-user">
+          <label for="txt-userName">Nombre *</label>
+          <input type="text" id="txt-userName" placeholder="Nombre de usuario" required>
+
+          <label for="txt-password">Contraseña *</label>
+          <input type="password" id="txt-password" placeholder="Contraseña" required>
+
+          <label for="txt-password2">Repetir contraseña *</label>
+          <input type="password" id="txt-password2" placeholder="Repetir contraseña" required>
+
+          <label for="sel-role">Permisos *</label>
+          <select id="sel-role" required>
+            <option value="admin">Administrador</option>
+            <option value="user" selected>Usuario</option>
+          </select>
+
+          <label for="user-email">Email</label>
+          <input type="email" id="user-email" placeholder="Email">
+
+          <button (click)="submitNewUser()" type="submit" class="btn-ok" id="btn-sub-new-user">Crear</button>
+          <button type="reset" class="btn-cancel" id="btn-cancel-sub-new-user">Cancelar</button>
+        </form>-->
+
+      </div>
+
+    </div>
+  </div>
+</section>

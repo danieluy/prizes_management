@@ -16,7 +16,7 @@ const User = function(user_info){
   let password = user_info.password;
   let role = user_info.role.toLowerCase();
   let email = user_info.email ? user_info.email : null;
-  let set_date = user_info.due_date || Date.now();
+  let set_date = user_info.set_date || Date.now();
 
   // Methods
   const save = () => {

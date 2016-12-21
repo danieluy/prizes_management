@@ -1,0 +1,174 @@
+/*--  Header  -----------------------------------------------------------------*/
+header{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 200px;
+  height: 100vh;
+}
+header nav{
+  width: 100%;
+  overflow: auto;
+}
+div.main-nav{
+  float: left;
+  width: 200px;
+  height: 90px;
+}
+div.main-nav img{
+  float: left;
+  margin: 30px 15px;
+  width: 30px;
+  height: 30px;
+}
+div.main-nav span{
+  display: inline-block;
+  line-height: 90px;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #F58500;
+}
+ul.nav-options{
+  list-style-type: none;
+  width: 100%;
+  padding-left: 15px;
+}
+ul.nav-options li a{
+  display: block;
+  width: calc(200px - 15px);
+  height: 60px;
+  line-height: 60px;
+  font-size: 1.1em;
+  text-decoration: none;
+  font-weight: 300;
+  color: #888888;
+  cursor: pointer;
+  transition: all 300ms linear;
+}
+ul.nav-options a > i{
+  vertical-align: middle;
+  color: #888888;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+ul.nav-options li a:hover{
+  background-color: #CCCCCC;
+}
+ul.nav-options li.menu-title{
+  font-size: .7em;
+  font-weight: 500;
+  line-height: 40px;
+  color: #888888;
+  text-transform: uppercase;
+}
+/*--  Login modal  -----------------------------------------------------------*/
+#login-modal{
+  position: absolute;
+  width: 300px;
+  top: 100px;
+  margin-left: calc(50% - 150px);
+  z-index: 10;
+  padding: 30px;
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+#login-modal:after{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  content: '';
+  width: 100%;
+  height: 100vh;
+  background-color: #FFFFFF;
+  z-index: -1;
+  pointer-events: auto;
+}
+#login-modal img{
+  margin-left: calc(50% - 48px);
+  margin-bottom: 30px;
+}
+#login-modal input{
+  line-height: 25px;
+  width: 100%;
+  border-style: none;
+  padding: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+#login-modal button{
+  width: 100%;
+}
+#login-modal.out{
+  opacity: 0;
+  pointer-events: none;
+}
+#login-modal.out:after{
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+
+
+
+
+/*--  Modal Forms  -----------------------------------------------------------*/
+form.modal-form{
+  position: fixed;
+  width: 800px;
+  top: 100vh;
+  border-radius: 3px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+  transition: top 300ms ease-in-out;
+}
+form.modal-form.visible{
+  top: 10px;
+}
+
+
+
+
+
+/*--  Buttons  ---------------------------------------------------------------*/
+button{
+  border-style: none;
+  border-radius: 3px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 20px;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: box-shadow 150ms ease-in-out;
+}
+button:hover{
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+button:active{
+  box-shadow: none;
+}
+button.btn-ok{
+  background-color: #F58500;
+  color: #fff;
+}
+button.btn-cancel{
+  background-color: #fff;
+  color: #F58500;
+}
+
+
+
+
+
+/*--  Animations  ------------------------------------------------------------*/
+.fadeIn{
+  animation: fadeIn 800ms;
+}
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}

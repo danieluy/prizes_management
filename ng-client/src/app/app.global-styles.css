@@ -1,0 +1,85 @@
+/*--  Buttons  ---------------------------------------------------------------*/
+button{
+  border-style: none;
+  border-radius: 3px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 20px;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: box-shadow 150ms ease-in-out;
+}
+button:hover{
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+button:active{
+  box-shadow: none;
+}
+button.btn-ok{
+  background-color: #F58500;
+  color: #fff;
+}
+button.btn-cancel{
+  background-color: #fff;
+  color: #F58500;
+}
+
+/*--  Content Forms  ---------------------------------------------------------*/
+h2{
+  line-height: 80px;
+  font-size: 2.5em;
+  color: #F58500;
+  font-weight: 100;
+}
+label{
+  display: block;
+  line-height: 30px;
+  text-transform: uppercase;
+  font-size: .7em;
+  font-weight: 700;
+  color: #888;
+  margin-top: 15px;
+}
+input, select, textarea{
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-style: none;
+  border-radius: 3px;
+  line-height: 40px;
+  padding: 0px 10px;
+  height: 40px;
+  transition: background-color 300ms ease-in-out;
+}
+.input-inline{
+  display: inline-block;
+  width: 49%;
+}
+textarea{
+  line-height: 20px;
+  padding: 10px 10px 0px 10px;
+}
+select,
+input[type="date"]{
+  color: #A9A9A9;
+}
+input:hover, select:hover, textarea:hover{
+  background-color: #eee;
+}
+input.ng-invalid,
+select.ng-invalid,
+textarea.ng-invalid {
+  background-color: #F58500;
+  color: #fff;
+}
+input.ng-invalid::-webkit-input-placeholder,
+select.ng-invalid::-webkit-input-placeholder,
+textarea.ng-invalid::-webkit-input-placeholder {
+  background-color: #F58500;
+  color: #fff;
+}
+button[type="submit"]{
+  margin-top: 30px;
+}
+

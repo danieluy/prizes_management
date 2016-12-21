@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link href="assets/img/icon_24.png" rel="icon" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Radiocero Premios</title>
+  <!-- CDNs -->
+  <!--<link rel="stylesheet" href="css/ds-spinners.css">-->
+  <!--<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>-->
+  <!--<link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
+  <!--<link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/info-hub.css">-->
+  <!--<script src="js/ds-spinners.js"></script>
+  <script src="js/ds-ajax.js"></script>
+  <script src="js/ds-dates.js"></script>
+  <script src="js/info-hub.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/users.js"></script>
+  <script src="js/prizes.js"></script>
+  <script src="js/winners.js"></script>-->
+</head>
+<body>
+  <header>
+    <!-- Nav Bar -->
+    <nav>
+      <div class="main-nav">
+        <a href="http://www.radiocero.com.uy/" target="_blank">
+          <img src="assets/img/icon_48.png" alt="Icono Radiocero"/>
+          <span>Radiocero</span>
+        </a>
+      </div>
+      <ul class="nav-options">
+
+        <li class="menu-title">Usuarios</li>
+        <li><a routerLink="/" routerLinkActive="active" class="ancor"><i class="material-icons">&#xE88A;</i> Inicio</a></li>
+        <li><a routerLink="/winners" routerLinkActive="active" class="ancor"><i class="material-icons">&#xE838;</i> Ganadores</a></li>
+        <li><a routerLink="/prizes" routerLinkActive="active" class="ancor"><i class="material-icons">&#xE838;</i> Premios</a></li>
+
+        <li class="menu-title">Administradores</li>
+        <li><a routerLink="/users" routerLinkActive="active" class="ancor"><i class="material-icons">&#xE7FD;</i> Usuarios</a></li>
+
+        <li class="menu-title">Sesión</li>
+        <li><a href="#" id="btn-log-out"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
+
+      </ul>
+    </nav>
+  </header>
+
+
+  <router-outlet></router-outlet>
+  <!--<% include partials/home.ejs %>
+
+  <% include partials/winners.ejs %>
+
+  <% include partials/prizes.ejs %>
+
+  <% include partials/users.ejs %>-->
+
+
+
+
+
+  <div id="login-modal" class="out">
+    <img src="assets/img/icon_96.png" alt="Logo Radiocero"/>
+    <form id="form-login" action="/login" method="post">
+      <input type="text" name="userName" id="login-userName" placeholder="Nombre de usuario">
+      <input type="password" name="password" id="login-password" placeholder="Contraseña">
+      <button type="submit" class="btn-cancel">Ingresar</button>
+    </form>
+  </div>
+
+  <div id="ds-spinner" class="start-spinning">
+    <div class="spinner-wrapper">
+      <!-- <div class="spinner spinner-circle"></div> -->
+      <div class="spinner spinner-radiocero"></div>
+    </div>
+  </div>
+
+  <div id="info-hub"></div>
+
+  <footer></footer>
+
+</body>
+</html>
