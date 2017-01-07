@@ -1,5 +1,5 @@
 Changelog
-v0.5.?
+v0.6.0
   + TODO Users server side checks
   + TODO Change administrator password, or allow it to be changed from UI
   + TODO cancelHandOverPrize() on backend
@@ -10,6 +10,7 @@ v0.5.?
   + TODO Finish the Prizes list UI
   + TODO Prize edition
   + TODO At prize creation the sponsors should be suggested in the same way types are suggested
+  + Added /json/winners/handprize method to json-api-router.js
 v0.5.1 (commited & pushed)
   + 20161221 - Started a new client app based on Angular 2
   + 20161221 - BUG FIX set_date on users was assigned as due_date and consequently it defaulted to the instantiation date

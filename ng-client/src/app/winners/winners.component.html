@@ -1,46 +1,84 @@
-<section id="section_winners" class="page">
+<section id="section_users" class="page">
+  <div class="content-card">
+    <nav class="card-nav">
+      <ul>
+        <li>
+          <button (click)="navigateTo('currentWinnersList')" class="nav-button">Ganadores Actuales</button>
+        </li>
+        <li>
+          <button (click)="navigateTo('winnersList')" class="nav-button">Todos los Ganadores</button>
+        </li>
+      </ul>
+    </nav>
+    <div class="content-forms">
 
-    <div class="content-card">
+      <div id="card-users-list" class="content-form" [style.display]="visible_tab == 'currentWinnersList' ? 'inherit' : 'none'">
+        <h2>Premios sin entregar</h2>
 
-      <nav class="card-nav">
-        <ul>
-          <li><button class="nav-button" data-content-id="card-winners-list">Lista de Ganadores</button></li>
-        </ul>
-        <!-- <ul>
-          <li><button class="nav-button" data-content-id="card-new-prize">Nuevo Ganador</button></li>
-        </ul> -->
-      </nav>
-
-      <div class="content-forms">
-
-        <div id="card-winners-list" class="content-form selected">
-          <h2>Lista de Ganadores</h2>
-          <ul id="ul-list-winners" class="list">
-            <!-- It's filled from JS -->
-            <!-- <li class="list-item">
-              <div>
-                <span class="data-description">Nombre Apellido</span>
-                <span class="data-description"><i>1.234.567-2</i></span>
-                <span class="data-type">Premio:</span>
-                <span class="data-description">The Fight Club - 1999</span>
-                <span class="data-type">Entrada de Cine <i> - Movie Center</i></span>
-                <div class="data-dates">
-                  <span>Ganó el </span><span class="data-date">27/10/2016</span>
-                </div>
-                <div class="list-actions">
-                  <button type="button" class="btn-ok btn-hand-over-prize" data-prize-id="dafsgdasfbaddrvfagwte">Entregado</button>
-                  <button type="button" class="btn-cancel btn-cancel-hand-over-prize" data-winner-ci="12345672">Cancelar</button>
-                </div>
+        <ul class="list">
+          <li *ngFor="let item of winner_prize_list" class="list-item">
+            <div>
+              <span class="data-description">{{item.w.Name}} {{item.w.Lastname}}</span>
+              <span class="data-description"><i>{{item.w.Ci}}</i></span>
+              <span class="data-type">Premio:</span>
+              <span class="data-description">{{item.p.Description}}</span>
+              <span class="data-type">{{item.p.Type}} <i> - {{item.p.Sponsor}}</i></span>
+              <div class="data-dates">
+                <span>Ganó el </span><span class="data-date">{{item.grantedDate}}</span>
               </div>
-            </li> -->
-          </ul>
-        </div>
-
-        <!-- <div id="card-new-winner" class="content-form">
-
-        </div> -->
+              <div class="list-actions">
+                <button (click)="handOverPrize(item.w.CiRaw, item.p.Id)" type="button" class="btn-ok btn-hand-over-prize">Entregado</button>
+                <button (click)="cancelHandOverPrize()" type="button" class="btn-cancel btn-cancel-hand-over-prize">Cancelar</button>
+              </div>
+            </div>
+          </li>
+        </ul>
 
       </div>
-    </div>
 
+
+      <div id="card-new-user" class="content-form" [style.display]="visible_tab == 'winnersList' ? 'inherit' : 'none'">
+
+        <h2>Buscar ganadores</h2>
+
+        <div class="search-bar">
+          <svg fill="#F58500" height="40" viewBox="-9 -9 40 40" width="40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+            <path d="M0 0h24v24H0z" fill="none" />
+          </svg>
+          <input type="text" placeholder="Ingresa tu búsqueda">
+        </div>
+
+        <ul class="list">
+          <li *ngFor="let winner of winners_list" class="list-item list-item-clickable">
+            <div (click)="displayWinnerInfo(winner.Id)">
+              <div *ngIf="winner_to_display !== winner.Id">
+                <span class="data-name">{{winner.Name}} {{winner.Lastname}}</span>
+                <span class="data-ci">{{winner.Ci}}</span>
+              </div>
+              <div *ngIf="winner_to_display === winner.Id">
+                <label>Nombre</label>
+                <span class="data-name">{{winner.Name}} {{winner.Lastname}}</span>
+                <label>C.I.</label>
+                <span class="data-ci">{{winner.Ci}}</span>
+                <label *ngIf="winner.Mail">Email</label>
+                <span class="data-Mail">{{winner.Mail}}</span>
+                <label *ngIf="winner.Phone">Teléfono</label>
+                <span class="data-Phone">{{winner.Phone}}</span>
+                <label *ngIf="winner.Facebook">Perfil de Facebook</label>
+                <span class="data-Facebook">{{winner.Facebook}}</span>
+                <label *ngIf="winner.StrSetDate">Usuario creado el:</label>
+                <span class="data-Facebook">{{winner.StrSetDate}}</span>
+                <label *ngIf="winner.StrUpdateDate">Ultima modificación</label>
+                <span class="data-Facebook">{{winner.StrUpdateDate}}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+
+    </div>
+  </div>
 </section>

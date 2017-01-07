@@ -10,6 +10,7 @@ import { WinnersComponent } from './winners/winners.component';
 import { PrizesComponent } from './prizes/prizes.component';
 import { UsersComponent } from './users/users.component';
 import { UserFormComponent } from './user-form/user-form.component';
+import { PrizesGrantingComponent } from './prizes-granting/prizes-granting.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { UserFormComponent } from './user-form/user-form.component';
     WinnersComponent,
     PrizesComponent,
     UsersComponent,
-    UserFormComponent
+    UserFormComponent,
+    PrizesGrantingComponent,
   ],
   imports: [
     BrowserModule,

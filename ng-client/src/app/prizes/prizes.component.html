@@ -3,44 +3,40 @@
 
     <nav class="card-nav">
       <ul>
-        <li><button class="nav-button" data-content-id="card-prizes-list">Lista de Premios</button></li>
+        <li><button (click)="navigateTo('prizesList')" class="nav-button">Lista de Premios</button></li>
       </ul>
       <ul>
-        <li><button class="nav-button" data-content-id="card-new-prize">Nuevo Premio</button></li>
+        <li><button (click)="navigateTo('newPrize')" class="nav-button">Nuevo Premio</button></li>
       </ul>
     </nav>
 
     <div class="content-forms">
 
-      <div id="card-prizes-list" class="content-form selected">
+      <div id="card-prizes-list" class="content-form" [style.display]="(visible_tab == 'prizesList') ? 'inherit' : 'none'">
         <h2>Lista de Premios</h2>
         <ul id="ul-list-prizes" class="list">
-          <!-- It's filled from JS -->
-          <!-- <li class="list-item" data-prize-id="580a1e893ef08f200bb4487c">
+          <li class="list-item" *ngFor="let prize of prizes_list; let i = index">
             <div>
-              <span class="data-stock">5</span>
-              <span class="data-description">The Fight Club - 1999</span>
-              <span class="data-type">Entrada de Cine <i> - Movie Center</i></span>
-              <div class="data-dates">
-                <span>Premio creado el </span>
-                <span class="data-date">27/10/2016</span>
-                <span>, vence el </span>
-                <span class="data-date">01/12/2016</span>
+              <span class="data-stock">{{prize.Stock}}</span>
+              <span class="data-description">{{prize.Description}}</span>
+              <span class="data-type">{{prize.Type}}<i class="data-sponsor"> - {{prize.Sponsor}}</i></span>
+              <div class="data-dates"><span>Premio creado el</span>
+                <span class="data-date">{{prize.StrSetDate}}</span>
+                <span> vence el </span>
+                <span class="data-date">{{prize.StrDueDate}}</span>
               </div>
-              <p class="data-notes">
-                Fight Club es una película de 1999 basada en la novela homónima de Chuck Palahniuk. La cinta fue dirigida por David Fincher y protagonizada por Edward Norton, Brad Pitt y Helena Bonham Carter.
-              </p>
               <div class="list-actions">
-                <button type="button" class="btn-ok">Otorgar</button>
-                <button type="button" class="btn-cancel">Editar</button>
+                <button (click)="displayGrantPrizeTab(prize)" type="button" class="btn-ok btn-grant-prize">Otorgar</button>
+                <button type="button" class="btn-cancel btn-edit-prize">Editar</button>
               </div>
             </div>
-          </li> -->
+          </li>
         </ul>
-        <!--<% include ./prize-grant-form.ejs %>-->
       </div>
 
-      <div id="card-new-prize" class="content-form">
+      <grant-prize-tab *ngIf="prize_to_grant" [prize]="prize_to_grant"></grant-prize-tab>
+
+      <div id="card-new-prize" class="content-form" [style.display]="visible_tab == 'newPrize' ? 'inherit' : 'none'">
         <h2>Nuevo Premio</h2>
         <form id="form-new-prize">
           <!-- input new prize data -->

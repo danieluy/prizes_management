@@ -43,3 +43,42 @@ json_api_router.put('/users', (req, res) => {
 });
 
 module.exports = json_api_router;
+
+// Winners  ////////////////////////////////////////////////////////////////////
+json_api_router.post('/winners/handprize', (req, res) => {
+  let winner_ci = req.body.winner_ci;
+  let prize_id = req.body.prize_id;
+  if(winner_ci && prize_id){
+    Prizes.findById(prize_id)
+    .then((prize) => {
+      if(prize){
+        Winners.findByCi(winner_ci)
+        .then((winner) => {
+          if(winner){
+            winner.handOverPrize(prize_id)
+            .then((WriteResult) => {
+              if(WriteResult.nModified > 0){
+                res.status(200).json({message: "The prize was correctly handed over"});
+              }
+              else {
+                res.status(500).json({error: "There was a problem handing over the prize", details: "ERROR [ api-router.js ][ post(/winners/handprize) ][ winner.handOverPrize("+prize_id+") ]"});
+              }
+            })
+          }
+          else{
+            res.status(500).json({error: "The winner could not be found", details: "ERROR [ api-router.js ][ post(/winners/handprize) ][ Winners.findByCi("+winner_ci+") ]"});
+          }
+        })
+      }
+      else{
+        res.status(500).json({error: "The prize could not be found", details: "ERROR [ api-router.js ][ post(/winners/handprize) ][ Prizes.findById("+prize_id+") ]"});
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({error: "There was a problem handing over the prize", details: err.toString()});
+    })
+  }
+  else {
+    res.status(400).json({error: "Bad request, a winner's ci and prize id must be provided", details: "ERROR [ api-router.js ][ post(/winners/handprize) ]"});
+  }
+});

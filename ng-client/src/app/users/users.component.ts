@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../users.service';
+import { User } from '../user.class';
 
 @Component({
   selector: 'app-users',
@@ -15,18 +16,13 @@ import { UsersService } from '../users.service';
 export class UsersComponent implements OnInit {
 
   constructor(private usersService: UsersService) { }
-  
-  private users_list;
-  private visible_tab;
 
-  private username: string;
-  private password: string;
-  private role: string;
-  private email: string;
+  private visible_tab: string;
+  private users_list: User[];
 
   ngOnInit() {
     this.visible_tab = 'usersList';
-    this.usersService.users$.subscribe(users => this.users_list = users)
+    this.usersService.users$.subscribe(users => { this.users_list = users })
     this.usersService.fetchUsers();
   }
 

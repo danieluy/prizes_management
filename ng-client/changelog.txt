@@ -1,3 +1,13 @@
 Changelog
 v0.1.0
+  TODO - Login
+  TODO - Notification service
+  TODO - User creation form -> parssword and email validations
+  TODO - Handed prizes actions (hand over and cancel)
+  TODO - Winners lists styles
+  + 20170106 - All winners list ready (styles are not ready)
+  + 20170106 - Added the search bar UI to the winners list, still have to do the logic
+  + 20170106 - Added functionality to hand over prizes to winners
+  + 20170105 - Current winners listing ready (styles are not ready)
+  + 20170102 - Prizes listing ready
   + 20161221 - Basic users functionality ready
