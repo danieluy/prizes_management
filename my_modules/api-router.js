@@ -10,8 +10,7 @@ const Winners = require('./winners.js');
 const Winner = Winners.Winner;
 const requireLogin = require('./security.js').requireLogin;
 
-// chek if user is logged
-api_router.use(requireLogin);
+api_router.use((req, res, next) => console.log(req.session))
 
 // Body parser
 api_router.use(bodyParser.urlencoded({ extended: false }))
@@ -25,7 +24,7 @@ api_router.use((req, res, next) => {
 
 //  Prizes  ////////////////////////////////////////////////////////////////////
 
-api_router.get('/prizes', (req, res) => {
+api_router.get('/prizes', requireLogin, (req, res) => {
   Prizes.findAll()
   .then((results) => {
     if(results)

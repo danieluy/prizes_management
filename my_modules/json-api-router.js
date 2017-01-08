@@ -10,9 +10,6 @@ const Winners = require('./winners.js');
 const Winner = Winners.Winner;
 const requireLogin = require('./security.js').requireLogin;
 
-// chek if user is logged
-json_api_router.use(requireLogin);
-
 // Body parser
 json_api_router.use(bodyParser.json());
 
@@ -23,6 +20,9 @@ json_api_router.use((req, res, next) => {
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
+
+// chek if user is logged
+json_api_router.use(requireLogin);
 
 //  Users  /////////////////////////////////////////////////////////////////////
 

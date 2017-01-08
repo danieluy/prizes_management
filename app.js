@@ -45,6 +45,8 @@ app.set('views', __dirname + '/views');
 ////////////////////////////////////////////////////////////////////////////////
 //  Middleware  ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+//  Public folder
+app.use(express.static(__dirname + '/public'));
 // Session
 app.use(sessions({
 	cookieName: 'session',
@@ -57,8 +59,6 @@ app.use(sessions({
 		secure: false
 	}
 }));
-//  Public folder
-app.use(express.static(__dirname + '/public'));
 // Routing
 app.use('/', router);
 app.use('/api', api_router);

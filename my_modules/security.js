@@ -19,6 +19,7 @@ const login = (name, pass) => {
 const hashPass = (_pass) => bcrypt.hashSync(_pass, bcrypt.genSaltSync(10));
 
 const requireLogin = (req, res, next) => {
+  console.log('requireLogin', req.session.user);
   if(!req.session.user){
     req.session.reset();
     res.status(401).json({error: "You need to be logged in to use this functionallity.", user: null});

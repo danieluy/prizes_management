@@ -7,10 +7,18 @@ const security = require('./security');
 // Body parser
 router.use(bodyParser.urlencoded({ extended: false }))
 
+// write CORS headers
+router.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 //  home  //////////////////////////////////////////////////////////////////////
 router.get('/', (req, res) => {
   res.render('index');
 });
+
 //  login  /////////////////////////////////////////////////////////////////////
 router.post('/login', (req, res) => {
   security.login(req.body.userName, req.body.password)
@@ -18,7 +26,7 @@ router.post('/login', (req, res) => {
     if(user) {
       req.session.user = user.userName;
       req.session.role = user.role;
-      res.json({error: null, user: user});
+      res.status(200).json({error: null, user: user});
     }
     else {
       req.session.reset();
@@ -26,9 +34,11 @@ router.post('/login', (req, res) => {
     }
   })
   .catch((err) => {
+    console.log(err);
     res.status(503).json({error: 'There was a problem with the login process, please try again later.', user: null});
   })
 });
+
 //  logout  ////////////////////////////////////////////////////////////////////
 router.get('/logout', (req, res) => {
   if(req.session){
