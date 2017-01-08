@@ -3,16 +3,19 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require("body-parser");
 const security = require('./security');
+const headers = require('./headers.js');
 
 // Body parser
 router.use(bodyParser.urlencoded({ extended: false }))
 
 // write CORS headers
-router.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+router.use(headers.writeCors);
+
+// test only
+// router.use((req, res, next) =>{
+//   console.log('router', req.session.user);
+//   next();
+// })
 
 //  home  //////////////////////////////////////////////////////////////////////
 router.get('/', (req, res) => {
@@ -40,11 +43,10 @@ router.post('/login', (req, res) => {
 });
 
 //  logout  ////////////////////////////////////////////////////////////////////
-router.get('/logout', (req, res) => {
-  if(req.session){
+router.post('/logout', (req, res) => {
+  if(req.session)
     req.session.reset();
-  }
-  res.render('index');
+  res.status(200).json({error: null, user: null});
 });
 
 

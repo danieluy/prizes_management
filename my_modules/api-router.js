@@ -9,22 +9,26 @@ const User = Users.User;
 const Winners = require('./winners.js');
 const Winner = Winners.Winner;
 const requireLogin = require('./security.js').requireLogin;
+const headers = require('./headers.js');
 
-api_router.use((req, res, next) => console.log(req.session))
+// Require login
+api_router.use(requireLogin);
 
 // Body parser
 api_router.use(bodyParser.urlencoded({ extended: false }))
 
 // write CORS headers
-api_router.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+api_router.use(headers.writeCors);
+
+// test only
+// api_router.use((req, res, next) =>{
+//   console.log('api_router', req.session.user);
+//   next();
+// })
 
 //  Prizes  ////////////////////////////////////////////////////////////////////
 
-api_router.get('/prizes', requireLogin, (req, res) => {
+api_router.get('/prizes', (req, res) => {
   Prizes.findAll()
   .then((results) => {
     if(results)

@@ -19,13 +19,13 @@ export class UsersService {
   constructor(private http: Http) { }
 
   fetchUsers() {
-    this.http.get(`${Const.APIURL}api/users`)
+    this.http.get(`${Const.APIURL}api/users`, { withCredentials: true })
       .map(res => res.json().map(u => new User(u.id, u.userName, u.email, u.set_date, u.role)))
       .subscribe(users => { this.users_source.next(users) });
   }
 
   newUser(user: User): any {
-    this.http.put(`${Const.APIURL}json/users`, JSON.stringify(user), { headers: Const.HEADERS })
+    this.http.put(`${Const.APIURL}json/users`, JSON.stringify(user), { headers: Const.HEADERS.json(), withCredentials: true })
       .map(res => res.json()).subscribe(replay => {
         if (replay.error)
           console.error(replay.error, replay.details)

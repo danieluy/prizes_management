@@ -41,8 +41,8 @@
         <li><a routerLink="/users" routerLinkActive="active" class="ancor"><i class="material-icons">&#xE7FD;</i> Usuarios</a></li>
 
         <li class="menu-title">Sesión</li>
-        <li><a *ngIf="!logged_user" routerLink="/login" routerLinkActive="active"><i class="material-icons">&#xE853;</i> Inicial sesión</a></li>
-        <li><a *ngIf="logged_user" href="/logout" id="btn-log-out"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
+        <li><a routerLink="/login" routerLinkActive="active"><i class="material-icons">&#xE853;</i> Inicial sesión</a></li>
+        <li><a routerLink="/login" (click)="logout()"><i class="material-icons">&#xE8AC;</i> Cerrar sesión</a></li>
 
       </ul>
     </nav>

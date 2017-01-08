@@ -18,7 +18,7 @@ export class WinnersService {
   constructor(private http: Http) { }
 
   fetchWinners() {
-    this.http.get(`${Const.APIURL}api/winners`)
+    this.http.get(`${Const.APIURL}api/winners`, { withCredentials: true })
       .map(res => res.json()
         .map(w => new Winner(w.id, w.ci, w.name, w.lastname, w.facebook, w.gender, w.phone, w.mail, w.prizes, w.set_date, w.update_date))
       )
@@ -26,7 +26,7 @@ export class WinnersService {
   }
 
   handOverPrize(winner_ci: string, prize_id: string) {
-    this.http.post(`${Const.APIURL}json/winners/handprize`, { winner_ci: winner_ci, prize_id: prize_id })
+    this.http.post(`${Const.APIURL}json/winners/handprize`, { winner_ci: winner_ci, prize_id: prize_id }, { headers: Const.HEADERS.json(), withCredentials: true })
       .subscribe(response => {
         let json_res = response.json();
         if(json_res.error)

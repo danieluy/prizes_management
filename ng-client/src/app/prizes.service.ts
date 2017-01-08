@@ -18,7 +18,7 @@ export class PrizesService {
   constructor(private http: Http) { }
 
   fetchPrizes() {
-    this.http.get(`${Const.APIURL}api/prizes`)
+    this.http.get(`${Const.APIURL}api/prizes`, { withCredentials: true })
       .map(res => res.json().map(p => new Prize(p.id, p.type, p.sponsor, p.description, p.stock, p.note, p.set_date, p.update_date, p.due_date)))
       .subscribe(prizes => {
         this.prizes_source.next(prizes)

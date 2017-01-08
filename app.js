@@ -17,12 +17,13 @@ const config = require('./config.json');
 const sessions = require('client-sessions');
 const security = require('./my_modules/security.js');
 const boot = require('./my_modules/boot.js');
+const ip = require('ip');
 ////////////////////////////////////////////////////////////////////////////////
 //  Configuration  /////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 // Server parameters
 const srv_params = {
-	ip: config.network.ip,
+	ip: ip.address(),
 	port: config.network.port,
 	url: function() { return 'http://' + this.ip + ':' + this.port }
 }

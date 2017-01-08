@@ -1,12 +1,23 @@
 
-import { Headers } from '@angular/http';
+import { Headers, RequestOptions } from '@angular/http';
 
 export class Const {
 
-  public static APIURL: string = 'http://localhost:1043/';
-  public static HEADERS: Headers = new Headers({ 'Content-Type': 'application/json' });
-  public static URLENCODED: Headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-
   constructor() { }
+
+  public static APIURL: string = 'http://localhost:1043/';
+
+  public static HEADERS: any = {
+    json: () => {
+      let header: Headers = new Headers({ 'Content-Type': 'application/json' });
+      // header.append('withCredentials', 'true')
+      return header;
+    },
+    urlencoded: () => {
+      let header: Headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      // header.append('withCredentials', 'true')
+      return header;
+    }
+  }
 
 }
