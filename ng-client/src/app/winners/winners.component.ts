@@ -22,6 +22,7 @@ export class WinnersComponent implements OnInit {
 
   private visible_tab: string;
   private winners_list: Winner[];
+  private winners_list_filter: Winner[];
   private current_winners_list: Winner[];
   private winner_prize_list: Array<any> = [];
   private winner_to_display: string;
@@ -36,6 +37,7 @@ export class WinnersComponent implements OnInit {
 
     this.winnersService.winners$.subscribe(winners => {
       this.winners_list = winners;
+      this.winners_list_filter = winners;
       this.current_winners_list = this.winners_list.filter(winner => winner.IsCurrent);
       this.prizesService.fetchPrizes();
     })
@@ -61,6 +63,22 @@ export class WinnersComponent implements OnInit {
     console.log('cancelHandOverPrize() was called');
   }
 
+  searchWinner(e: any): void {
+    if (!e.target.value || e.target.value === '')
+      this.winners_list_filter = this.winners_list;
+    else {
+      let query_arr = e.target.value.trim().split(' ');
+      let results = new WinnersResults();
+      for (let i = 0; i < query_arr.length; i++) {
+        for (let j = 0; j < this.winners_list.length; j++) {
+          if (this.winners_list[j].matches(query_arr[i]))
+            results.addResult(this.winners_list[j]);
+        }
+      }
+      this.winners_list_filter = results.SortedResults;
+    }
+  }
+
   pairWinnerPrize(prizes: Prize[]): void {
     this.winner_prize_list = [];
     for (let i = 0; i < this.current_winners_list.length; i++)
@@ -78,6 +96,48 @@ export class WinnersComponent implements OnInit {
   dateToString(date: number): string {
     let aux: Date = new Date(date);
     return aux.getDate() + '/' + (aux.getMonth() + 1) + '/' + aux.getUTCFullYear();
+  }
+
+}
+
+class WinnersResults {
+
+  constructor() {
+    this.results = new Object();
+  }
+
+  private results: any;
+
+  public addResult(w: Winner): void {
+    this.results.hasOwnProperty(w.CiRaw) ? this.results[w.CiRaw].count++ : this.results[w.CiRaw] = { w: w, count: 1 };
+  }
+
+  public get SortedResults(): Winner[] {
+
+    let sorted: any[] = [];
+
+    for (let key in this.results) {
+      sorted.push(this.results[key])
+    }
+
+    // SELECTION SORT
+    for (let i = 0; i < sorted.length - 1; i++) {
+      let max_count: number = sorted[i + 1].count;
+      let max_pos: number = i + 1;
+      for (let j = i + 2; j < sorted.length; j++) {
+        if (max_count < sorted[j].count) {
+          max_count = sorted[j].count;
+          max_pos = j;
+        }
+      }
+      if (sorted[i].count < max_count) {
+        let aux: any = sorted[i];
+        sorted[i] = sorted[max_pos];
+        sorted[max_pos] = aux;
+      }
+    }
+
+    return sorted.map(result => result.w);
   }
 
 }

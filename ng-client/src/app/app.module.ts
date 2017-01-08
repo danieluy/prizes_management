@@ -11,6 +11,8 @@ import { PrizesComponent } from './prizes/prizes.component';
 import { UsersComponent } from './users/users.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { PrizesGrantingComponent } from './prizes-granting/prizes-granting.component';
+import { LoginComponent } from './login/login.component';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { PrizesGrantingComponent } from './prizes-granting/prizes-granting.compo
     UsersComponent,
     UserFormComponent,
     PrizesGrantingComponent,
+    LoginComponent,
+    LoginFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,7 +34,8 @@ import { PrizesGrantingComponent } from './prizes-granting/prizes-granting.compo
       { path: '', component: HomeComponent },
       { path: 'winners', component: WinnersComponent },
       { path: 'prizes', component: PrizesComponent },
-      { path: 'users', component: UsersComponent }
+      { path: 'users', component: UsersComponent },
+      { path: 'login', component: LoginComponent }
     ])
   ],
   providers: [],

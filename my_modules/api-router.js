@@ -8,6 +8,10 @@ const Users = require('./users.js');
 const User = Users.User;
 const Winners = require('./winners.js');
 const Winner = Winners.Winner;
+const requireLogin = require('./security.js').requireLogin;
+
+// chek if user is logged
+api_router.use(requireLogin);
 
 // Body parser
 api_router.use(bodyParser.urlencoded({ extended: false }))

@@ -83,9 +83,23 @@ export class Winner {
     return false;
   }
 
+  public matches(query: string): boolean {
+    let regex = new RegExp(this.escapeString(query.trim()), 'gi');
+    if (this.ci.match(regex)) return true;
+    if (this.name.match(regex)) return true;
+    if (this.lastname.match(regex)) return true;
+    if (this.name.match(regex)) return true;
+    if (this.Ci.match(regex)) return true;
+    return false;
+  }
+
   private dateToString(date: number): string {
     let aux: Date = new Date(date);
     return aux.getDate() + '/' + (aux.getMonth() + 1) + '/' + aux.getUTCFullYear();
+  }
+
+  private escapeString(txt: string): string {
+    return txt.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   }
 
 }

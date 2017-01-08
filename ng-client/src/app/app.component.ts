@@ -13,7 +13,9 @@ export class AppComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(){
+  private logged_user: string;
+
+  ngOnInit() {
   }
 
   title = 'Radiocero Premios';

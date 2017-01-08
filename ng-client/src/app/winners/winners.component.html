@@ -47,11 +47,11 @@
             />
             <path d="M0 0h24v24H0z" fill="none" />
           </svg>
-          <input type="text" placeholder="Ingresa tu búsqueda">
+          <input (keyup)="searchWinner($event)" type="text" placeholder="Ingresa tu búsqueda">
         </div>
 
         <ul class="list">
-          <li *ngFor="let winner of winners_list" class="list-item list-item-clickable">
+          <li *ngFor="let winner of winners_list_filter" class="list-item list-item-clickable">
             <div (click)="displayWinnerInfo(winner.Id)">
               <div *ngIf="winner_to_display !== winner.Id">
                 <span class="data-name">{{winner.Name}} {{winner.Lastname}}</span>

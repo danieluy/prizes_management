@@ -71,7 +71,7 @@ function newPrize() {
 	})
 	.catch((err) => { console.error(err) });
 }
-newPrize();
+// newPrize();
 
 
 function increaseStock(value) {

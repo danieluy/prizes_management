@@ -1,5 +1,5 @@
 "use strict";
-const Users = require('./Users');
+const Users = require('./users');
 const bcrypt = require('bcryptjs');
 
 const login = (name, pass) => {

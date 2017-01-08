@@ -30,7 +30,7 @@ router.post('/login', (req, res) => {
   })
 });
 //  logout  ////////////////////////////////////////////////////////////////////
-router.post('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   if(req.session){
     req.session.reset();
   }

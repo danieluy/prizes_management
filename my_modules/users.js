@@ -1,9 +1,11 @@
 "use strict";
 
 const db = require('./db.js');
-const hashPass = require('./security.js').hashPass;
+let hashPass = null;
 
 const User = function(user_info){
+
+  hashPass = require('./security.js').hashPass;
 
   if (!user_info.userName || !user_info.password || !user_info.role)
     throw 'ERROR: To create a new user, "userName", "password" and "role", must be provided';

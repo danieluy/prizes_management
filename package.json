@@ -4,7 +4,7 @@
   "description": "Aplicación para gestión de premios",
   "main": "app.js",
   "scripts": {
-    "start": " concurrent \"mongod\" \"node app.js\" "
+    "start": " concurrently \"mongod\" \"node app.js\" "
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,7 @@
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.14.1",
     "client-sessions": "^0.7.0",
+    "commander": "^2.9.0",
     "csurf": "^1.8.3",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
