@@ -46,10 +46,23 @@ export class Prize {
   public get StrDueDate(): string {
     return this.dateToString(this.due_date);
   }
+  public set StrDueDate(str_date: string) {
+    this.due_date = this.strgDateToInt(str_date);
+  }
 
   private dateToString(date: number): string {
     let aux: Date = new Date(date);
     return aux.getDate() + '/' + (aux.getMonth() + 1) + '/' + aux.getUTCFullYear();
+  }
+
+  private strgDateToInt(str_date):number {
+    if (!str_date)
+      return null;
+    if (str_date.match(/^\d{4}\-\d{2}\-\d{2}$/))
+      return new Date(str_date.replace(/-/g, "/")).getTime();
+    else if(str_date.match(/^\d{4}\/\d{2}\/\d{2}$/))
+      return new Date(str_date).getTime();
+    return null;
   }
 
 } 

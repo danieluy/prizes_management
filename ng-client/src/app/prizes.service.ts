@@ -25,4 +25,14 @@ export class PrizesService {
       });
   }
 
+  newPrize(prize: Prize): void {
+    this.http.post(`${Const.APIURL}api/prizes`, 'lalala=kokoko', { headers: Const.HEADERS.urlencoded(), withCredentials: true })
+      .map(res => res.json()).subscribe(replay => {
+        if (replay.error)
+          console.error(replay.error, replay.details)
+        else
+          this.fetchPrizes();
+      })
+  }
+
 }

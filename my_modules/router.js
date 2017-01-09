@@ -9,7 +9,7 @@ const headers = require('./headers.js');
 router.use(bodyParser.urlencoded({ extended: false }))
 
 // write CORS headers
-router.use(headers.writeCors);
+router.use(headers.writeCORS);
 
 // test only
 // router.use((req, res, next) =>{

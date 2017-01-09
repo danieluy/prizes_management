@@ -26,7 +26,7 @@ export class WinnersService {
   }
 
   handOverPrize(winner_ci: string, prize_id: string) {
-    this.http.post(`${Const.APIURL}json/winners/handprize`, { winner_ci: winner_ci, prize_id: prize_id }, { headers: Const.HEADERS.json(), withCredentials: true })
+    this.http.post(`${Const.APIURL}winners/handprize`, `winner_ci=${winner_ci}&prize_id=${prize_id}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
       .subscribe(response => {
         let json_res = response.json();
         if(json_res.error)

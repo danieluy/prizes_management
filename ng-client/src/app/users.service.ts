@@ -25,7 +25,7 @@ export class UsersService {
   }
 
   newUser(user: User): any {
-    this.http.put(`${Const.APIURL}json/users`, JSON.stringify(user), { headers: Const.HEADERS.json(), withCredentials: true })
+    this.http.post(`${Const.APIURL}json/users`, JSON.stringify(user), { headers: Const.HEADERS.json(), withCredentials: true })
       .map(res => res.json()).subscribe(replay => {
         if (replay.error)
           console.error(replay.error, replay.details)

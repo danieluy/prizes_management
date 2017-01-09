@@ -1,24 +1,24 @@
 <form (ngSubmit)="onSubmit()" #newPrizeForm="ngForm">
 
-  <label for="name">Nombre *</label>
-  <input [(ngModel)]="user.name" name="name" id="name" placeholder="Nombre de usuario" required #spy>
+  <label for="type">Tipo de premio *</label>
+  <input [(ngModel)]="prize.type" name="type" id="type" placeholder="Tipo de premio" required>
 
-  <label for="password">Contraseña *</label>
-  <input [(ngModel)]="user.password" name="password" id="password" type="password" placeholder="Contraseña" required>
+  <label for="description">Descripción *</label>
+  <input [(ngModel)]="prize.description" name="description" id="description" placeholder="Descripción" required>
 
-  <label for="password2">Repetir contraseña *</label>
-  <input [(ngModel)]="user.password2" name="password2" id="password2" type="password" placeholder="Repetir contraseña" required>
+  <label for="sponsor">Espónsor *</label>
+  <input [(ngModel)]="prize.sponsor" name="sponsor" id="sponsor" placeholder="Espónsor" required>
 
-  <label for="role">Permisos *</label>
-  <select [(ngModel)]="user.role" id="role" name="role" required>
-    <option value="admin">Administrador</option>
-    <option value="user" selected>Usuario</option>
-  </select>
+  <label for="stock">Stock *</label>
+  <input [(ngModel)]="prize.stock" name="stock" id="stock" placeholder="Stock inicial" min="0" required>
 
-  <label for="email">Email</label>
-  <input [(ngModel)]="user.email" id="email" name="email" placeholder="Email">
+  <label for="due_date">Vencimiento</label>
+  <input type="date" name="due_date" id="due_date" (input)="inputDate($event)">
 
-  <button (click)="newUser(); newPrizeForm.reset()" type="submit" class="btn-ok" id="btn-sub-new-user" [disabled]="!newPrizeForm.form.valid">Crear</button>
+  <label for="note">Notas</label>
+  <input [(ngModel)]="prize.note" name="note" id="note" placeholder="Comentarios sobre el premio">
+
+  <button (click)="newPrize(); newPrizeForm.reset()" type="submit" class="btn-ok" [disabled]="!newPrizeForm.form.valid">Crear</button>
   <button (click)="newPrizeForm.reset()" class="btn-cancel" id="btn-cancel-sub-new-user">Cancelar</button>
 
 </form>

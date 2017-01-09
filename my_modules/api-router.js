@@ -11,6 +11,11 @@ const Winner = Winners.Winner;
 const requireLogin = require('./security.js').requireLogin;
 const headers = require('./headers.js');
 
+api_router.use((req, res, next) =>{
+  console.log(req.session);
+  next();
+})
+
 // Require login
 api_router.use(requireLogin);
 
@@ -18,13 +23,7 @@ api_router.use(requireLogin);
 api_router.use(bodyParser.urlencoded({ extended: false }))
 
 // write CORS headers
-api_router.use(headers.writeCors);
-
-// test only
-// api_router.use((req, res, next) =>{
-//   console.log('api_router', req.session.user);
-//   next();
-// })
+api_router.use(headers.writeCORS);
 
 //  Prizes  ////////////////////////////////////////////////////////////////////
 
@@ -41,26 +40,28 @@ api_router.get('/prizes', (req, res) => {
   })
 });
 
-api_router.put('/prizes', (req, res) => {
-  var p = new Prize({
-    type: req.body.type,
-    sponsor: req.body.sponsor,
-    description: req.body.description,
-    stock: req.body.stock,
-    due_date: req.body.due_date,
-    note: req.body.note
-  })
-  .save()
-  .then((WriteResult) => {
-    if(WriteResult.insertedCount > 0){
-      res.status(200).json({message: 'The prize has been correctly saved'});
-    }
-    else
-      res.status(500).json({error: "There was a problem creating the prize", details: err.toString()});
-  })
-  .catch((err) => {
-    res.status(500).json({error: "There was a problem creating the prize", details: err.toString()});
-  })
+api_router.post('/prizes', (req, res) => {
+  console.log(req.body);
+  res.status(200).json({error: 'Test OK!'})
+  // var p = new Prize({
+  //   type: req.body.type,
+  //   sponsor: req.body.sponsor,
+  //   description: req.body.description,
+  //   stock: req.body.stock,
+  //   due_date: req.body.due_date,
+  //   note: req.body.note
+  // })
+  // .save()
+  // .then((WriteResult) => {
+  //   if(WriteResult.insertedCount > 0){
+  //     res.status(200).json({message: 'The prize has been correctly saved'});
+  //   }
+  //   else
+  //     res.status(500).json({error: "There was a problem creating the prize", details: err.toString()});
+  // })
+  // .catch((err) => {
+  //   res.status(500).json({error: "There was a problem creating the prize", details: err.toString()});
+  // })
 });
 
 //  Users  /////////////////////////////////////////////////////////////////////
@@ -78,7 +79,7 @@ api_router.get('/users', (req, res) => {
   })
 });
 
-api_router.put('/users', (req, res) => {
+api_router.post('/users', (req, res) => {
   var u = new User({
     userName: req.body.name,
     password: req.body.password,

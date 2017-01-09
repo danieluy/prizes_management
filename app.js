@@ -7,7 +7,6 @@ const app = express();
 const server = require('http').createServer(app);
 const router = require('./my_modules/router.js');
 const api_router = require('./my_modules/api-router.js');
-const json_api_router = require('./my_modules/json-api-router.js');
 const io = require('socket.io').listen(server);
 const fs = require('fs');
 const log = require('./my_modules/logger.js');
@@ -63,7 +62,6 @@ app.use(sessions({
 // Routing
 app.use('/', router);
 app.use('/api', api_router);
-app.use('/json', json_api_router);
 ////////////////////////////////////////////////////////////////////////////////
 //  Server  ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

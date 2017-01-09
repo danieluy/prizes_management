@@ -2,7 +2,7 @@
 
 const ip = require('ip');
 
-const writeCors = (req, res, next) => {
+const writeCORS = (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:4200");
   // res.header("Access-Control-Allow-Origin", "http://${{ip.address()}}:1043");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -12,5 +12,5 @@ const writeCors = (req, res, next) => {
 }
 
 module.exports = {
-  writeCors: writeCors
+  writeCORS: writeCORS
 };
