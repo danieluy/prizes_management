@@ -1,10 +1,5 @@
 <form id="form-new-user" (ngSubmit)="onSubmit()" #userForm="ngForm">
 
-  <!--TODO DELETE
-  <pre>
-    {{diagnostic}}
-  </pre>-->
-
   <label for="name">Nombre *</label>
   <input [(ngModel)]="user.name" name="name" id="name" placeholder="Nombre de usuario" required #spy>
 

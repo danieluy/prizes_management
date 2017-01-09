@@ -38,34 +38,9 @@
 
       <div id="card-new-prize" class="content-form" [style.display]="visible_tab == 'newPrize' ? 'inherit' : 'none'">
         <h2>Nuevo Premio</h2>
-        <form id="form-new-prize">
-          <!-- input new prize data -->
+        
 
-          <label for="txt-type">Tipo *</label>
-          <input list="prizes-type-list" id="txt-type" placeholder="Tipo de premio" autocomplete="off" required>
-          <datalist id="prizes-type-list">
-            <!-- It's filled from JS -->
-          </datalist>
-
-          <label for="txt-description">Descripción *</label>
-          <input type="text" id="txt-description" placeholder="Descripción del premio" required>
-
-
-          <label for="txt-sponsor">Espónsor *</label>
-          <input type="text" id="txt-sponsor" placeholder="Nombre del espónsor" required>
-
-          <label for="txt-stock">Stock *</label>
-          <input type="number" id="txt-stock" placeholder="Stock inicial" min="0" required>
-
-          <label for="date-duedate">Vencimiento</label>
-          <input type="date" id="date-duedate">
-
-          <label for="txt-note">Notas</label>
-          <textarea id="txt-note" placeholder="Comentarios sobre el premio"></textarea>
-
-          <button type="submit" class="btn-ok" id="btn-sub-prize">Crear</button>
-          <button type="reset" class="btn-cancel" id="btn-cancel-sub-prize">Cancelar</button>
-        </form>
+        
       </div>
 
     </div>
