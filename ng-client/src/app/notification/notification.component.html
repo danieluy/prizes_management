@@ -1,0 +1,14 @@
+<div id="notif-wrapper">
+
+  <div *ngFor="let notif of notif_stack; let i = index" class="notif {{notif.type}}">
+    <button *ngIf(!notif.timeOut) class="dismiss-notif" (click)="dismissNotif(i)">&#x2716;</button>
+    <span *ngIf(notif.timeOut) class="time-out">{{notif.timer}}</span>
+    <span class="title">
+      {{notif.title}}
+    </span>
+    <p class="message">
+      {{notif.message}}
+    </p>
+  </div>
+
+</div>

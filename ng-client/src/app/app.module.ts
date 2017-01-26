@@ -3,17 +3,18 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { WinnersComponent } from './winners/winners.component';
 import { PrizesComponent } from './prizes/prizes.component';
 import { UsersComponent } from './users/users.component';
-import { UserFormComponent } from './user-form/user-form.component';
-import { PrizesGrantingComponent } from './prizes-granting/prizes-granting.component';
 import { LoginComponent } from './login/login.component';
-import { LoginFormComponent } from './login-form/login-form.component';
-import { NewPrizeFormComponent } from './new-prize-form/new-prize-form.component';
+import { NotificationComponent } from './notification/notification.component';
+import { EqualValidatorDirective } from './equal-validator.directive';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
+
 
 @NgModule({
   declarations: [
@@ -22,16 +23,15 @@ import { NewPrizeFormComponent } from './new-prize-form/new-prize-form.component
     WinnersComponent,
     PrizesComponent,
     UsersComponent,
-    UserFormComponent,
-    PrizesGrantingComponent,
     LoginComponent,
-    LoginFormComponent,
-    NewPrizeFormComponent,
+    NotificationComponent,
+    EqualValidatorDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: 'winners', component: WinnersComponent },
@@ -40,7 +40,9 @@ import { NewPrizeFormComponent } from './new-prize-form/new-prize-form.component
       { path: 'login', component: LoginComponent }
     ])
   ],
-  providers: [],
+  providers: [
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

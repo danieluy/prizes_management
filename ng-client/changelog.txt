@@ -1,16 +1,32 @@
-Changelog
+# Radiocero Premios ng client changelog
+v0.3.0
+  20170126 | TODO | Handed prizes actions (cancel)
+  20170126 | TODO | Winners lists styles
+  20170126 | TODO | Improve the use of ng forms all over
+  20170126 | TODO | Add actions to notification component ???
+  20170126 | + | Greatly improved the login UX
+  20170126 | + | Implemented cookie handling with angular2-cookie (npm module)
+  20170125 | + | Added prize edition functionality
+  20170124 | + | Added timers to notification component (with countdown)
+  20170123 | + | At prize creation the sponsors and types are now suggested
+  20170123 | + | Added input restrictions on users creation form for username without spaces, email addresses and matching passwords
+  20170118 | + | Improved notification service
+v0.2.0
+  20170117 | + | Added functionality to check for repeating winners on a period <= 3 months
+  20170117 | + | Added CI validation method on winner.class.ts
+  20170113 | + | All the implemented functionalities are now working (login, users listing and creation, prize granting, creation and listing, winners listing, search and prizes handing)
+  20170113 | + | Added home UI
+  20170111 | + | UI added a border to the input fields
+  20170111 | + | Prize handling form ready
+  20170110 | + | Added prizes creation functionality
+  20170110 | + | Changed all the http requests to use 'Content-Type': 'application/x-www-form-urlencoded' and POST instead of PUT to avoid preflight issues
+  20170108 | + | Added notification service that only logs out messages, for now...
 v0.1.0
-  TODO - New prizes creation
-  TODO - Improve notification service
-  TODO - User creation form -> password and email validations
-  TODO - Handed prizes actions (hand over and cancel)
-  TODO - Winners lists styles
-  + 20170108 - Added notification service that only logs out messages, for now...
-  + 20170108 - Added authentication functionality
-  + 20170107 - Added the winners search functionality
-  + 20170106 - All winners list ready (styles are not ready)
-  + 20170106 - Added the search bar UI to the winners list
-  + 20170106 - Added functionality to hand over prizes to winners
-  + 20170105 - Current winners listing ready (styles are not ready)
-  + 20170102 - Prizes listing ready
-  + 20161221 - Basic users functionality ready
+  20170108 | + | Added authentication functionality
+  20170107 | + | Added the winners search functionality
+  20170106 | + | All winners list ready (styles are not ready)
+  20170106 | + | Added the search bar UI to the winners list
+  20170106 | + | Added functionality to hand over prizes to winners
+  20170105 | + | Current winners listing ready (styles are not ready)
+  20170102 | + | Prizes listing ready
+  20161221 | + | Basic users functionality ready

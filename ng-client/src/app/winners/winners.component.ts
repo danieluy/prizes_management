@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Winner } from '../winner.class';
-import { Prize } from '../prize.class';
-import { WinnersService } from '../winners.service';
-import { PrizesService } from '../prizes.service';
+import { Winner } from './winner.class';
+import { Prize } from '../prizes/prize.class';
+import { WinnersService } from '../winners/winners.service';
+import { PrizesService } from '../prizes/prizes.service';
 
 @Component({
   selector: 'app-winners',

@@ -29,7 +29,7 @@
             </div>
           </li>
         </ul>
-        
+
       </div>
 
 
@@ -37,7 +37,30 @@
 
         <h2>Nuevo Usuario</h2>
 
-        <user-form></user-form>
+        <form id="form-new-user" (ngSubmit)="onSubmit()" #userForm="ngForm">
+
+          <label for="name">Nombre de usuario *</label>
+          <input [(ngModel)]="user.name" name="name" id="name" placeholder="Nombre sin espacios"  pattern="\S+" required>
+
+          <label for="password">Contraseña *</label>
+          <input [(ngModel)]="user.password" #password="ngModel" name="password" id="password" type="password" placeholder="Contraseña" required>
+
+          <label for="password2">Repetir contraseña *</label>
+          <input [(ngModel)]="user.password2" name="password2" id="password2" type="password" placeholder="Repetir contraseña" validateEqual="password" required>
+
+          <label for="role">Permisos *</label>
+          <select [(ngModel)]="user.role" id="role" name="role" required>
+            <option value="admin">Administrador</option>
+            <option value="user" selected>Usuario</option>
+          </select>
+
+          <label for="email">Email</label>
+          <input [(ngModel)]="user.email" id="email" name="email" placeholder="Email" pattern="\S+@\S+\.\S+">
+
+          <button (click)="newUser(); userForm.reset()" type="submit" class="btn-ok" [disabled]="!userForm.form.valid">Crear</button>
+          <button (click)="userForm.reset()" class="btn-cancel" id="btn-cancel-sub-new-user">Cancelar</button>
+
+        </form>
 
       </div>
 

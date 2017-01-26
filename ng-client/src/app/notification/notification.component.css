@@ -1,0 +1,70 @@
+#notif-wrapper{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+.notif{
+  position: relative;
+  width: 25%;
+  min-height: 100px;
+  margin: 0 10px 10px auto;
+  pointer-events: auto;
+  border-radius: 3px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
+}
+.ok{
+  background-color: #88d8b0;
+}
+.alert{
+  background-color: #ffcc5c;
+}
+.error{
+  background-color: #ff6f69;
+}
+.title{
+  display: block;
+  font-size: 1rem;
+  font-weight: 900;
+  width: 100%;
+  color: #FFF;
+  padding: 20px 10px 0 10px;
+  word-break:break-all;
+}
+.message{
+  font-size: 0.8rem;
+  font-weight: 300;
+  width: 100%;
+  color: #FFF;
+  padding: 20px 10px;
+}
+.dismiss-notif{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-style: none;
+  background-color: transparent;
+  color: rgba(0, 0, 0, .5);
+  font-size: 12px;
+  cursor: pointer;
+}
+.time-out{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  border-style: none;
+  background-color: transparent;
+  color: rgba(0, 0, 0, .5);
+  font-size: 12px;
+}
+.dismiss-notif:hover{
+  color: rgba(0, 0, 0, 1);
+}

@@ -1,14 +1,22 @@
-<section id="section_login" class="page">
-  <div class="content-card">
-    <div class="content-forms">
+<div class="login-background">
 
-      <div class="content-form">
-        <h2>Iniciar sesión</h2>
+  <img class="header" src="assets/img/icon_48.png" alt="Icono Radiocero" />
+  
+  <div class="login-modal">
 
-        <login-form></login-form>
-        
-      </div>
 
-    </div>
+    <h2>Iniciar sesión</h2>
+
+    <form id="form-login" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+      <label for="userName">Nombre de usuario *</label>
+      <input [(ngModel)]="userName" name="userName" id="userName" placeholder="Nombre de usuario" required>
+
+      <label for="password">Contraseña *</label>
+      <input [(ngModel)]="password" name="password" id="password" type="password" placeholder="Contraseña" required>
+
+      <button (click)="login()" type="submit" class="btn-ok" id="btn-sub-login">Iniciar sesión</button>
+
+    </form>
   </div>
-</section>
+</div>

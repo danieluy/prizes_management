@@ -45,12 +45,17 @@ input, select, textarea{
   display: block;
   width: 100%;
   max-width: 100%;
-  border-style: none;
+  border: 1px solid #eee;
   border-radius: 3px;
   line-height: 40px;
   padding: 0px 10px;
   height: 40px;
   transition: background-color 300ms ease-in-out;
+}
+input.borderless,
+select.borderless,
+textarea.borderless{
+  border-style: none;
 }
 .input-inline{
   display: inline-block;

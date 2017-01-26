@@ -1,54 +1,60 @@
-Changelog
+# Radiocero Premios Changelog
 v0.6.0
-  + TODO Users server side checks
-  + TODO Change administrator password, or allow it to be changed from UI
-  + TODO cancelHandOverPrize() on backend
-  + TODO Clear the new prize's form after prize creation
-  + TODO Clear the grant prizes form after the prize's granted
-  + TODO Format CI to display on winner's list
-  + TODO Filter prizes on list
-  + TODO Finish the Prizes list UI
-  + TODO Prize edition
-  + TODO At prize creation the sponsors should be suggested in the same way types are suggested
-  + 20170108 - Authentication enabled
-  + 20161222 - Added /json/winners/handprize method to json-api-router.js
-v0.5.1 (commited & pushed)
-  + 20161221 - Started a new client app based on Angular 2
-  + 20161221 - BUG FIX set_date on users was assigned as due_date and consequently it defaulted to the instantiation date
-v0.5.0 (commited & pushed)
-  + SOLVED everything about the prize's stock is broken, assigning prizes is working now, stock management included ;)
-  + Added prize handing over functionality on backend
-  + When adding a new prize, the prize's list in now updated
-  + Added administrator account creation on first boot
-  + Added users management, without server side checks
-v0.4.4 (commited & pushed)
-  + Added ejs partials
-  + Solved a bug on index.js that was sending non UTC date to the server
-  + Solved a bug on index.js that didn't refresh the content position when the window was resized
-  + Added the form to grant prizes
-  + Added Winners module
-  + Added info_hub actions
-  + Solved grantPrize() on fontend's winner.js
-  + Solved Dates and comments displaying even if they are null
-  - BUG everything about the prizes stock is broken!!!!
-v0.4.3 (commited & pushed)
-  + Added tab navigation
-  + Added User's list style
-  + Added new navigation system
-  + Added DS-Spinners
-  + Added delay option to ds-ajax.js
-v0.4.2 (commited & pushed)
-  + Added Form's UI design
-  + Added suggested prize types from the existing prize types in the database
-  + The method findAll at prizes.js and users.js now returns an empty Array instead of null when there is no results
-  + Added PUT method to ds_ajax.js
-  + Added date format control in the prizes.js module
-  + Added :valid and :invalid pseudo classes style to input, textarea and select tags within div.content-form
-  + Added info-hub to display messages
-  + New prize's UI to back-end connection finished
-  + Refined forms UI
-  + Added resert functionallity to forms
-v0.4.1 (commited & pushed)
-  + Added concurrently dev-dependency to run MongoDB along with app.js
-  + Started to normalize sintaxis
-  + Current status of modules users.js and prizes.js was correctly tested
+  20170125 | TODO | Test winner.js => hasWonSinceThreeMonths()
+  20170125 | TODO | Users server side checks
+  20170125 | TODO | Change administrator password, or allow it to be changed from UI
+  20170125 | TODO | cancelHandOverPrize() on backend
+  20170125 | + | Added /prizes/edit api_router route and method
+  20170125 | + | Added Prize.edit() method
+  20170116 | + | Added method to check if a winner has won in the last three months
+  20170113 | + | Added ng-client
+  20170113 | - | Removed old client
+  20170110 | - | Removed the json-api router
+  20170108 | + | Authentication enabled
+  20161222 | + | Added /json/winners/handprize method to json-api-router.js
+# commited & pushed
+v0.5.1
+  20161221 | + | Started a new client app based on Angular 2
+  20161221 | BUG FIX | set_date on users was assigned as due_date and consequently it defaulted to the instantiation date
+# commited & pushed
+v0.5.0
+  19700101 | BUG FIX | everything about the prize's stock is broken, assigning prizes is working now, stock management included ;)
+  19700101 | + | Added prize handing over functionality on backend
+  19700101 | + | When adding a new prize, the prize's list in now updated
+  19700101 | + | Added administrator account creation on first boot
+  19700101 | + | Added users management, without server side checks
+# commited & pushed
+v0.4.4
+  19700101 | + | Added ejs partials
+  19700101 | BUG FIX | Solved a bug on index.js that was sending non UTC date to the server
+  19700101 | BUG FIX | Solved a bug on index.js that didn't refresh the content position when the window was resized
+  19700101 | + | Added the form to grant prizes
+  19700101 | + | Added Winners module
+  19700101 | + | Added info_hub actions
+  19700101 | BUG FIX | Solved grantPrize() on fontend's winner.js
+  19700101 | BUG FIX | Solved Dates and comments displaying even if they are null
+  19700101 | BUG | everything about the prizes stock is broken!!!!
+# commited & pushed
+v0.4.3
+  19700101 | + | Added tab navigation
+  19700101 | + | Added User's list style
+  19700101 | + | Added new navigation system
+  19700101 | + | Added DS-Spinners
+  19700101 | + | Added delay option to ds-ajax.js
+# commited & pushed
+v0.4.2
+  19700101 | + | Added Form's UI design
+  19700101 | + | Added suggested prize types from the existing prize types in the database
+  19700101 | + | The method findAll at prizes.js and users.js now returns an empty Array instead of null when there is no results
+  19700101 | + | Added PUT method to ds_ajax.js
+  19700101 | + | Added date format control in the prizes.js module
+  19700101 | + | Added :valid and :invalid pseudo classes style to input, textarea and select tags within div.content-form
+  19700101 | + | Added info-hub to display messages
+  19700101 | + | New prize's UI to back-end connection finished
+  19700101 | + | Refined forms UI
+  19700101 | + | Added resert functionallity to forms
+# commited & pushed
+v0.4.1
+  19700101 | + | Added concurrently dev-dependency to run MongoDB along with app.js
+  19700101 | + | Started to normalize sintaxis
+  19700101 | + | Current status of modules users.js and prizes.js was correctly tested

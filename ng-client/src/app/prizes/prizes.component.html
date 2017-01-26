@@ -26,21 +26,127 @@
                 <span class="data-date">{{prize.StrDueDate}}</span>
               </div>
               <div class="list-actions">
-                <button (click)="displayGrantPrizeTab(prize)" type="button" class="btn-ok btn-grant-prize">Otorgar</button>
-                <button type="button" class="btn-cancel btn-edit-prize">Editar</button>
+                <button (click)="displayGrantPrizeForm(prize)" type="button" class="btn-ok btn-grant-prize">Otorgar</button>
+                <button (click)="displayEditPrizeForm(prize)" type="button" class="btn-cancel btn-edit-prize">Editar</button>
               </div>
             </div>
           </li>
         </ul>
       </div>
 
-      <grant-prize-tab *ngIf="prize_to_grant" [prize]="prize_to_grant"></grant-prize-tab>
-
       <div id="card-new-prize" class="content-form" [style.display]="visible_tab == 'newPrize' ? 'inherit' : 'none'">
         <h2>Nuevo Premio</h2>
-        
-        <new-prize-form></new-prize-form>
-        
+
+        <form (ngSubmit)="onSubmit()" #newPrizeForm="ngForm">
+
+          <label>Tipo de premio *</label>
+          <input [(ngModel)]="new_prize.type" name="type" list="types_list" placeholder="Tipo de premio" required>
+          <datalist id="types_list">
+            <option *ngFor="let type of prizes_type_list" value="{{type}}">
+          </datalist>
+
+          <label>Descripción *</label>
+          <input [(ngModel)]="new_prize.description" name="description" placeholder="Descripción" required>
+
+          <label>Espónsor *</label>
+          <input [(ngModel)]="new_prize.sponsor" name="sponsor" list="sponsors_list" placeholder="Espónsor" required>
+          <datalist id="sponsors_list">
+            <option *ngFor="let type of prizes_sponsor_list" value="{{type}}">
+          </datalist>
+
+          <label>Stock *</label>
+          <input type="number" [(ngModel)]="new_prize.stock" name="stock" placeholder="Stock inicial" min="0" required>
+
+          <label>Vencimiento</label>
+          <input type="date" name="due_date" (input)="inputDate($event)">
+
+          <label>Notas</label>
+          <input [(ngModel)]="new_prize.note" name="note" placeholder="Comentarios sobre el premio">
+
+          <button (click)="newPrize(); newPrizeForm.reset()" type="submit" class="btn-ok" [disabled]="!newPrizeForm.form.valid">Crear</button>
+          <button (click)="newPrizeForm.reset()" class="btn-cancel">Cancelar</button>
+
+        </form>
+
+      </div>
+
+      <!--New Prize Form-->
+      <div *ngIf="prize" class="wrapper">
+        <form (ngSubmit)="onSubmit()" #grantPrizeForm="ngForm">
+
+          <h2>Otorgar premio</h2>
+
+          <h3 id="prize-to-grant-description">{{prize.Description}}</h3>
+          <h4 id="prize-to-grant-type">{{prize.Type}}</h4>
+
+          <!--<pre>{{inputValues}}</pre>-->
+
+          <label>C.I. *</label>
+          <input [(ngModel)]="winner.ci" (keyup)="checkWinnerCi(ci_input.value)" #ci_input name="ci" id="ci" placeholder="CI sin puntos ni guiones"
+            autocomplete="off" pattern="^\d{7,8}$" required>
+
+          <label>Nombre *</label>
+          <input [(ngModel)]="winner.name" class="input-inline" name="name" id="name" placeholder="Nombre" required>
+          <input [(ngModel)]="winner.lastname" class="input-inline" name="lastname" id="lastname" placeholder="Apellido" required>
+
+          <label>Sexo</label>
+          <select [(ngModel)]="winner.gender" name="gender" id="gender" title="Seleccione sexo">
+            <option value="F">Femenino</option>
+            <option value="M">Masculino</option>
+            <option value="O">Otro</option>
+          </select>
+
+          <label>Perfil de Facebook</label>
+          <input [(ngModel)]="winner.facebook" name="facebook" id="facebook" placeholder="https://es-la.facebook.com/nombre.usuario">
+
+          <label>Teléfono</label>
+          <input [(ngModel)]="winner.phone" name="phone" id="phone" placeholder="099000111">
+
+          <label>Email</label>
+          <input [(ngModel)]="winner.mail" name="mail" id="mail" placeholder="usuario@dominio.com">
+
+          <button (click)="grantPrize(); grantPrizeForm.reset()" type="submit" class="btn-ok" [disabled]="!grantPrizeForm.form.valid">Otorgar</button>
+          <button (click)="destroyGrantPrizeForm($event)" class="btn-cancel">Cancelar</button>
+
+        </form>
+      </div>
+
+      <!--Edit Prize Form-->
+      <div *ngIf="prize_to_edit" class="wrapper">
+        <form (ngSubmit)="onSubmit()" #editPrizeForm="ngForm">
+
+          <h2>Editar premio</h2>
+
+          <!--<pre>{{editPrizeInputValues}}</pre>-->
+
+          <label>Tipo de premio *</label>
+          <input [(ngModel)]="prize_to_edit.type" name="type" list="types_list" placeholder="Tipo de premio" required>
+          <datalist id="types_list">
+            <option *ngFor="let type of prizes_type_list" value="{{type}}">
+          </datalist>
+
+          <label>Descripción *</label>
+          <input [(ngModel)]="prize_to_edit.description" name="description" placeholder="Descripción" required>
+
+          <label>Espónsor *</label>
+          <input [(ngModel)]="prize_to_edit.sponsor" name="sponsor" list="sponsors_list" placeholder="Espónsor" required>
+          <datalist id="sponsors_list">
+            <option *ngFor="let type of prizes_sponsor_list" value="{{type}}">
+          </datalist>
+
+          <label>Stock *</label>
+          <input type="number" [(ngModel)]="prize_to_edit.stock" name="stock" placeholder="Stock inicial" min="0" required>
+
+          <label>Vencimiento</label>
+          <input type="date" value="{{prize_to_edit.DateToSetInput}}" name="due_date" (input)="inputNewDate($event.target.value)">
+
+          <label>Notas</label>
+          <input [(ngModel)]="prize_to_edit.note" name="note" placeholder="Comentarios sobre el premio">
+
+          <button (click)="editPrize(); editPrizeForm.reset()" type="submit" class="btn-ok" [disabled]="!editPrizeForm.form.valid">Guardar</button>
+          <button (click)="destroyEditPrizeForm($event)" class="btn-cancel">Cancelar</button>
+
+        </form>
       </div>
 
     </div>

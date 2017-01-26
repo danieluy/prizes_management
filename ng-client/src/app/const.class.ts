@@ -5,7 +5,10 @@ export class Const {
 
   constructor() { }
 
-  public static APIURL: string = 'http://localhost:1043/';
+  // public static APIURL: string = 'http://localhost:1043/';
+  public static APIURL: string = `http://${window.location.hostname}:1043/`;
+
+
 
   public static HEADERS: any = {
     json: () => {
@@ -19,5 +22,7 @@ export class Const {
       return header;
     }
   }
+
+  public static WINNING_MIN_PERIOD = 6;
 
 }

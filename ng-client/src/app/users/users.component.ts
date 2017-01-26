@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../users.service';
-import { User } from '../user.class';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.class';
 
 @Component({
   selector: 'app-users',
@@ -31,4 +31,11 @@ export class UsersComponent implements OnInit {
     this.visible_tab = tab;
   }
 
+  //  New user Form  //////////////////////////////////////////////////////////
+  private user = new User(null, null, null, null, null);
+  private submitted = false;
+  newUser() { this.usersService.newUser(this.user) }
+  onSubmit() { this.submitted = true; }
+  // TODO: Remove this when we're done
+  get inputValues() { return JSON.stringify(this.user, null, 2) }
 }
