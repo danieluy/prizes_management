@@ -6,7 +6,9 @@ import { LoginService } from './login.service';
 describe('LoginService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LoginService]
+      providers: [
+        LoginService
+      ]
     });
   });
 

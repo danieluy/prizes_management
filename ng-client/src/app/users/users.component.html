@@ -57,7 +57,7 @@
           <label for="email">Email</label>
           <input [(ngModel)]="user.email" id="email" name="email" placeholder="Email" pattern="\S+@\S+\.\S+">
 
-          <button (click)="newUser(); userForm.reset()" type="submit" class="btn-ok" [disabled]="!userForm.form.valid">Crear</button>
+          <button (click)="newUser($event); userForm.reset()" type="submit" class="btn-ok" [disabled]="!userForm.form.valid">Crear</button>
           <button (click)="userForm.reset()" class="btn-cancel" id="btn-cancel-sub-new-user">Cancelar</button>
 
         </form>

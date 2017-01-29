@@ -8,7 +8,9 @@ const Users = require('./users.js');
 const User = Users.User;
 const Winners = require('./winners.js');
 const Winner = Winners.Winner;
-const requireLogin = require('./security.js').requireLogin;
+const security = require('./security.js');
+const requireLogin = security.requireLogin;
+const checkRoleAdmin = security.checkRoleAdmin;
 const headers = require('./headers.js');
 
 // Require login
@@ -56,7 +58,7 @@ api_router.post('/prizes', (req, res) => {
     })
 });
 
-api_router.post('/prizes/edit', (req, res) => {
+api_router.post('/prizes/edit', checkRoleAdmin, (req, res) => {
   Prizes.findById(req.body.id)
     .then(prize => {
       if (prize) {
@@ -97,8 +99,7 @@ api_router.get('/users', (req, res) => {
     })
 });
 
-api_router.post('/users', (req, res) => {
-  console.log(req.body);
+api_router.post('/users', checkRoleAdmin, (req, res) => {
   var u = new User({
     userName: req.body.name,
     password: req.body.password,

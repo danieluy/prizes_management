@@ -29,16 +29,9 @@ export class UsersService {
       );
   }
 
-  newUser(user: User): any {
-    this.http.post(`${Const.APIURL}api/users`, `name=${user.name}&password=${user.password}&role=${user.role}&email=${user.email}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
+  newUser(user: User): Observable<any> {
+    return this.http.post(`${Const.APIURL}api/users`, `name=${user.name}&password=${user.password}&role=${user.role}&email=${user.email}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
       .map(res => res.json())
-      .subscribe(
-      res => {
-        this.fetchUsers();
-        this.notificationService.ok("Exito :)", "El usuario se ha creado correctamente.");
-      },
-      error => this.notificationService.error("Error creando el usuario", error.json().details)
-      );
   }
 
 }

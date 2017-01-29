@@ -12,6 +12,7 @@ import { PrizesComponent } from './prizes/prizes.component';
 import { UsersComponent } from './users/users.component';
 import { LoginComponent } from './login/login.component';
 import { NotificationComponent } from './notification/notification.component';
+import { NotificationService } from './notification/notification.service';
 import { EqualValidatorDirective } from './equal-validator.directive';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 
@@ -41,7 +42,8 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
     ])
   ],
   providers: [
-    CookieService
+    CookieService,
+    NotificationService
   ],
   bootstrap: [AppComponent]
 })

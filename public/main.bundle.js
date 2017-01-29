@@ -44,7 +44,7 @@ module.exports = "/*--  Buttons  -----------------------------------------------
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__login_login_service__ = __webpack_require__(324);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__notification_notification_service__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_angular2_cookie_services_cookies_service__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_angular2_cookie_services_cookies_service___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_angular2_cookie_services_cookies_service__);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return AppComponent; });
@@ -86,8 +86,7 @@ var AppComponent = (function () {
             template: __webpack_require__(664),
             styles: [__webpack_require__(655), __webpack_require__(661), __webpack_require__(658)],
             providers: [
-                __WEBPACK_IMPORTED_MODULE_1__login_login_service__["a" /* LoginService */],
-                __WEBPACK_IMPORTED_MODULE_2__notification_notification_service__["a" /* NotificationService */]
+                __WEBPACK_IMPORTED_MODULE_1__login_login_service__["a" /* LoginService */]
             ]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__login_login_service__["a" /* LoginService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__login_login_service__["a" /* LoginService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__notification_notification_service__["a" /* NotificationService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__notification_notification_service__["a" /* NotificationService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_angular2_cookie_services_cookies_service__["CookieService"] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3_angular2_cookie_services_cookies_service__["CookieService"]) === 'function' && _c) || Object])
@@ -111,7 +110,7 @@ var AppComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise__ = __webpack_require__(148);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__notification_notification_service__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular2_cookie_services_cookies_service__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular2_cookie_services_cookies_service___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_angular2_cookie_services_cookies_service__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__const_class__ = __webpack_require__(136);
@@ -147,9 +146,9 @@ var LoginService = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (res) {
             if (res.error)
-                _this.notificationService.alert("Error", "Usuario y/o contraseña incorrectos", 4000);
+                _this.notificationService.alert("Error", "Usuario y/o contraseña incorrectos", 6000);
             else {
-                _this.notificationService.ok("Bienvenido", "Haz iniciado sesi\u00F3n como " + res.user.userName + " con privilegios de " + res.user.role, 2000);
+                _this.notificationService.ok("Bienvenido", "Haz iniciado sesi\u00F3n como " + res.user.userName + " con privilegios de " + res.user.role, 3000);
                 _this.login_source.next({ userName: res.user.userName, role: res.user.role });
                 var expirationDate = new Date(Date.now() + (4 * 60 * 60 * 1000)); // four hours
                 _this.cookieService.putObject('user', { userName: res.user.userName, role: res.user.role }, { expires: expirationDate });
@@ -314,7 +313,7 @@ var Prize = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__const_class__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__prize_class__ = __webpack_require__(325);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__notification_notification_service__ = __webpack_require__(38);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return PrizesService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -347,28 +346,16 @@ var PrizesService = (function () {
             .subscribe(function (prizes) { return _this.prizes_source.next(prizes); }, function (error) { return _this.notificationService.error("Error descargando los premios", "Debes iniciar sesión para ver esta información"); });
     };
     PrizesService.prototype.newPrize = function (prize) {
-        var _this = this;
-        this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/prizes", "type=" + prize.Type + "&sponsor=" + prize.Sponsor + "&description=" + prize.Description + "&stock=" + prize.Stock + "&due_date=" + prize.StrDueDateToPost + "&note=" + prize.Note, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (ok) {
-            _this.fetchPrizes();
-            _this.notificationService.ok("Exito :)", "El premio se ha creado correctamente.", 3000);
-        }, function (error) { return _this.notificationService.error("Error creando el premio", error.json().details); });
+        return this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/prizes", "type=" + prize.Type + "&sponsor=" + prize.Sponsor + "&description=" + prize.Description + "&stock=" + prize.Stock + "&due_date=" + prize.StrDueDateToPost + "&note=" + prize.Note, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
+            .map(function (res) { return res.json(); });
     };
     PrizesService.prototype.editPrize = function (prize) {
-        var _this = this;
-        this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/prizes/edit", "id=" + prize.id + "&type=" + prize.type + "&sponsor=" + prize.sponsor + "&description=" + prize.description + "&stock=" + prize.stock + "&due_date=" + prize.StrDueDateToPost + "&note=" + prize.note, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (ok) {
-            _this.fetchPrizes();
-            _this.notificationService.ok("Exito :)", "El premio se ha editado correctamente.", 3000);
-        }, function (error) { return _this.notificationService.error("Error editando el premio", error._body); });
+        return this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/prizes/edit", "id=" + prize.id + "&type=" + prize.type + "&sponsor=" + prize.sponsor + "&description=" + prize.description + "&stock=" + prize.stock + "&due_date=" + prize.StrDueDateToPost + "&note=" + prize.note, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
+            .map(function (res) { return res.json(); });
     };
     PrizesService.prototype.grantPrize = function (prize, winner) {
-        var _this = this;
-        this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/grantprize", this.grantPrizeFormatParameters(prize, winner), { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (ok) { return _this.notificationService.ok("Exito :)", "El premio se ha otorgado correctamente", 3000); }, function (error) { return _this.notificationService.error("Error otorgando el premio", error.json().details); });
+        return this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/grantprize", this.grantPrizeFormatParameters(prize, winner), { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
+            .map(function (res) { return res.json(); });
     };
     PrizesService.prototype.grantPrizeFormatParameters = function (prize, winner) {
         var params = "prize_id=" + prize.Id + "&ci=" + winner.CiRaw + "&name=" + winner.name + "&lastname=" + winner.lastname;
@@ -635,7 +622,7 @@ var Winner = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__const_class__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__winner_class__ = __webpack_require__(328);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__notification_notification_service__ = __webpack_require__(38);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return WinnersService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -669,13 +656,8 @@ var WinnersService = (function () {
             .subscribe(function (winners) { return _this.winners_source.next(winners); }, function (error) { return _this.notificationService.error("Error descargando los ganadores", "Debes iniciar sesión para ver esta información"); });
     };
     WinnersService.prototype.handOverPrize = function (winner_ci, prize_id) {
-        var _this = this;
-        this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/winners/handprize", "winner_ci=" + winner_ci + "&prize_id=" + prize_id, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (res) {
-            _this.fetchWinners();
-            _this.notificationService.ok("Exito :)", "El premio se a entregado correctamente.");
-        }, function (error) { return _this.notificationService.error("Error entregando el premio", error.json().details); });
+        return this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/winners/handprize", "winner_ci=" + winner_ci + "&prize_id=" + prize_id, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
+            .map(function (res) { return res.json(); });
     };
     WinnersService.prototype.checkWinnerCi = function (ci) {
         return this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/winners/checkwinner", "ci=" + ci, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
@@ -689,6 +671,57 @@ var WinnersService = (function () {
     var _a, _b;
 }());
 //# sourceMappingURL=C:/Users/ddba/Desktop/Daniel/prizes_management/ng-client/src/winners.service.js.map
+
+/***/ },
+
+/***/ 38:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__ = __webpack_require__(493);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__);
+/* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return NotificationService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var NotificationService = (function () {
+    function NotificationService() {
+        this.notifications_source = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
+        this.notifications$ = this.notifications_source.asObservable();
+    }
+    NotificationService.prototype.ok = function (title, message, timeOut) {
+        // console.log('OK message');
+        // console.log(new Notification('ok', title, message));
+        this.notifications_source.next(new __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__["a" /* Notification */]('ok', title, message, timeOut));
+    };
+    NotificationService.prototype.alert = function (title, message, timeOut) {
+        // console.log('ALERT message');
+        // console.log(new Notification('alert', title, message));
+        this.notifications_source.next(new __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__["a" /* Notification */]('alert', title, message, timeOut));
+    };
+    NotificationService.prototype.error = function (title, message, timeOut) {
+        // console.log('ERROR message');
+        // console.error(new Notification('error', title, message));
+        this.notifications_source.next(new __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__["a" /* Notification */]('error', title, message, timeOut));
+    };
+    NotificationService = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(), 
+        __metadata('design:paramtypes', [])
+    ], NotificationService);
+    return NotificationService;
+}());
+//# sourceMappingURL=C:/Users/ddba/Desktop/Daniel/prizes_management/ng-client/src/notification.service.js.map
 
 /***/ },
 
@@ -745,9 +778,10 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__users_users_component__ = __webpack_require__(496);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__login_login_component__ = __webpack_require__(492);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__notification_notification_component__ = __webpack_require__(494);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__equal_validator_directive__ = __webpack_require__(489);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular2_cookie_services_cookies_service__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular2_cookie_services_cookies_service___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13_angular2_cookie_services_cookies_service__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__notification_notification_service__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__equal_validator_directive__ = __webpack_require__(489);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_angular2_cookie_services_cookies_service__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_angular2_cookie_services_cookies_service___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14_angular2_cookie_services_cookies_service__);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -758,6 +792,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -786,7 +821,7 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_9__users_users_component__["a" /* UsersComponent */],
                 __WEBPACK_IMPORTED_MODULE_10__login_login_component__["a" /* LoginComponent */],
                 __WEBPACK_IMPORTED_MODULE_11__notification_notification_component__["a" /* NotificationComponent */],
-                __WEBPACK_IMPORTED_MODULE_12__equal_validator_directive__["a" /* EqualValidatorDirective */]
+                __WEBPACK_IMPORTED_MODULE_13__equal_validator_directive__["a" /* EqualValidatorDirective */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["b" /* BrowserModule */],
@@ -802,7 +837,8 @@ var AppModule = (function () {
                 ])
             ],
             providers: [
-                __WEBPACK_IMPORTED_MODULE_13_angular2_cookie_services_cookies_service__["CookieService"]
+                __WEBPACK_IMPORTED_MODULE_14_angular2_cookie_services_cookies_service__["CookieService"],
+                __WEBPACK_IMPORTED_MODULE_12__notification_notification_service__["a" /* NotificationService */]
             ],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
         }), 
@@ -992,7 +1028,7 @@ var Notification = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__notification_notification_service__ = __webpack_require__(38);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return NotificationComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1064,7 +1100,7 @@ var NotificationComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__prizes_prizes_service__ = __webpack_require__(326);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__winners_winners_service__ = __webpack_require__(329);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__prizes_prize_class__ = __webpack_require__(325);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__winners_winner_class__ = __webpack_require__(328);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return PrizesComponent; });
@@ -1107,37 +1143,69 @@ var PrizesComponent = (function () {
         this.prizesService.fetchPrizes();
         this.visible_tab = tab;
     };
-    PrizesComponent.prototype.inputDate = function (event) { this.new_prize.StrDueDate = event.target.value; };
-    PrizesComponent.prototype.newPrize = function () { this.prizesService.newPrize(this.new_prize); };
-    PrizesComponent.prototype.displayGrantPrizeForm = function (prize, displayGrantPrizeTab) { this.prize = prize; };
+    PrizesComponent.prototype.inputDate = function (event) {
+        this.new_prize.StrDueDate = event.target.value;
+    };
+    PrizesComponent.prototype.newPrize = function () {
+        var _this = this;
+        this.prizesService.newPrize(this.new_prize)
+            .subscribe(function (ok) {
+            _this.prizesService.fetchPrizes();
+            _this.notificationService.ok("Exito", "El premio se ha creado correctamente.", 3000);
+        }, function (error) { return _this.notificationService.error("Error, el premio NO se ha creado", error.json().details); });
+    };
+    PrizesComponent.prototype.displayGrantPrizeForm = function (prize) {
+        this.prize = prize;
+    };
     PrizesComponent.prototype.destroyGrantPrizeForm = function (event) {
-        event.preventDefault();
+        if (event)
+            event.preventDefault();
         this.prize = null;
     };
-    PrizesComponent.prototype.grantPrize = function () { this.prizesService.grantPrize(this.prize, this.winner); };
+    PrizesComponent.prototype.grantPrize = function () {
+        var _this = this;
+        this.prizesService.grantPrize(this.prize, this.winner)
+            .subscribe(function (ok) {
+            _this.notificationService.ok("Exito :)", "El premio se ha otorgado correctamente", 3000);
+            _this.destroyGrantPrizeForm();
+        }, function (error) { return _this.notificationService.error("Error otorgando el premio", error.json().details); });
+    };
     PrizesComponent.prototype.checkWinnerCi = function (ci) {
         var _this = this;
         if (this.validateCi(ci)) {
             this.winnersService.checkWinnerCi(ci)
                 .subscribe(function (ok) {
                 if (ok.allowed && ok.message === 'This person is allowed to participate but has already won')
-                    _this.notificationService.alert('Persona habilitada pero que ya ha ganado');
+                    _this.notificationService.alert('Persona habilitada', 'Ganó hace más de 3 meses', 6000);
                 else if (ok.allowed)
-                    _this.notificationService.ok('Persona habilitada', "No hay registro de que esta persona haya participado anteriormente");
+                    _this.notificationService.ok('Persona habilitada', "No hay registro de que haya participado anteriormente", 3000);
                 else {
                     _this.prize = null;
-                    _this.notificationService.error('Persona NO hablitada (ganó hace menos de 3 meses)');
+                    _this.notificationService.error('Persona NO hablitada', 'Ganó hace menos de 3 meses');
                 }
             }, function (err) { return _this.notificationService.error(err); });
         }
     };
-    PrizesComponent.prototype.displayEditPrizeForm = function (prize) { this.prize_to_edit = prize; };
+    PrizesComponent.prototype.displayEditPrizeForm = function (prize) {
+        this.prize_to_edit = prize;
+    };
     PrizesComponent.prototype.destroyEditPrizeForm = function (event) {
-        event.preventDefault();
+        if (event)
+            event.preventDefault();
         this.prize_to_edit = null;
     };
-    PrizesComponent.prototype.inputNewDate = function (date) { this.prize_to_edit.StrDueDate = date; };
-    PrizesComponent.prototype.editPrize = function () { this.prizesService.editPrize(this.prize_to_edit); };
+    PrizesComponent.prototype.inputNewDate = function (date) {
+        this.prize_to_edit.StrDueDate = date;
+    };
+    PrizesComponent.prototype.editPrize = function () {
+        var _this = this;
+        this.prizesService.editPrize(this.prize_to_edit)
+            .subscribe(function (ok) {
+            _this.prizesService.fetchPrizes();
+            _this.notificationService.ok("Exito :)", "El premio se ha editado correctamente.", 3000);
+            _this.destroyEditPrizeForm();
+        }, function (error) { return _this.notificationService.error("Error editando el premio", error._body); });
+    };
     // TODO: Remove this when we're done
     // get editPrizeInputValues(): any { return JSON.stringify(this.prize_to_edit, null, 2) };
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////  
@@ -1206,6 +1274,7 @@ var PrizesComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__users_users_service__ = __webpack_require__(497);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_user_class__ = __webpack_require__(327);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__ = __webpack_require__(38);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return UsersComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1219,9 +1288,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var UsersComponent = (function () {
-    function UsersComponent(usersService) {
+    function UsersComponent(usersService, notificationService) {
         this.usersService = usersService;
+        this.notificationService = notificationService;
         //  New user Form  //////////////////////////////////////////////////////////
         this.user = new __WEBPACK_IMPORTED_MODULE_2__users_user_class__["a" /* User */](null, null, null, null, null);
         this.submitted = false;
@@ -1233,17 +1304,20 @@ var UsersComponent = (function () {
         this.usersService.fetchUsers();
     };
     UsersComponent.prototype.navigateTo = function (tab) {
-        this.usersService.fetchUsers(); // TODO find out why the users list is not updated en user creation
+        this.usersService.fetchUsers();
         this.visible_tab = tab;
     };
-    UsersComponent.prototype.newUser = function () { this.usersService.newUser(this.user); };
+    UsersComponent.prototype.newUser = function (event) {
+        var _this = this;
+        if (event)
+            event.preventDefault();
+        this.usersService.newUser(this.user)
+            .subscribe(function (res) {
+            _this.usersService.fetchUsers();
+            _this.notificationService.ok("Exito", "El usuario se ha creado correctamente", 3000);
+        }, function (error) { return _this.notificationService.error("Error, el usuario NO ha sido creado", error.json().error); });
+    };
     UsersComponent.prototype.onSubmit = function () { this.submitted = true; };
-    Object.defineProperty(UsersComponent.prototype, "inputValues", {
-        // TODO: Remove this when we're done
-        get: function () { return JSON.stringify(this.user, null, 2); },
-        enumerable: true,
-        configurable: true
-    });
     UsersComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-users',
@@ -1253,10 +1327,10 @@ var UsersComponent = (function () {
                 __WEBPACK_IMPORTED_MODULE_1__users_users_service__["a" /* UsersService */]
             ]
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__users_users_service__["a" /* UsersService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__users_users_service__["a" /* UsersService */]) === 'function' && _a) || Object])
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__users_users_service__["a" /* UsersService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__users_users_service__["a" /* UsersService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__["a" /* NotificationService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__["a" /* NotificationService */]) === 'function' && _b) || Object])
     ], UsersComponent);
     return UsersComponent;
-    var _a;
+    var _a, _b;
 }());
 //# sourceMappingURL=C:/Users/ddba/Desktop/Daniel/prizes_management/ng-client/src/users.component.js.map
 
@@ -1276,7 +1350,7 @@ var UsersComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__const_class__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__user_class__ = __webpack_require__(327);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__notification_notification_service__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__notification_notification_service__ = __webpack_require__(38);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return UsersService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1309,13 +1383,8 @@ var UsersService = (function () {
             .subscribe(function (users) { return _this.users_source.next(users); }, function (error) { return _this.notificationService.error("Error descargando los usuarios", "Debes iniciar sesión para ver esta información"); });
     };
     UsersService.prototype.newUser = function (user) {
-        var _this = this;
-        this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/users", "name=" + user.name + "&password=" + user.password + "&role=" + user.role + "&email=" + user.email, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
-            .map(function (res) { return res.json(); })
-            .subscribe(function (res) {
-            _this.fetchUsers();
-            _this.notificationService.ok("Exito :)", "El usuario se ha creado correctamente.");
-        }, function (error) { return _this.notificationService.error("Error creando el usuario", error.json().details); });
+        return this.http.post(__WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].APIURL + "api/users", "name=" + user.name + "&password=" + user.password + "&role=" + user.role + "&email=" + user.email, { headers: __WEBPACK_IMPORTED_MODULE_5__const_class__["a" /* Const */].HEADERS.urlencoded(), withCredentials: true })
+            .map(function (res) { return res.json(); });
     };
     UsersService = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(), 
@@ -1335,6 +1404,7 @@ var UsersService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__winners_winners_service__ = __webpack_require__(329);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__prizes_prizes_service__ = __webpack_require__(326);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__ = __webpack_require__(38);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return WinnersComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1348,10 +1418,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var WinnersComponent = (function () {
-    function WinnersComponent(winnersService, prizesService) {
+    function WinnersComponent(winnersService, prizesService, notificationService) {
         this.winnersService = winnersService;
         this.prizesService = prizesService;
+        this.notificationService = notificationService;
         this.winner_prize_list = [];
     }
     WinnersComponent.prototype.ngOnInit = function () {
@@ -1377,7 +1449,12 @@ var WinnersComponent = (function () {
         this.winner_to_display = winner_id;
     };
     WinnersComponent.prototype.handOverPrize = function (winner_ci, prize_id) {
-        this.winnersService.handOverPrize(winner_ci, prize_id);
+        var _this = this;
+        this.winnersService.handOverPrize(winner_ci, prize_id)
+            .subscribe(function (res) {
+            _this.winnersService.fetchWinners();
+            _this.notificationService.ok("Exito", "El premio se a entregado correctamente", 3000);
+        }, function (error) { return _this.notificationService.error("Error, el premio NO ha sido entregado", error.json().details); });
     };
     WinnersComponent.prototype.cancelHandOverPrize = function () {
         // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
@@ -1433,10 +1510,10 @@ var WinnersComponent = (function () {
                 __WEBPACK_IMPORTED_MODULE_2__prizes_prizes_service__["a" /* PrizesService */]
             ]
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__winners_winners_service__["a" /* WinnersService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__winners_winners_service__["a" /* WinnersService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__prizes_prizes_service__["a" /* PrizesService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__prizes_prizes_service__["a" /* PrizesService */]) === 'function' && _b) || Object])
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__winners_winners_service__["a" /* WinnersService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__winners_winners_service__["a" /* WinnersService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__prizes_prizes_service__["a" /* PrizesService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__prizes_prizes_service__["a" /* PrizesService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__["a" /* NotificationService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__notification_notification_service__["a" /* NotificationService */]) === 'function' && _c) || Object])
     ], WinnersComponent);
     return WinnersComponent;
-    var _a, _b;
+    var _a, _b, _c;
 }());
 var WinnersResults = (function () {
     function WinnersResults() {
@@ -1550,57 +1627,6 @@ var environment = {
 
 /***/ },
 
-/***/ 61:
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__ = __webpack_require__(493);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__);
-/* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return NotificationService; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var NotificationService = (function () {
-    function NotificationService() {
-        this.notifications_source = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
-        this.notifications$ = this.notifications_source.asObservable();
-    }
-    NotificationService.prototype.ok = function (title, message, timeOut) {
-        // console.log('OK message');
-        // console.log(new Notification('ok', title, message));
-        this.notifications_source.next(new __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__["a" /* Notification */]('ok', title, message, timeOut));
-    };
-    NotificationService.prototype.alert = function (title, message, timeOut) {
-        // console.log('ALERT message');
-        // console.log(new Notification('alert', title, message));
-        this.notifications_source.next(new __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__["a" /* Notification */]('alert', title, message, timeOut));
-    };
-    NotificationService.prototype.error = function (title, message, timeOut) {
-        // console.log('ERROR message');
-        // console.error(new Notification('error', title, message));
-        this.notifications_source.next(new __WEBPACK_IMPORTED_MODULE_1__notification_notification_class__["a" /* Notification */]('error', title, message, timeOut));
-    };
-    NotificationService = __decorate([
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(), 
-        __metadata('design:paramtypes', [])
-    ], NotificationService);
-    return NotificationService;
-}());
-//# sourceMappingURL=C:/Users/ddba/Desktop/Daniel/prizes_management/ng-client/src/notification.service.js.map
-
-/***/ },
-
 /***/ 655:
 /***/ function(module, exports) {
 
@@ -1702,7 +1728,7 @@ module.exports = "<section id=\"section_pizes\" class=\"page\">\n  <div class=\"
 /***/ 669:
 /***/ function(module, exports) {
 
-module.exports = "<section id=\"section_users\" class=\"page\">\n  <div class=\"content-card\">\n    <nav class=\"card-nav\">\n      <ul>\n        <li>\n          <button (click)=\"navigateTo('usersList')\" class=\"nav-button\">Lista de Usuarios</button>\n        </li>\n        <li>\n          <button (click)=\"navigateTo('newUser')\" class=\"nav-button\">Nuevo Usuario</button>\n        </li>\n      </ul>\n    </nav>\n    <div class=\"content-forms\">\n\n      <div id=\"card-users-list\" class=\"content-form\" [style.display]=\"visible_tab == 'usersList' ? 'inherit' : 'none'\">\n        <h2>Lista de Usuarios</h2>\n\n        <!--Users List-->\n        <ul id=\"ul-list-users\" class=\"list\">\n          <li class=\"list-item\" *ngFor=\"let user of users_list\">\n            <span class=\"item-avatar\">{{user.Name.slice(0,1)}}</span>\n            <div class=\"item-data\">\n              <span class=\"data-name\">{{user.Name}}</span>\n              <span class=\"data-right\">\n                  <span class=\"data-role\">{{user.Role}}</span>\n              <small> creado el </small>\n              <span class=\"data-set_date\">{{user.StrDate}}</span>\n              </span>\n            </div>\n          </li>\n        </ul>\n\n      </div>\n\n\n      <div id=\"card-new-user\" class=\"content-form\" [style.display]=\"visible_tab == 'newUser' ? 'inherit' : 'none'\">\n\n        <h2>Nuevo Usuario</h2>\n\n        <form id=\"form-new-user\" (ngSubmit)=\"onSubmit()\" #userForm=\"ngForm\">\n\n          <label for=\"name\">Nombre de usuario *</label>\n          <input [(ngModel)]=\"user.name\" name=\"name\" id=\"name\" placeholder=\"Nombre sin espacios\"  pattern=\"\\S+\" required>\n\n          <label for=\"password\">Contraseña *</label>\n          <input [(ngModel)]=\"user.password\" #password=\"ngModel\" name=\"password\" id=\"password\" type=\"password\" placeholder=\"Contraseña\" required>\n\n          <label for=\"password2\">Repetir contraseña *</label>\n          <input [(ngModel)]=\"user.password2\" name=\"password2\" id=\"password2\" type=\"password\" placeholder=\"Repetir contraseña\" validateEqual=\"password\" required>\n\n          <label for=\"role\">Permisos *</label>\n          <select [(ngModel)]=\"user.role\" id=\"role\" name=\"role\" required>\n            <option value=\"admin\">Administrador</option>\n            <option value=\"user\" selected>Usuario</option>\n          </select>\n\n          <label for=\"email\">Email</label>\n          <input [(ngModel)]=\"user.email\" id=\"email\" name=\"email\" placeholder=\"Email\" pattern=\"\\S+@\\S+\\.\\S+\">\n\n          <button (click)=\"newUser(); userForm.reset()\" type=\"submit\" class=\"btn-ok\" [disabled]=\"!userForm.form.valid\">Crear</button>\n          <button (click)=\"userForm.reset()\" class=\"btn-cancel\" id=\"btn-cancel-sub-new-user\">Cancelar</button>\n\n        </form>\n\n      </div>\n\n    </div>\n  </div>\n</section>"
+module.exports = "<section id=\"section_users\" class=\"page\">\n  <div class=\"content-card\">\n    <nav class=\"card-nav\">\n      <ul>\n        <li>\n          <button (click)=\"navigateTo('usersList')\" class=\"nav-button\">Lista de Usuarios</button>\n        </li>\n        <li>\n          <button (click)=\"navigateTo('newUser')\" class=\"nav-button\">Nuevo Usuario</button>\n        </li>\n      </ul>\n    </nav>\n    <div class=\"content-forms\">\n\n      <div id=\"card-users-list\" class=\"content-form\" [style.display]=\"visible_tab == 'usersList' ? 'inherit' : 'none'\">\n        <h2>Lista de Usuarios</h2>\n\n        <!--Users List-->\n        <ul id=\"ul-list-users\" class=\"list\">\n          <li class=\"list-item\" *ngFor=\"let user of users_list\">\n            <span class=\"item-avatar\">{{user.Name.slice(0,1)}}</span>\n            <div class=\"item-data\">\n              <span class=\"data-name\">{{user.Name}}</span>\n              <span class=\"data-right\">\n                  <span class=\"data-role\">{{user.Role}}</span>\n              <small> creado el </small>\n              <span class=\"data-set_date\">{{user.StrDate}}</span>\n              </span>\n            </div>\n          </li>\n        </ul>\n\n      </div>\n\n\n      <div id=\"card-new-user\" class=\"content-form\" [style.display]=\"visible_tab == 'newUser' ? 'inherit' : 'none'\">\n\n        <h2>Nuevo Usuario</h2>\n\n        <form id=\"form-new-user\" (ngSubmit)=\"onSubmit()\" #userForm=\"ngForm\">\n\n          <label for=\"name\">Nombre de usuario *</label>\n          <input [(ngModel)]=\"user.name\" name=\"name\" id=\"name\" placeholder=\"Nombre sin espacios\"  pattern=\"\\S+\" required>\n\n          <label for=\"password\">Contraseña *</label>\n          <input [(ngModel)]=\"user.password\" #password=\"ngModel\" name=\"password\" id=\"password\" type=\"password\" placeholder=\"Contraseña\" required>\n\n          <label for=\"password2\">Repetir contraseña *</label>\n          <input [(ngModel)]=\"user.password2\" name=\"password2\" id=\"password2\" type=\"password\" placeholder=\"Repetir contraseña\" validateEqual=\"password\" required>\n\n          <label for=\"role\">Permisos *</label>\n          <select [(ngModel)]=\"user.role\" id=\"role\" name=\"role\" required>\n            <option value=\"admin\">Administrador</option>\n            <option value=\"user\" selected>Usuario</option>\n          </select>\n\n          <label for=\"email\">Email</label>\n          <input [(ngModel)]=\"user.email\" id=\"email\" name=\"email\" placeholder=\"Email\" pattern=\"\\S+@\\S+\\.\\S+\">\n\n          <button (click)=\"newUser($event); userForm.reset()\" type=\"submit\" class=\"btn-ok\" [disabled]=\"!userForm.form.valid\">Crear</button>\n          <button (click)=\"userForm.reset()\" class=\"btn-cancel\" id=\"btn-cancel-sub-new-user\">Cancelar</button>\n\n        </form>\n\n      </div>\n\n    </div>\n  </div>\n</section>"
 
 /***/ },
 

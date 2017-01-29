@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.class';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'app-users',
@@ -15,7 +16,7 @@ import { User } from '../users/user.class';
 })
 export class UsersComponent implements OnInit {
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService, private notificationService: NotificationService) { }
 
   private visible_tab: string;
   private users_list: User[];
@@ -27,15 +28,24 @@ export class UsersComponent implements OnInit {
   }
 
   navigateTo(tab: string) {
-    this.usersService.fetchUsers(); // TODO find out why the users list is not updated en user creation
+    this.usersService.fetchUsers();
     this.visible_tab = tab;
   }
 
   //  New user Form  //////////////////////////////////////////////////////////
   private user = new User(null, null, null, null, null);
   private submitted = false;
-  newUser() { this.usersService.newUser(this.user) }
+  newUser(event?: any) {
+    if(event)
+      event.preventDefault();
+    this.usersService.newUser(this.user)
+      .subscribe(
+      res => {
+        this.usersService.fetchUsers();
+        this.notificationService.ok("Exito", "El usuario se ha creado correctamente", 3000);
+      },
+      error => this.notificationService.error("Error, el usuario NO ha sido creado", error.json().error)
+      );
+  }
   onSubmit() { this.submitted = true; }
-  // TODO: Remove this when we're done
-  get inputValues() { return JSON.stringify(this.user, null, 2) }
 }

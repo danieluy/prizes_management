@@ -3,6 +3,7 @@ import { Winner } from './winner.class';
 import { Prize } from '../prizes/prize.class';
 import { WinnersService } from '../winners/winners.service';
 import { PrizesService } from '../prizes/prizes.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'app-winners',
@@ -18,7 +19,7 @@ import { PrizesService } from '../prizes/prizes.service';
 })
 export class WinnersComponent implements OnInit {
 
-  constructor(private winnersService: WinnersService, private prizesService: PrizesService) { }
+  constructor(private winnersService: WinnersService, private prizesService: PrizesService, private notificationService: NotificationService) { }
 
   private visible_tab: string;
   private winners_list: Winner[];
@@ -55,7 +56,14 @@ export class WinnersComponent implements OnInit {
   }
 
   handOverPrize(winner_ci: string, prize_id: string): void {
-    this.winnersService.handOverPrize(winner_ci, prize_id);
+    this.winnersService.handOverPrize(winner_ci, prize_id)
+      .subscribe(
+      res => {
+        this.winnersService.fetchWinners();
+        this.notificationService.ok("Exito", "El premio se a entregado correctamente", 3000)
+      },
+      error => this.notificationService.error("Error, el premio NO ha sido entregado", error.json().details)
+      );
   }
 
   cancelHandOverPrize(): void {

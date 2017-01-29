@@ -29,37 +29,19 @@ export class PrizesService {
       );
   }
 
-  newPrize(prize: Prize): void {
-    this.http.post(`${Const.APIURL}api/prizes`, `type=${prize.Type}&sponsor=${prize.Sponsor}&description=${prize.Description}&stock=${prize.Stock}&due_date=${prize.StrDueDateToPost}&note=${prize.Note}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
+  newPrize(prize: Prize): Observable<any> {
+    return this.http.post(`${Const.APIURL}api/prizes`, `type=${prize.Type}&sponsor=${prize.Sponsor}&description=${prize.Description}&stock=${prize.Stock}&due_date=${prize.StrDueDateToPost}&note=${prize.Note}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
       .map(res => res.json())
-      .subscribe(
-      ok => {
-        this.fetchPrizes();
-        this.notificationService.ok("Exito :)", "El premio se ha creado correctamente.", 3000);
-      },
-      error => this.notificationService.error("Error creando el premio", error.json().details)
-      );
   }
 
-  editPrize(prize: Prize): void {
-    this.http.post(`${Const.APIURL}api/prizes/edit`, `id=${prize.id}&type=${prize.type}&sponsor=${prize.sponsor}&description=${prize.description}&stock=${prize.stock}&due_date=${prize.StrDueDateToPost}&note=${prize.note}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
+  editPrize(prize: Prize): Observable<any> {
+    return this.http.post(`${Const.APIURL}api/prizes/edit`, `id=${prize.id}&type=${prize.type}&sponsor=${prize.sponsor}&description=${prize.description}&stock=${prize.stock}&due_date=${prize.StrDueDateToPost}&note=${prize.note}`, { headers: Const.HEADERS.urlencoded(), withCredentials: true })
       .map(res => res.json())
-      .subscribe(
-      ok => {
-        this.fetchPrizes();
-        this.notificationService.ok("Exito :)", "El premio se ha editado correctamente.", 3000);
-      },
-      error => this.notificationService.error("Error editando el premio", error._body)
-      );
   }
 
-  grantPrize(prize: Prize, winner: Winner): void {
-    this.http.post(`${Const.APIURL}api/grantprize`, this.grantPrizeFormatParameters(prize, winner), { headers: Const.HEADERS.urlencoded(), withCredentials: true })
+  grantPrize(prize: Prize, winner: Winner): Observable<any> {
+    return this.http.post(`${Const.APIURL}api/grantprize`, this.grantPrizeFormatParameters(prize, winner), { headers: Const.HEADERS.urlencoded(), withCredentials: true })
       .map(res => res.json())
-      .subscribe(
-      ok => this.notificationService.ok("Exito :)", "El premio se ha otorgado correctamente", 3000),
-      error => this.notificationService.error("Error otorgando el premio", error.json().details)
-      );
   }
 
   grantPrizeFormatParameters(prize: Prize, winner: Winner) {

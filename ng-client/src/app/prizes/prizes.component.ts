@@ -43,30 +43,53 @@ export class PrizesComponent implements OnInit {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  New Prize Form  /////////////////////////////////////////////////////////////////////////////////////////
   new_prize: Prize;
-  inputDate(event): void { this.new_prize.StrDueDate = event.target.value }
-  newPrize() { this.prizesService.newPrize(this.new_prize) }
+  inputDate(event): void {
+    this.new_prize.StrDueDate = event.target.value
+  }
+  newPrize() {
+    this.prizesService.newPrize(this.new_prize)
+      .subscribe(
+      ok => {
+        this.prizesService.fetchPrizes();
+        this.notificationService.ok("Exito", "El premio se ha creado correctamente.", 3000);
+      },
+      error => this.notificationService.error("Error, el premio NO se ha creado", error.json().details)
+      );
+  }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Prize Grant Form  ///////////////////////////////////////////////////////////////////////////////////////
   winner: Winner;
   prize: Prize;
-  displayGrantPrizeForm(prize: Prize, displayGrantPrizeTab: number) { this.prize = prize }
-  destroyGrantPrizeForm(event: any) {
-    event.preventDefault();
+  displayGrantPrizeForm(prize: Prize) {
+    this.prize = prize
+  }
+  destroyGrantPrizeForm(event?: any) {
+    if (event)
+      event.preventDefault();
     this.prize = null
   }
-  grantPrize() { this.prizesService.grantPrize(this.prize, this.winner) }
+  grantPrize() {
+    this.prizesService.grantPrize(this.prize, this.winner)
+      .subscribe(
+      ok => {
+        this.notificationService.ok("Exito :)", "El premio se ha otorgado correctamente", 3000);
+        this.destroyGrantPrizeForm();
+      },
+      error => this.notificationService.error("Error otorgando el premio", error.json().details)
+      );
+  }
   checkWinnerCi(ci: string): void {
     if (this.validateCi(ci)) {
       this.winnersService.checkWinnerCi(ci)
         .subscribe(
         ok => {
           if (ok.allowed && ok.message === 'This person is allowed to participate but has already won')
-            this.notificationService.alert('Persona habilitada pero que ya ha ganado');
+            this.notificationService.alert('Persona habilitada', 'Ganó hace más de 3 meses', 6000);
           else if (ok.allowed)
-            this.notificationService.ok('Persona habilitada', "No hay registro de que esta persona haya participado anteriormente");
+            this.notificationService.ok('Persona habilitada', "No hay registro de que haya participado anteriormente", 3000);
           else {
             this.prize = null;
-            this.notificationService.error('Persona NO hablitada (ganó hace menos de 3 meses)')
+            this.notificationService.error('Persona NO hablitada', 'Ganó hace menos de 3 meses')
           }
         },
         err => this.notificationService.error(err)
@@ -78,13 +101,28 @@ export class PrizesComponent implements OnInit {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Edit Prize  /////////////////////////////////////////////////////////////////////////////////////////////
   prize_to_edit: Prize;
-  displayEditPrizeForm(prize: Prize) { this.prize_to_edit = prize }
-  destroyEditPrizeForm(event: any) {
-    event.preventDefault();
+  displayEditPrizeForm(prize: Prize) {
+    this.prize_to_edit = prize
+  }
+  destroyEditPrizeForm(event?: any) {
+    if (event)
+      event.preventDefault();
     this.prize_to_edit = null
   }
-  inputNewDate(date): void { this.prize_to_edit.StrDueDate = date }
-  editPrize() { this.prizesService.editPrize(this.prize_to_edit) }
+  inputNewDate(date): void {
+    this.prize_to_edit.StrDueDate = date
+  }
+  editPrize() {
+    this.prizesService.editPrize(this.prize_to_edit)
+      .subscribe(
+      ok => {
+        this.prizesService.fetchPrizes();
+        this.notificationService.ok("Exito :)", "El premio se ha editado correctamente.", 3000);
+        this.destroyEditPrizeForm();
+      },
+      error => this.notificationService.error("Error editando el premio", error.json().error)
+      );
+  }
   // TODO: Remove this when we're done
   // get editPrizeInputValues(): any { return JSON.stringify(this.prize_to_edit, null, 2) };
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////  

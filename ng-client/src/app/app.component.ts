@@ -17,8 +17,7 @@ enableProdMode();
     './material-icons.css'
   ],
   providers: [
-    LoginService,
-    NotificationService
+    LoginService
   ]
 })
 export class AppComponent implements OnInit {

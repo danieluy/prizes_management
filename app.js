@@ -59,17 +59,6 @@ app.use(sessions({
 		secure: false
 	}
 }));
-app.use(sessions({
-	cookieName: 'user',
-	secret: '0',
-	duration: session.duration * 60 * 60 * 1000, // hours
-	activeDuration: session.active_duration * 60 * 60 * 1000, // hours
-	cookie: {
-		ephemeral: false,
-		httpOnly: false,
-		secure: false
-	}
-}));
 // Routing
 app.use('/', router);
 app.use('/api', api_router);

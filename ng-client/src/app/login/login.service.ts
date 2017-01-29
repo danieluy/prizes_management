@@ -25,9 +25,9 @@ export class LoginService {
       .subscribe(
       res => {
         if (res.error)
-          this.notificationService.alert("Error", "Usuario y/o contraseña incorrectos", 4000);
+          this.notificationService.alert("Error", "Usuario y/o contraseña incorrectos", 6000);
         else {
-          this.notificationService.ok("Bienvenido", `Haz iniciado sesión como ${res.user.userName} con privilegios de ${res.user.role}`, 2000)
+          this.notificationService.ok("Bienvenido", `Haz iniciado sesión como ${res.user.userName} con privilegios de ${res.user.role}`, 3000)
           this.login_source.next({ userName: res.user.userName, role: res.user.role });
           let expirationDate = new Date(Date.now() + (4 * 60 * 60 * 1000)); // four hours
           this.cookieService.putObject('user', { userName: res.user.userName, role: res.user.role }, { expires: expirationDate });

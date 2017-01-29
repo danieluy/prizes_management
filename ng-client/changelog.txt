@@ -1,9 +1,17 @@
-# Radiocero Premios ng client changelog
+# Radiocero Premios Angular2 Client Changelog
+v?.?.?
+  19700101 | TODO | Handed prizes actions (cancel)
+  19700101 | TODO | Winners lists styles
+  19700101 | TODO | When winner exist autofill winner data in the granting form
+  19700101 | TODO | Shut down autofill on the input datalist
+  19700101 | TODO | Shut down autofill on the new user form
+  19700101 | TODO | Improve the use of ng forms all over
+  19700101 | TODO | Add actions to notification component ???
+v0.4.0
+  20170127 | REFACTORING | NotificationService is now globally provided in app.module.ts
+  20170127 | + | Updated all notifications to use the improved notification service
+  20170127 | REFACTORING | Moved Observable's subscriptions from the service to the served component to allow reaction (with the exception of the login, logout and fetch methods)
 v0.3.0
-  20170126 | TODO | Handed prizes actions (cancel)
-  20170126 | TODO | Winners lists styles
-  20170126 | TODO | Improve the use of ng forms all over
-  20170126 | TODO | Add actions to notification component ???
   20170126 | + | Greatly improved the login UX
   20170126 | + | Implemented cookie handling with angular2-cookie (npm module)
   20170125 | + | Added prize edition functionality

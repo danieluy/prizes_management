@@ -1,4 +1,6 @@
 # Radiocero Premios Changelog
+v0.7.0
+  20170127 | + | Enable admin privilege's check for some functionalities
 v0.6.0
   20170125 | TODO | Test winner.js => hasWonSinceThreeMonths()
   20170125 | TODO | Users server side checks
